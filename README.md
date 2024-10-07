@@ -37,7 +37,7 @@ Ensure you have the following installed on your machine:
 
 1. **Clone the repository**
    ```bash
-   https://github.com/wallicestene/Restaurant-system.git
+   https://github.com/wallicestene/Bookify.git
    cd bookify
    ```
 
