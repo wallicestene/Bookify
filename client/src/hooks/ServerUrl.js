@@ -1,4 +1,4 @@
-const serverUrl = "https://bookify-74120f653892.herokuapp.com/"
+const serverUrl = "http://localhost:3000/"
 export default function useServer() {
     return serverUrl;
 }
