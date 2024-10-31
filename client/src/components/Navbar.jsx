@@ -10,7 +10,6 @@ const Navbar = () => {
   const [showNavMobile, setShowNavMobile] = useState(false);
   const [showNavbar, setShowNavbar] = useState(false);
   const [{ user }, dispatch] = useUserContext();
-  console.log(user);
   useEffect(() => {
     const navShow = () => {
       if (window.scrollY > 10) {
