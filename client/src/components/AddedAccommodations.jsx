@@ -4,14 +4,14 @@
 import { Circle, LocationOn } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
-const AddedRestaurants = ({ restaurant }) => {
+const AddedAccommodations = ({ accommodation }) => {
   return (
     <>
       <div className=" relative h-64 w-fit">
         <div className=" h-full w-full overflow-hidden shadow-xl shadow-gray-400 rounded-xl inline-block ">
           <img
-            src={restaurant?.images[0]}
-            alt={`${restaurant?.name} image 1 `}
+            src={accommodation?.images[0]}
+            alt={`${accommodation?.name} image 1 `}
             className=" h-full object-cover brightness-[0.9]"
           />
         </div>
@@ -24,7 +24,7 @@ const AddedRestaurants = ({ restaurant }) => {
                   width: "0.12em",
                 }}
               />{" "}
-              {restaurant?.guests} Guest(s)
+              {accommodation?.guests} Guest(s)
             </p>
             <p>
               <Circle
@@ -33,12 +33,12 @@ const AddedRestaurants = ({ restaurant }) => {
                   width: "0.12em",
                 }}
               />{" "}
-              {restaurant?.whereToSleep.length} Bedroom
-              {restaurant?.whereToSleep.length != 1 ? "s" : ""}
+              {accommodation?.whereToSleep.length} Bedroom
+              {accommodation?.whereToSleep.length != 1 ? "s" : ""}
             </p>
           </div>
 
-          <h2 className="text-lg font-semibold  ">{restaurant?.name}</h2>
+          <h2 className="text-lg font-semibold  ">{accommodation?.name}</h2>
           <div>
             {/* <p className=" inline-block font-light text-gray-100 bg-black text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
               <span>
@@ -52,7 +52,7 @@ const AddedRestaurants = ({ restaurant }) => {
               </span>
             </p> */}
             <p className=" mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
-              {(restaurant?.price).toLocaleString("en-US", {
+              {(accommodation?.price).toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}{" "}
@@ -66,11 +66,11 @@ const AddedRestaurants = ({ restaurant }) => {
                 color: "red",
               }}
             />
-            <span className="">{restaurant?.address}</span>
+            <span className="">{accommodation?.address}</span>
           </p>
         </div>
         <Link
-          to={`/account/myRestaurants/${restaurant._id}`}
+          to={`/account/myAccommodations/${accommodation._id}`}
           className="absolute top-5 right-5 items-center justify-start inline-block px-4 py-2 text-sm overflow-hidden bg-white rounded-full group"
         >
           <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
@@ -85,4 +85,4 @@ const AddedRestaurants = ({ restaurant }) => {
   );
 };
 
-export default AddedRestaurants;
+export default AddedAccommodations;

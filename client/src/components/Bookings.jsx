@@ -9,7 +9,7 @@ const Bookings = ({ booking }) => {
   const [{ user }] = useUserContext();
   const deleteBooking = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    fetch(`${useServer()}api/restaurant/reservation/${booking._id}`, {
+    fetch(`${useServer()}api/accommodation/reservation/${booking._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -33,8 +33,8 @@ const Bookings = ({ booking }) => {
       <div className=" relative h-64 w-fit">
         <div className=" h-full w-full overflow-hidden shadow-xl shadow-gray-400 rounded-xl inline-block">
           <img
-            src={booking?.restaurantId.images[0]}
-            alt={`${booking?.restaurantId.name} image 1 `}
+            src={booking?.accommodationId.images[0]}
+            alt={`${booking?.accommodationId.name} image 1 `}
             className=" h-full object-cover brightness-[0.9]"
           />
         </div>
@@ -56,13 +56,13 @@ const Bookings = ({ booking }) => {
                   width: "0.12em",
                 }}
               />{" "}
-              {booking?.restaurantId.whereToSleep.length} Bedroom
-              {booking?.restaurantId.whereToSleep.length != 1 ? "s" : ""}
+              {booking?.accommodationId.whereToSleep.length} Bedroom
+              {booking?.accommodationId.whereToSleep.length != 1 ? "s" : ""}
             </p>
           </div>
 
           <h2 className="text-lg font-semibold  ">
-            {booking?.restaurantId.name}
+            {booking?.accommodationId.name}
           </h2>
           <div>
             <p className=" inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
@@ -77,7 +77,7 @@ const Bookings = ({ booking }) => {
               </span>
             </p>
             <p className=" mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
-              {(booking?.restaurantId.price).toLocaleString("en-US", {
+              {(booking?.accommodationId.price).toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}{" "}
@@ -91,7 +91,7 @@ const Bookings = ({ booking }) => {
                 color: "red",
               }}
             />
-            <span className="">{booking?.restaurantId.address}</span>
+            <span className="">{booking?.accommodationId.address}</span>
           </p>
         </div>
         {/* <button className="  bg bg-white lg:p-2 p-1 rounded-full text-[0.8rem]">

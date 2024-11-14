@@ -6,11 +6,11 @@
 //   Add,
 //   FormatListBulleted,
 //   PersonOutline,
-//   RestaurantMenu,
+//   AccommodationMenu,
 // } from "@mui/icons-material";
 // import Profile from "./Profile";
 // import MyBookings from "./MyBookings";
-// import MyRestaurants from "./MyRestaurants";
+// import MyAccommodations from "./MyAccommodations";
 
 // const AccountPage = () => {
 //   const [{ user }, dispatch] = useUserContext();
@@ -26,7 +26,7 @@
 //         <div className=" grid place-items-center gap-y-1 items-center text-sm py-2 px-4">
 //           {subPage === undefined && <Profile />}
 //           {subPage === "myBookings" && <MyBookings subPage={subPage} />}
-//           {subPage === "myFavorites" && <MyRestaurants />}
+//           {subPage === "myFavorites" && <MyAccommodations />}
 //         </div>
 //       </>
 //       {/* )

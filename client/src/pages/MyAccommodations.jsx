@@ -8,7 +8,7 @@
 // import { useUserContext } from "../hooks/Usercontext";
 
 
-// const MyRestaurants = () => {
+// const MyAccommodations = () => {
 //   const [name, setName] = useState("");
 //   const [address, setAddress] = useState("");
 //   const [description, setDescription] = useState("");
@@ -43,9 +43,9 @@
 //     });
 //     setContactsInput("");
 //   };
-//   const addRestaurant = (e) => {
+//   const addAccommodation = (e) => {
 //     e.preventDefault();
-//     fetch("http://localhost:3000/api/restaurant", {
+//     fetch("http://localhost:3000/api/accommodation", {
 //       method: "POST",
 //       headers: {
 //         "Content-Type": "application/json",
@@ -70,17 +70,17 @@
 //           <form>
 //             {inputTitle(
 //               "Title",
-//               "Title for your restaurant. Should be short and precise"
+//               "Title for your accommodation. Should be short and precise"
 //             )}
 //             <input
 //               type="text"
 //               className=""
-//               placeholder="title, for example: My Restaurant "
+//               placeholder="title, for example: My Accommodation "
 //               name="name"
 //               value={name}
 //               onChange={(e) => setName(e.target.value)}
 //             />
-//             {inputTitle("Address", "address to your restaurant")}
+//             {inputTitle("Address", "address to your accommodation")}
 //             <input
 //               type="text"
 //               className=""
@@ -106,7 +106,7 @@
 //               value={description}
 //               onChange={(e) => setDescription(e.target.value)}
 //             ></textarea>
-//             {inputTitle("Menu", "The menu items for your restaurant")}
+//             {inputTitle("Menu", "The menu items for your accommodation")}
 //             <MenuItems
 //               itemName={itemName}
 //               setItemName={setItemName}
@@ -120,7 +120,7 @@
 //               "Tags, for example dates, fast-food, five-star..."
 //             )}
 //             <Tags selectedTags={tags} setSelectedTags={setTags} />
-//             {inputTitle("Contacts", "Contacts to your restaurant")}
+//             {inputTitle("Contacts", "Contacts to your accommodation")}
 //             {contacts.length > 0 && (
 //               <div className="flex flex-wrap gap-4 my-2 ">
 //                 {contacts?.map((contact, index) => (
@@ -168,7 +168,7 @@
 //             </div>
 //             <div className=" my-4">
 //               <button
-//                 onClick={addRestaurant}
+//                 onClick={addAccommodation}
 //                 className=" w-full bg-totem-pole-400 text-totem-pole-50 py-2 text-center rounded-md"
 //               >
 //                 Save
@@ -180,4 +180,4 @@
 //   );
 // };
 
-// export default MyRestaurants;
+// export default MyAccommodations;

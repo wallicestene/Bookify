@@ -43,7 +43,7 @@ import Scroll from "../components/SmoothScroll";
 import BookingPage from "../components/BookingPage";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
-const RestaurantDetailsPage = () => {
+const AccommodationDetailsPage = () => {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState({
     startDate: null,
@@ -67,7 +67,7 @@ const RestaurantDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useFetch(
-    `${useServer()}api/restaurant/${id}`
+    `${useServer()}api/accommodation/${id}`
   );
   useEffect(() => {
     const numberOfGuests = () => {
@@ -84,7 +84,7 @@ const RestaurantDetailsPage = () => {
 
   const handleBooking = () => {
     if (user && date.startDate && date.endDate) {
-      fetch(`${useServer()}api/restaurant/reservation`, {
+      fetch(`${useServer()}api/accommodation/reservation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const RestaurantDetailsPage = () => {
         },
         body: JSON.stringify({
           userId: user?.userId,
-          restaurantId: data._id,
+          accommodationId: data._id,
           checkIn: date.startDate,
           checkOut: date.endDate,
           guests: {
@@ -707,4 +707,4 @@ const RestaurantDetailsPage = () => {
   );
 };
 
-export default RestaurantDetailsPage;
+export default AccommodationDetailsPage;

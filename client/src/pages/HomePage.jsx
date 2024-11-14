@@ -1,12 +1,12 @@
 
-import RestauarantContainer from "../components/RestauarantContainer";
+import AccommodationContainer from "../components/AccommodationContainer";
 
 const HomePage = () => {
   return (
     <section>
       <div>
         <div>
-          <RestauarantContainer />
+          <AccommodationContainer />
         </div>
       </div>
     </section>

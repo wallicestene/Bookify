@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Restaurant = require("../models/restaurantModel");
+const Accommodation = require("../models/accommodationModel");
 const multer = require("multer");
 const imageDownloader = require("image-downloader");
 const { request } = require("express");
@@ -10,7 +10,7 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 require("dotenv").config();
 
 // const path = req
-// add a restaurant
+// add a Accommodation
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
@@ -22,7 +22,7 @@ const s3 = new S3Client({
   },
   region: bucketRegion,
 });
-const addRestaurant = (req, res) => {
+const addAccommodation = (req, res) => {
   const {
     owner,
     name,
@@ -35,7 +35,7 @@ const addRestaurant = (req, res) => {
     amenities,
     tags,
   } = req.body;
-  Restaurant.create({
+  Accommodation.create({
     owner,
     name,
     address,
@@ -54,21 +54,21 @@ const addRestaurant = (req, res) => {
       res.status(400).json({ error: err.message });
     });
 };
-// get all restaurants by the owner
-const getRestaurantByOwner = (req, res) => {
+// get all Accommodations by the owner
+const getAccommodationByOwner = (req, res) => {
   const { owner } = req.params;
   if (!mongoose.Types.ObjectId.isValid(owner)) {
     return res.status(400).json("No user with that Id");
   }
-  Restaurant.find({ owner })
-    .then((restaurants) => {
-      if (!restaurants) {
-        return res.status(404).send("no restaurants found");
+  Accommodation.find({ owner })
+    .then((accommodations) => {
+      if (!accommodations) {
+        return res.status(404).send("no Accommodations found");
       }
-      res.status(200).json(restaurants);
+      res.status(200).json(accommodations);
     })
     .catch((error) => {
-      res.status(500).json({ error: "failed to fetch the restaurants" });
+      res.status(500).json({ error: "failed to fetch the Accommodations" });
     });
 };
 // custom filename and destination
@@ -110,7 +110,7 @@ const uploadMenuImage = (req, res) => {
   const { filename } = req.file;
   return res.json(filename);
 };
-// find all restaurants
+
 const uploadImageByLink = (req, res) => {
   const { link } = req.body;
   const newName = "photo" + Date.now() + ".jpg";
@@ -152,21 +152,21 @@ const uploadImageByLink = (req, res) => {
       res.status(500).json({ error: "Failed to download image" });
     });
 };
-
-const findAllRestaurants = (req, res) => {
-  Restaurant.find()
+// find all accommodations
+const findAllAccommodations = (req, res) => {
+  Accommodation.find()
     .sort({
       updatedAt: -1,
     })
-    .then((restaurants) => {
-      res.status(200).json(restaurants);
+    .then((accommodations) => {
+      res.status(200).json(accommodations);
     })
     .catch((error) => {
-      res.status(500).json({ error: `Failed to fetch all restaurant` });
+      res.status(500).json({ error: `Failed to fetch all accommodation error` });
     });
 };
-// update restaurant details
-const updateRestaurant = (req, res) => {
+// update Accommodation details
+const updateAccommodation = (req, res) => {
   const {
     name,
     address,
@@ -180,9 +180,9 @@ const updateRestaurant = (req, res) => {
   } = req.body;
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json("No restaurant with that id");
+    return res.status(404).json("No accommodation with that id");
   }
-  Restaurant.findByIdAndUpdate(id, {
+  Accommodation.findByIdAndUpdate(id, {
     name,
     address,
     description,
@@ -193,39 +193,39 @@ const updateRestaurant = (req, res) => {
     amenities,
     tags,
   })
-    .then((restaurant) => {
-      if (!restaurant) {
-        res.json(`no restaurant found with that ${id}`);
+    .then((accommodation) => {
+      if (!accommodation) {
+        res.json(`no accommodation found with that ${id}`);
       }
-      res.status(200).json(restaurant);
+      res.status(200).json(accommodation);
     })
     .catch((err) => {
-      res.status(500).json({ error: "failed to fetch the restaurant" });
+      res.status(500).json({ error: "failed to fetch the accommodation" });
     });
 };
-// find a single restaurant
-const findOneRestaurant = (req, res) => {
+// find a single rAccommodation
+const findOneAccommodation = (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json("No record with that id");
   }
-  Restaurant.findById(id)
-    .then((restaurant) => {
-      if (!restaurant) {
-        return res.status(404).json(`no restaurant found with that ${id}`);
+  Accommodation.findById(id)
+    .then((accommodation) => {
+      if (!accommodation) {
+        return res.status(404).json(`no accommodation found with that ${id}`);
       } else {
-        res.status(200).json(restaurant);
+        res.status(200).json(accommodation);
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: "failed to fetch the restaurant" });
+      res.status(500).json({ error: "failed to fetch the accommodation" });
     });
 };
-// find/search a restaurant by name or address
-const searchRestaurant = (req, res) => {
+// find/search a rAccommodation by name or address
+const searchAccommodation = (req, res) => {
   const { query } = req.query;
   const searchRegex = new RegExp(query, "i");
-  Restaurant.find({
+  Accommodation.find({
     $or: [
       {
         name: searchRegex,
@@ -238,48 +238,48 @@ const searchRestaurant = (req, res) => {
     .sort({
       updatedAt: -1,
     })
-    .then((restaurants) => {
-      if (!restaurants) {
-        res.status(404).json({ error: "No matching restaurants found!" });
+    .then((accommodations) => {
+      if (!accommodations) {
+        res.status(404).json({ error: "No matching accommodations found!" });
       }
-      res.status(200).json(restaurants);
+      res.status(200).json(accommodations);
     })
     .catch((error) => {
       res
         .status(500)
-        .json({ error: "error in while searching for restaurant" });
+        .json({ error: "error in while searching for Accommodation" });
     });
 };
-// delete a restaurant
-const deleteRestaurant = (req, res) => {
+// delete a rAccommodation
+const deleteAccommodation = (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json(`No restaurant with given id : ${id}`);
+    return res.status(404).json(`No Accommodation with given id : ${id}`);
   }
 
-  Restaurant.findByIdAndDelete(id)
+  Accommodation.findByIdAndDelete(id)
 
     .then((result) => {
       if (!result) {
-        return res.status(400).json({ error: "No such restaurant" });
+        return res.status(400).json({ error: "No such accommodation" });
       } else {
         res.status(200).json(result);
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: "error in deleting the restaurant" });
+      res.status(500).json({ error: "error in deleting the accommodation" });
     });
 };
 module.exports = {
-  addRestaurant,
-  findAllRestaurants,
-  findOneRestaurant,
-  deleteRestaurant,
+  addAccommodation,
+  findAllAccommodations,
+  findOneAccommodation,
+  deleteAccommodation,
   uploadImages,
   uploadMiddleware,
   uploadImageByLink,
   uploadMenuImage,
-  getRestaurantByOwner,
-  updateRestaurant,
-  searchRestaurant,
+  getAccommodationByOwner,
+  updateAccommodation,
+  searchAccommodation,
 };

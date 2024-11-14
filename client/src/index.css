@@ -15,7 +15,7 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
-.restaurant::-webkit-scrollbar {
+.accommodation::-webkit-scrollbar {
   display: none;
 }
 input::-webkit-outer-spin-button,

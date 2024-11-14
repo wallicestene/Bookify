@@ -6,7 +6,7 @@ require("dotenv").config();
 
 // require routes
 const userRoutes = require("./routes/UserRoutes");
-const restaurantRoutes = require("./routes/restaurantRoutes");
+const accommodationRoutes = require("./routes/accommodationRoutes");
 const reservationRoutes = require("./routes/reservationRoute");
 
 // initialisizing the app
@@ -36,7 +36,7 @@ mongoose
 
 // All Routes
 app.use(userRoutes);
-app.use(restaurantRoutes);
+app.use(accommodationRoutes);
 // app.use(tableRoutes);
 app.use(reservationRoutes);
 // fallback route for handling unknown routes

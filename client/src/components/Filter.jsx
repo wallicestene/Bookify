@@ -1,16 +1,7 @@
-/* eslint-disable no-unused-vars */
-import {
-  EditCalendar,
-  LocationOn,
-  Person,
-  Search,
-  TableBar,
-  TableRestaurant,
-} from "@mui/icons-material";
-import React, { useState } from "react";
+import { Search } from "@mui/icons-material";
 
 // eslint-disable-next-line react/prop-types
-const Filter = ({searchInput, setSearchInput, searchRestaurant}) => {
+const Filter = ({ searchInput, setSearchInput, searchAccommodation }) => {
   return (
     <section className="p-2">
       <div className=" font-mulish mt-20">
@@ -25,13 +16,16 @@ const Filter = ({searchInput, setSearchInput, searchRestaurant}) => {
             />
           </div>
 
-          <button className=" p-3 bg-totem-pole-500 rounded-full text-orange-50 text-sm hover:bg-totem-pole-600 transition-all delay-100 duration-150 hover:transform hover:scale-105 ease-linear" onClick={searchRestaurant}>
-            <Search/>
+          <button
+            className=" p-3 bg-totem-pole-500 rounded-full text-orange-50 text-sm hover:bg-totem-pole-600 transition-all delay-100 duration-150 hover:transform hover:scale-105 ease-linear"
+            onClick={searchAccommodation}
+          >
+            <Search />
           </button>
         </form>
       </div>
     </section>
   );
-}
+};
 
 export default Filter;

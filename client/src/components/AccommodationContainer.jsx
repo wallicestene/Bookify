@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import Restaurant from "./Restaurant";
+import Accommodation from "./Accommodation";
 import useFetch from "../hooks/useFetch";
 import { Alert, Skeleton } from "@mui/material";
 import Filter from "./Filter";
 import { toast } from "sonner";
 import useServer from "../hooks/ServerUrl";
 
-const RestaurantContainer = () => {
+const AccommodationContainer = () => {
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [searchInput, setSearchInput] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -18,15 +18,15 @@ const RestaurantContainer = () => {
     data,
     isLoading: initialLoading,
     error: initialError,
-  } = useFetch(`${useServer()}api/restaurant`);
+  } = useFetch(`${useServer()}api/accommodation`);
   useEffect(() => {
     setLoading(initialLoading);
     setSearchError(initialError);
   }, [initialLoading, initialError]);
 
-  const searchRestaurant = (e) => {
+  const searchAccommodation = (e) => {
     e.preventDefault();
-    fetch(`${useServer()}api/search/restaurant/?query=${searchInput}`)
+    fetch(`${useServer()}api/search/accommodation/?query=${searchInput}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -53,7 +53,7 @@ const RestaurantContainer = () => {
       <Filter
         searchInput={searchInput}
         setSearchInput={setSearchInput}
-        searchRestaurant={searchRestaurant}
+        searchAccommodation={searchAccommodation}
       />
       <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-x-5 md:gap-x-10 gap-x-5 gap-y-10 py-[50px] px-5 lg:px-10 ">
         {loading &&
@@ -77,15 +77,15 @@ const RestaurantContainer = () => {
         {initialError && <Alert severity="error">{initialError}</Alert>}
         {!loading &&
           (searchData.length > 0
-            ? searchData.map((restaurant) => (
-                <Restaurant key={restaurant._id} restaurant={restaurant} />
+            ? searchData.map((accommodation) => (
+                <Accommodation key={accommodation._id} accommodation={accommodation} />
               ))
-            : data.map((restaurant) => (
-                <Restaurant key={restaurant._id} restaurant={restaurant} />
+            : data.map((accommodation) => (
+                <Accommodation key={accommodation._id} accommodation={accommodation} />
               )))}
       </div>
     </section>
   );
 };
 
-export default RestaurantContainer;
+export default AccommodationContainer;

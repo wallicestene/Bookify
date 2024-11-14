@@ -10,8 +10,8 @@ import React, { useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import { Link } from "react-router-dom";
 
-const Restaurant = ({ restaurant }) => {
-  const [images, setImages] = useState(restaurant.images);
+const Accommodation = ({ accommodation }) => {
+  const [images, setImages] = useState(accommodation.images);
 
   return (
     <div className=" flex flex-col gap-y-1 h-full rounded-t-2xl overflow-hidden bg-white shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]  rounded-xl transition-shadow duration-200 delay-100 ease-linear  font-Mulish">
@@ -48,7 +48,7 @@ const Restaurant = ({ restaurant }) => {
         }
       >
         {images.map((image, index) => (
-          <Link key={index} to={`/restaurant/${restaurant._id}`}>
+          <Link key={index} to={`/accommodation/${accommodation._id}`}>
             <div className=" h-full w-full  overflow-hidden ">
               <img
                 src={image}
@@ -60,7 +60,7 @@ const Restaurant = ({ restaurant }) => {
         ))}
       </Carousel>
       <div className="flex flex-col justify-between text-start p-2 ">
-        <Link to={`/restaurant/${restaurant._id}`}>
+        <Link to={`/accommodation/${accommodation._id}`}>
           <div className=" flex items-center justify-start gap-1 text-[0.97rem]">
             <LocationOn
               sx={{
@@ -68,13 +68,13 @@ const Restaurant = ({ restaurant }) => {
               }}
             />
             <h1 className="font-semibold">
-              <span>{restaurant.address}</span>
+              <span>{accommodation.address}</span>
             </h1>
           </div>
         </Link>
         <div className=" flex  flex-col  gap-y-1 justify-between h-full text-sm">
           <div className=" flex flex-row gap-x-2 gap-y-1 flex-wrap text-gray-600">
-            {restaurant.tags.slice(0, 5).map((tag, index) => (
+            {accommodation.tags.slice(0, 5).map((tag, index) => (
               <div
                 key={index}
                 className=" border border-totem-pole-500 py-1 px-2 rounded"
@@ -86,7 +86,7 @@ const Restaurant = ({ restaurant }) => {
           <div className=" text-[0.97rem]">
             <p>
               <span className=" font-semibold">
-                {(restaurant?.price).toLocaleString("en-US", {
+                {(accommodation?.price).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}{" "}
@@ -100,4 +100,4 @@ const Restaurant = ({ restaurant }) => {
   );
 };
 
-export default Restaurant;
+export default Accommodation;

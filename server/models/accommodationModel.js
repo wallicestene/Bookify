@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const restaurantSchema = new Schema({
+const accommodationSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -68,4 +68,4 @@ const restaurantSchema = new Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model("restaurant", restaurantSchema);
+module.exports = mongoose.model("accommodation", accommodationSchema);
