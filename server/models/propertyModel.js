@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const accommodationSchema = new Schema({
+const propertySchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -68,4 +68,4 @@ const accommodationSchema = new Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model("accommodation", accommodationSchema);
+module.exports = mongoose.model("property", propertySchema);

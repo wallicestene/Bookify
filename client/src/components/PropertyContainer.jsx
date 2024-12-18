@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import Accommodation from "./Accommodation";
+import Property from "./Property";
 import useFetch from "../hooks/useFetch";
 import { Alert, Skeleton } from "@mui/material";
 import Filter from "./Filter";
 import { toast } from "sonner";
 import useServer from "../hooks/ServerUrl";
 
-const AccommodationContainer = () => {
+const PropertyContainer = () => {
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [searchInput, setSearchInput] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -18,15 +18,15 @@ const AccommodationContainer = () => {
     data,
     isLoading: initialLoading,
     error: initialError,
-  } = useFetch(`${useServer()}api/accommodation`);
+  } = useFetch(`${useServer()}api/property`);
   useEffect(() => {
     setLoading(initialLoading);
     setSearchError(initialError);
   }, [initialLoading, initialError]);
 
-  const searchAccommodation = (e) => {
+  const searchProperty = (e) => {
     e.preventDefault();
-    fetch(`${useServer()}api/search/accommodation/?query=${searchInput}`)
+    fetch(`${useServer()}api/search/property/?query=${searchInput}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -53,7 +53,7 @@ const AccommodationContainer = () => {
       <Filter
         searchInput={searchInput}
         setSearchInput={setSearchInput}
-        searchAccommodation={searchAccommodation}
+        searchProperty={searchProperty}
       />
       <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-x-5 md:gap-x-10 gap-x-5 gap-y-10 py-[50px] px-5 lg:px-10 ">
         {loading &&
@@ -77,15 +77,15 @@ const AccommodationContainer = () => {
         {initialError && <Alert severity="error">{initialError}</Alert>}
         {!loading &&
           (searchData.length > 0
-            ? searchData.map((accommodation) => (
-                <Accommodation key={accommodation._id} accommodation={accommodation} />
+            ? searchData.map((property) => (
+                <Property key={property._id} property={property} />
               ))
-            : data.map((accommodation) => (
-                <Accommodation key={accommodation._id} accommodation={accommodation} />
+            : data.map((property) => (
+                <Property key={property._id} property={property} />
               )))}
       </div>
     </section>
   );
 };
 
-export default AccommodationContainer;
+export default PropertyContainer;

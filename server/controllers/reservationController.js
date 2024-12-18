@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const Reservation = require("../models/reservationModel");
 const moment = require("moment");
 const addReservation = (req, res) => {
-  const { userId, accommodationId, checkIn, checkOut, guests } = req.body;
+  const { userId, propertyId, checkIn, checkOut, guests } = req.body;
 
   // Checking if the place's already reserved for the given date
-  Reservation.findOne({ accommodationId, checkIn, checkOut })
+  Reservation.findOne({ propertyId, checkIn, checkOut })
     .then((reservationExists) => {
       if (!reservationExists) {
         // Create a new reservation
-        Reservation.create({ userId, accommodationId, checkIn, checkOut, guests })
+        Reservation.create({ userId, propertyId, checkIn, checkOut, guests })
           .then((reservation) => {
             // Return the created reservation
             res.status(200).json(reservation);
@@ -35,7 +35,7 @@ const getUserReservations = (req, res) => {
   }
 
   Reservation.find({ userId })
-    .populate("accommodationId")
+    .populate("propertyId")
     .then((reservations) => {
       if (!reservations) {
         return res.status(404).json("No reservations found!");
@@ -51,12 +51,12 @@ const getUserReservations = (req, res) => {
 // delete a reservation
 
 const deleteReservation = (req, res) => {
-  const { accommodationId } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(accommodationId)) {
+  const { propertyId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(propertyId)) {
     res.status(404).json(`no reservations found with the given ID`);
   }
 
-  Reservation.findByIdAndDelete(accommodationId)
+  Reservation.findByIdAndDelete(propertyId)
     .then((reservation) => {
       if (!reservation) {
         return res.status(404).json("no reservation found");

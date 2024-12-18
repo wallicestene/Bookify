@@ -59,11 +59,11 @@ const PlacesForm = () => {
       </div>
     );
   };
-  const saveAccommodation = (e) => {
+  const saveProperty = (e) => {
     e.preventDefault();
     if (id) {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      fetch(`${useServer()}api/accommodation/${id}`, {
+      fetch(`${useServer()}api/property/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const PlacesForm = () => {
       });
     } else {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      fetch(`${useServer()}api/accommodation`, {
+      fetch(`${useServer()}api/property`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,9 +109,9 @@ const PlacesForm = () => {
     }
   };
   useEffect(() => {
-    const getAccommodation = () => {
+    const getProperty = () => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      fetch(`${useServer()}api/accommodation/${id}`)
+      fetch(`${useServer()}api/property/${id}`)
         .then((res) => res.json())
         .then((data) => {
           setName(data.name);
@@ -128,7 +128,7 @@ const PlacesForm = () => {
     if (!id) {
       return;
     }
-    getAccommodation();
+    getProperty();
   }, [id]);
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -162,7 +162,7 @@ const PlacesForm = () => {
                 <input
                   type="text"
                   className=" h-40 text-[2.9rem] text-center  "
-                  placeholder="title, for example: My Accommodation"
+                  placeholder="title, for example: My Property"
                   name="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -173,7 +173,7 @@ const PlacesForm = () => {
               <div className=" h-full flex flex-col items-start gap-y-10">
                 {inputTitle(
                   "Add the Address to your place",
-                  "Address to your accommodation"
+                  "Address to your property"
                 )}
                 <input
                   type="text"
@@ -272,13 +272,13 @@ const PlacesForm = () => {
             {currentPage === 8 && (
               <div>
                 <div className=" h-full  flex flex-col items-start gap-y-10">
-                  {inputTitle("Tags", "What is you accommodation best known for?")}
+                  {inputTitle("Tags", "What is you property best known for?")}
                   <Tags selectedTags={tags} setSelectedTags={setTags} />
                 </div>
 
                 <div className="mb-[45px] w-full flex items-center justify-center p-2 rounded">
                   <button
-                    onClick={saveAccommodation}
+                    onClick={saveProperty}
                     className="inline-flex w-full items-center justify-center h-12 px-6 font-medium  text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none"
                   >
                     Save
@@ -301,7 +301,7 @@ const PlacesForm = () => {
             {/* {currentPage === 8 && (
               <div className="mb-[50px] flex items-center justify-center p-2 rounded">
                 <button
-                  onClick={saveAccommodation}
+                  onClick={saveProperty}
                   className=" w-full py-2 inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none"
                 >
                   Save

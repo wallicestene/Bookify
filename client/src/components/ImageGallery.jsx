@@ -7,7 +7,7 @@ import useServer from "../hooks/ServerUrl";
 const ImageGallery = () => {
   const { id } = useParams();
   const { data, isLoading, error } = useFetch(
-    `${useServer()}api/accommodation/${id}`
+    `${useServer()}api/property/${id}`
   );
   const navigate = useNavigate();
   return (

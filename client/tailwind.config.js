@@ -32,8 +32,8 @@ export default {
         2: 0.2,
       },
       backgroundImage: {
-        login: "url('./src/assets/loginFormImages/accommodation1.png')",
-        signup: "url('./src/assets/loginFormImages/accommodation2.png')",
+        login: "url('./src/assets/loginFormImages/property1.png')",
+        signup: "url('./src/assets/loginFormImages/property2.png')",
       },
       fontSize: {
         sm: "clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem)",

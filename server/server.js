@@ -6,10 +6,10 @@ require("dotenv").config();
 
 // require routes
 const userRoutes = require("./routes/UserRoutes");
-const accommodationRoutes = require("./routes/accommodationRoutes");
+const propertyRoutes = require("./routes/propertyRoutes");
 const reservationRoutes = require("./routes/reservationRoute");
 
-// initialisizing the app
+// initializing the app
 const app = express();
 
 // middlewares
@@ -26,7 +26,7 @@ mongoose
   })
   .then(() => {
     app.listen(process.env.PORT, () => {
-      console.log(`Server is running on port ${process.env.PORT}`);
+      console.log(`Server is running on port ${process.env.PORT} `);
       console.log("Connected to the database");
     });
   })
@@ -36,8 +36,7 @@ mongoose
 
 // All Routes
 app.use(userRoutes);
-app.use(accommodationRoutes);
-// app.use(tableRoutes);
+app.use(propertyRoutes);
 app.use(reservationRoutes);
 // fallback route for handling unknown routes
 

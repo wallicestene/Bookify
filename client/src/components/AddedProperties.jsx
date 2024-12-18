@@ -4,14 +4,14 @@
 import { Circle, LocationOn } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
-const AddedAccommodations = ({ accommodation }) => {
+const AddedProperties = ({ property }) => {
   return (
     <>
       <div className=" relative h-64 w-fit">
         <div className=" h-full w-full overflow-hidden shadow-xl shadow-gray-400 rounded-xl inline-block ">
           <img
-            src={accommodation?.images[0]}
-            alt={`${accommodation?.name} image 1 `}
+            src={property?.images[0]}
+            alt={`${property?.name} image 1 `}
             className=" h-full object-cover brightness-[0.9]"
           />
         </div>
@@ -24,7 +24,7 @@ const AddedAccommodations = ({ accommodation }) => {
                   width: "0.12em",
                 }}
               />{" "}
-              {accommodation?.guests} Guest(s)
+              {property?.guests} Guest(s)
             </p>
             <p>
               <Circle
@@ -33,12 +33,12 @@ const AddedAccommodations = ({ accommodation }) => {
                   width: "0.12em",
                 }}
               />{" "}
-              {accommodation?.whereToSleep.length} Bedroom
-              {accommodation?.whereToSleep.length != 1 ? "s" : ""}
+              {property?.whereToSleep.length} Bedroom
+              {property?.whereToSleep.length != 1 ? "s" : ""}
             </p>
           </div>
 
-          <h2 className="text-lg font-semibold  ">{accommodation?.name}</h2>
+          <h2 className="text-lg font-semibold  ">{property?.name}</h2>
           <div>
             {/* <p className=" inline-block font-light text-gray-100 bg-black text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
               <span>
@@ -52,7 +52,7 @@ const AddedAccommodations = ({ accommodation }) => {
               </span>
             </p> */}
             <p className=" mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
-              {(accommodation?.price).toLocaleString("en-US", {
+              {(property?.price).toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}{" "}
@@ -66,11 +66,11 @@ const AddedAccommodations = ({ accommodation }) => {
                 color: "red",
               }}
             />
-            <span className="">{accommodation?.address}</span>
+            <span className="">{property?.address}</span>
           </p>
         </div>
         <Link
-          to={`/account/myAccommodations/${accommodation._id}`}
+          to={`/account/myProperties/${property._id}`}
           className="absolute top-5 right-5 items-center justify-start inline-block px-4 py-2 text-sm overflow-hidden bg-white rounded-full group"
         >
           <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
@@ -85,4 +85,4 @@ const AddedAccommodations = ({ accommodation }) => {
   );
 };
 
-export default AddedAccommodations;
+export default AddedProperties;

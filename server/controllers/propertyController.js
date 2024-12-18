@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Accommodation = require("../models/accommodationModel");
+const Property = require("../models/propertyModel");
 const multer = require("multer");
 const imageDownloader = require("image-downloader");
 const { request } = require("express");
@@ -10,7 +10,7 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 require("dotenv").config();
 
 // const path = req
-// add a Accommodation
+// add a Property
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
@@ -22,7 +22,7 @@ const s3 = new S3Client({
   },
   region: bucketRegion,
 });
-const addAccommodation = (req, res) => {
+const addProperty = (req, res) => {
   const {
     owner,
     name,
@@ -35,7 +35,7 @@ const addAccommodation = (req, res) => {
     amenities,
     tags,
   } = req.body;
-  Accommodation.create({
+  Property.create({
     owner,
     name,
     address,
@@ -54,21 +54,21 @@ const addAccommodation = (req, res) => {
       res.status(400).json({ error: err.message });
     });
 };
-// get all Accommodations by the owner
-const getAccommodationByOwner = (req, res) => {
+// get all Properties by the owner
+const getPropertyByOwner = (req, res) => {
   const { owner } = req.params;
   if (!mongoose.Types.ObjectId.isValid(owner)) {
     return res.status(400).json("No user with that Id");
   }
-  Accommodation.find({ owner })
-    .then((accommodations) => {
-      if (!accommodations) {
-        return res.status(404).send("no Accommodations found");
+  Property.find({ owner })
+    .then((properties) => {
+      if (!properties) {
+        return res.status(404).send("no Properties found");
       }
-      res.status(200).json(accommodations);
+      res.status(200).json(properties);
     })
     .catch((error) => {
-      res.status(500).json({ error: "failed to fetch the Accommodations" });
+      res.status(500).json({ error: "failed to fetch the Properties" });
     });
 };
 // custom filename and destination
@@ -152,21 +152,21 @@ const uploadImageByLink = (req, res) => {
       res.status(500).json({ error: "Failed to download image" });
     });
 };
-// find all accommodations
-const findAllAccommodations = (req, res) => {
-  Accommodation.find()
+// find all properties
+const findAllProperties = (req, res) => {
+  Property.find()
     .sort({
       updatedAt: -1,
     })
-    .then((accommodations) => {
-      res.status(200).json(accommodations);
+    .then((properties) => {
+      res.status(200).json(properties);
     })
     .catch((error) => {
-      res.status(500).json({ error: `Failed to fetch all accommodation error` });
+      res.status(500).json({ error: `Failed to fetch all property error` });
     });
 };
-// update Accommodation details
-const updateAccommodation = (req, res) => {
+// update Property details
+const updateProperty = (req, res) => {
   const {
     name,
     address,
@@ -180,9 +180,9 @@ const updateAccommodation = (req, res) => {
   } = req.body;
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json("No accommodation with that id");
+    return res.status(404).json("No property with that id");
   }
-  Accommodation.findByIdAndUpdate(id, {
+  Property.findByIdAndUpdate(id, {
     name,
     address,
     description,
@@ -193,39 +193,39 @@ const updateAccommodation = (req, res) => {
     amenities,
     tags,
   })
-    .then((accommodation) => {
-      if (!accommodation) {
-        res.json(`no accommodation found with that ${id}`);
+    .then((property) => {
+      if (!property) {
+        res.json(`no property found with that ${id}`);
       }
-      res.status(200).json(accommodation);
+      res.status(200).json(property);
     })
     .catch((err) => {
-      res.status(500).json({ error: "failed to fetch the accommodation" });
+      res.status(500).json({ error: "failed to fetch the property" });
     });
 };
-// find a single rAccommodation
-const findOneAccommodation = (req, res) => {
+// find a single rProperty
+const findOneProperty = (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json("No record with that id");
   }
-  Accommodation.findById(id)
-    .then((accommodation) => {
-      if (!accommodation) {
-        return res.status(404).json(`no accommodation found with that ${id}`);
+  Property.findById(id)
+    .then((property) => {
+      if (!property) {
+        return res.status(404).json(`no property found with that ${id}`);
       } else {
-        res.status(200).json(accommodation);
+        res.status(200).json(property);
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: "failed to fetch the accommodation" });
+      res.status(500).json({ error: "failed to fetch the property" });
     });
 };
-// find/search a rAccommodation by name or address
-const searchAccommodation = (req, res) => {
+// find/search a rProperty by name or address
+const searchProperty = (req, res) => {
   const { query } = req.query;
   const searchRegex = new RegExp(query, "i");
-  Accommodation.find({
+  Property.find({
     $or: [
       {
         name: searchRegex,
@@ -238,48 +238,48 @@ const searchAccommodation = (req, res) => {
     .sort({
       updatedAt: -1,
     })
-    .then((accommodations) => {
-      if (!accommodations) {
-        res.status(404).json({ error: "No matching accommodations found!" });
+    .then((properties) => {
+      if (!properties) {
+        res.status(404).json({ error: "No matching properties found!" });
       }
-      res.status(200).json(accommodations);
+      res.status(200).json(properties);
     })
     .catch((error) => {
       res
         .status(500)
-        .json({ error: "error in while searching for Accommodation" });
+        .json({ error: "error in while searching for Property" });
     });
 };
-// delete a rAccommodation
-const deleteAccommodation = (req, res) => {
+// delete a rProperty
+const deleteProperty = (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json(`No Accommodation with given id : ${id}`);
+    return res.status(404).json(`No Property with given id : ${id}`);
   }
 
-  Accommodation.findByIdAndDelete(id)
+  Property.findByIdAndDelete(id)
 
     .then((result) => {
       if (!result) {
-        return res.status(400).json({ error: "No such accommodation" });
+        return res.status(400).json({ error: "No such property" });
       } else {
         res.status(200).json(result);
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: "error in deleting the accommodation" });
+      res.status(500).json({ error: "error in deleting the property" });
     });
 };
 module.exports = {
-  addAccommodation,
-  findAllAccommodations,
-  findOneAccommodation,
-  deleteAccommodation,
+  addProperty,
+  findAllProperties,
+  findOneProperty,
+  deleteProperty,
   uploadImages,
   uploadMiddleware,
   uploadImageByLink,
   uploadMenuImage,
-  getAccommodationByOwner,
-  updateAccommodation,
-  searchAccommodation,
+  getPropertyByOwner,
+  updateProperty,
+  searchProperty,
 };

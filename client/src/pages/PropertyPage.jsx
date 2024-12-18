@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import AddedAccommodations from "../components/AddedAccommodations";
+import AddedProperties from "../components/AddedProperties";
 import useFetch from "../hooks/useFetch";
 import { Alert } from "@mui/material";
 import { Add } from "@mui/icons-material";
@@ -10,7 +10,7 @@ import useServer from "../hooks/ServerUrl";
 const AccommodationPage = () => {
   const [{ user }] = useUserContext();
   const { data, isLoading, error } = useFetch(
-    `${useServer()}api/accommodations/owner/${user?.userId}`
+    `${useServer()}api/properties/owner/${user?.userId}`
   );
   return (
     <div className=" lg:w-11/12  mx-auto w-full py-28 px-2 font-Mulish">
@@ -18,7 +18,7 @@ const AccommodationPage = () => {
       <div className=" flex justify-center ">
         <Link
           className="inline-flex items-center justify-center gap-2 h-12 px-6 font-medium tracking-wide text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none"
-          to="/account/myAccommodations/new"
+          to="/account/myProperties/new"
         >
           <Add />
           <span>Add new Listing</span>
@@ -37,7 +37,7 @@ const AccommodationPage = () => {
       {!isLoading && data.length > 0 && (
         <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 p-6 lg:place-items-start place-items-center">
           {data?.map((accommodation) => (
-            <AddedAccommodations key={accommodation._id} accommodation={accommodation} />
+            <AddedProperties key={accommodation._id} accommodation={accommodation} />
           ))}
         </div>
       )}

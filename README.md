@@ -4,13 +4,13 @@ Here’s a documentation template you can add to the README file on GitHub for y
 
 # Bookify - MERN Stack Booking App
 
-**Bookify** is a full-featured booking platform, where users can browse and book accommodations. The application allows users to search for available properties, make bookings, and hosts can list their properties for booking.
+**Bookify** is a full-featured booking platform, where users can browse and book Properties. The application allows users to search for available properties, make bookings, and hosts can list their properties for booking.
 
 ## Features
-- **Browse Accommodations**: Users can explore and search properties based on various filters.
-- **Property Search**: Advanced filtering to find accommodations based on location, price range, amenities, etc.
+- **Browse Properties**: Users can explore and search properties based on various filters.
+- **Property Search**: Advanced filtering to find Properties based on location, price range, amenities, etc.
 - **Property Listing**: Hosts can list their properties, set availability, and manage bookings.
-- **Booking System**: Users can book accommodations, view booking history, and manage reservations.
+- **Booking System**: Users can book Properties, view booking history, and manage reservations.
 
 ## Tech Stack
 This app uses the following technologies:

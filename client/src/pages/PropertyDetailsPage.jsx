@@ -12,6 +12,7 @@ import {
   FireExtinguisherOutlined,
   Fireplace,
   HotTub,
+  KeyboardArrowLeft,
   Kitchen,
   LocalLaundryServiceOutlined,
   MedicalServicesOutlined,
@@ -43,7 +44,7 @@ import Scroll from "../components/SmoothScroll";
 import BookingPage from "../components/BookingPage";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
-const AccommodationDetailsPage = () => {
+const PropertyDetailsPage = () => {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState({
     startDate: null,
@@ -67,7 +68,7 @@ const AccommodationDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useFetch(
-    `${useServer()}api/accommodation/${id}`
+    `${useServer()}api/property/${id}`
   );
   useEffect(() => {
     const numberOfGuests = () => {
@@ -84,7 +85,7 @@ const AccommodationDetailsPage = () => {
 
   const handleBooking = () => {
     if (user && date.startDate && date.endDate) {
-      fetch(`${useServer()}api/accommodation/reservation`, {
+      fetch(`${useServer()}api/property/reservation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +93,7 @@ const AccommodationDetailsPage = () => {
         },
         body: JSON.stringify({
           userId: user?.userId,
-          accommodationId: data._id,
+          propertyId: data._id,
           checkIn: date.startDate,
           checkOut: date.endDate,
           guests: {
@@ -148,17 +149,13 @@ const AccommodationDetailsPage = () => {
       )}
       {!isLoading && !error && (
         <div className=" py-16 lg:w-11/12 md:w-11/12 w-full mx-auto font-Mulish relative">
-          <div className="px-2">
+          <div className="px-1">
             <button
-              className=" flex items-center justify-between text-base hover:bg-totem-pole-100 w-fit p-1 rounded-md transition-colors delay-150 duration-300"
+              className=" flex items-center justify-between text-base hover:bg-totem-pole-100 w-fit  p-2 rounded-md transition-colors delay-150 duration-300"
               onClick={() => navigate(-1)}
             >
               <span>
-                <KeyboardBackspace
-                  sx={{
-                    fontSize: "1.3rem",
-                  }}
-                />
+                <KeyboardBackspace />
               </span>
               <span className=" text-[1rem]">Back</span>
             </button>
@@ -707,4 +704,4 @@ const AccommodationDetailsPage = () => {
   );
 };
 
-export default AccommodationDetailsPage;
+export default PropertyDetailsPage;

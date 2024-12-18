@@ -1,7 +1,7 @@
 // import React from "react";
 import HomePage from "./pages/HomePage";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AccommodationDetailsPage from "./pages/AccommodationDetailsPage";
+import PropertyDetailsPage from "./pages/PropertyDetailsPage";
 import Layout from "./layouts/Layout";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -10,7 +10,7 @@ import Profile from "./pages/Profile";
 import { Toaster } from 'sonner'
 import { useUserContext } from "./hooks/Usercontext";
 import { useEffect } from "react";
-import AccommodationsPage from "./pages/AccommodationsPage";
+import PropertiesPage from "./pages/PropertiesPage";
 import PlacesForm from "./pages/PlacesForm";
 import MyBookings from "./pages/MyBookings";
 import ImageGallery from "./components/ImageGallery";
@@ -34,14 +34,14 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index path="/" element={<HomePage />} />
-          <Route path="/accommodation/:id" element={<AccommodationDetailsPage />} />
+          <Route path="/property/:id" element={<PropertyDetailsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/account" element={<Profile/>} />
-          <Route path="/account/myListings" element={<AccommodationsPage/>} />
+          <Route path="/account/myListings" element={<PropertiesPage/>} />
           <Route path="/account/myBookings" element={<MyBookings/>} />
-          <Route path="/account/myAccommodations/new" element={<PlacesForm />} />
-          <Route path="/account/myAccommodations/:id" element={<PlacesForm />} />
+          <Route path="/account/myProperties/new" element={<PlacesForm />} />
+          <Route path="/account/myProperties/:id" element={<PlacesForm />} />
           <Route path="/imageGallery/:id" element={<ImageGallery />} />
         </Route>
       </Routes>
