@@ -44,6 +44,7 @@ import Scroll from "../components/SmoothScroll";
 import BookingPage from "../components/BookingPage";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
+import fetchWrapper from "../utils/fetchWrapper";
 const PropertyDetailsPage = () => {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState({
@@ -53,7 +54,6 @@ const PropertyDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [showBookingMobile, setShowBookingMobile] = useState(false);
   const [showGuests, setShowGuests] = useState(false);
-  const [bookingError, setBookingError] = useState(null);
   const [allAmenities, setAllAmenities] = useState(8);
 
   const [adults, setAdults] = useState(1);
@@ -63,7 +63,7 @@ const PropertyDetailsPage = () => {
   const [disableGuests, setDisableGuests] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
-  const [{ user }] = useUserContext();
+  const [{ user }, dispatch] = useUserContext();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -85,12 +85,8 @@ const PropertyDetailsPage = () => {
 
   const handleBooking = () => {
     if (user && date.startDate && date.endDate) {
-      fetch(`${useServer()}api/property/reservation`, {
+      fetchWrapper(`${useServer()}api/property/reservation`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
         body: JSON.stringify({
           userId: user?.userId,
           propertyId: data._id,
@@ -106,8 +102,7 @@ const PropertyDetailsPage = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.error) {
-            setBookingError(result.error);
-            toast.error(result.error);
+            throw new Error(result?.error);
           } else {
             const promise = () =>
               new Promise((resolve) => setTimeout(resolve, 2000));
@@ -120,7 +115,7 @@ const PropertyDetailsPage = () => {
           }
         })
         .catch((err) => {
-          console.log(err.message);
+          toast.error(err.message);
         });
     } else {
       toast.error("Please select check in and check out to book!");

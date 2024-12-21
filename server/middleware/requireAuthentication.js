@@ -9,11 +9,13 @@ const requireAuth = async (req, res, next) => {
   const token = authorization.split(" ")[1];
   try {
     const { _id } = jwt.verify(token, process.env.JWT_SECRET);
-    req.user =  await User.findOne({_id}).select("_id")
+    req.user = await User.findOne({ _id }).select("_id")
     next()
   } catch (error) {
-    console.log("Invalid Token", error);
-    res.status(401).json({ error: "Request is not authorized" });
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ error: 'Session expired. Please log in again.' })
+    }
+    return res.status(400).json({ error: "Invalid Token" });
   }
 };
 module.exports = requireAuth

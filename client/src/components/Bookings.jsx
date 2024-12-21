@@ -2,19 +2,14 @@
 /* eslint-disable react/prop-types */
 import { Circle, LocationOn } from "@mui/icons-material";
 import moment from "moment";
-import { useUserContext } from "../hooks/Usercontext";
 import { toast } from "sonner";
+import fetchWrapper from "../utils/fetchWrapper";
 import useServer from "../hooks/ServerUrl";
 const Bookings = ({ booking }) => {
-  const [{ user }] = useUserContext();
   const deleteBooking = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    fetch(`${useServer()}api/property/reservation/${booking._id}`, {
+    fetchWrapper(`${useServer()}api/property/reservation/${booking._id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.token}`,
-      },
     })
       .then((response) => response.json())
       .then((data) => {
@@ -33,8 +28,8 @@ const Bookings = ({ booking }) => {
       <div className=" relative h-64 w-fit">
         <div className=" h-full w-full overflow-hidden shadow-xl shadow-gray-400 rounded-xl inline-block">
           <img
-            src={booking?.propertyId.images[0]}
-            alt={`${booking?.propertyId.name} image 1 `}
+            src={booking?.propertyId?.images[0]}
+            alt={`${booking?.propertyId?.name} image 1 `}
             className=" h-full object-cover brightness-[0.9]"
           />
         </div>
@@ -56,13 +51,13 @@ const Bookings = ({ booking }) => {
                   width: "0.12em",
                 }}
               />{" "}
-              {booking?.propertyId.whereToSleep.length} Bedroom
-              {booking?.propertyId.whereToSleep.length != 1 ? "s" : ""}
+              {booking?.propertyId?.whereToSleep.length} Bedroom
+              {booking?.propertyId?.whereToSleep.length != 1 ? "s" : ""}
             </p>
           </div>
 
           <h2 className="text-lg font-semibold  ">
-            {booking?.propertyId.name}
+            {booking?.propertyId?.name}
           </h2>
           <div>
             <p className=" inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
@@ -77,7 +72,7 @@ const Bookings = ({ booking }) => {
               </span>
             </p>
             <p className=" mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
-              {(booking?.propertyId.price).toLocaleString("en-US", {
+              {(booking?.propertyId?.price).toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}{" "}
@@ -91,7 +86,7 @@ const Bookings = ({ booking }) => {
                 color: "red",
               }}
             />
-            <span className="">{booking?.propertyId.address}</span>
+            <span className="">{booking?.propertyId?.address}</span>
           </p>
         </div>
         {/* <button className="  bg bg-white lg:p-2 p-1 rounded-full text-[0.8rem]">

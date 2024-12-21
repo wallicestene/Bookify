@@ -7,6 +7,7 @@ import AccountNav from "../components/AccountNav";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Alert } from "@mui/material";
 import useServer from "../hooks/ServerUrl";
+import fetchWrapper from "../utils/fetchWrapper";
 // eslint-disable-next-line react/prop-types
 const MyBookings = () => {
   const [myBookings, setMyBookings] = useState([]);
@@ -16,15 +17,11 @@ const MyBookings = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const getMyBookings = () => {
-      fetch(
+      fetchWrapper(
         // eslint-disable-next-line react-hooks/rules-of-hooks
         `${useServer()}api/reservations/?userId=${user?.userId}`,
         {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.token}`,
-          },
         }
       )
         .then((response) => {
