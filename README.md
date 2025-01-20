@@ -1,7 +1,3 @@
-Here’s a documentation template you can add to the README file on GitHub for your "Bookify" application:
-
----
-
 # Bookify - MERN Stack Booking App
 
 **Bookify** is a full-featured booking platform, where users can browse and book Properties. The application allows users to search for available properties, make bookings, and hosts can list their properties for booking.
@@ -83,5 +79,3 @@ Ensure you have the following installed on your machine:
 3. Commit your changes.
 4. Push to the branch.
 5. Open a pull request.
-
-Feel free to modify this as per your specific project needs!
