@@ -29,6 +29,7 @@ const App = () => {
         if (isTokenExpired) {
           // Notify the logged-in user about the session expiration
           toast("Your session has expired. Please log in again.");
+          // Remove the user from local storage
           localStorage.removeItem("user");
           dispatch({ type: "LOGOUT_USER" });
           return;
