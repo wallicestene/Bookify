@@ -61,7 +61,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   name="guests"
                   value={searchInput.guests}
                   min={1}
-                  className="h-full w-full border outline-none bg-none rounded-md p-2 "
+                  className="h-full w-full border border-black outline-none bg-none rounded-md p-2 cursor-pointer "
                 />
               </div>
             </div>
