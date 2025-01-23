@@ -7,10 +7,24 @@ import { Alert, Skeleton } from "@mui/material";
 import Filter from "./Filter";
 import { toast } from "sonner";
 import useServer from "../hooks/ServerUrl";
+import { addDays } from "date-fns";
 
 const PropertyContainer = () => {
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState({
+    location: "",
+    // minPrice: 1000,
+    // maxPrice: 5000,
+    // amenities: "Wi-Fi,Parking",
+    // tags: "pet-friendly,beachfront",
+    guests: "",
+    // // bedrooms: 2,
+    checkIn: new Date(),
+    checkOut: addDays(new Date(), 1),
+    // page: 1,
+    // limit: 10,
+  });
+
   const [searchData, setSearchData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchError, setSearchError] = useState(null);
@@ -26,7 +40,8 @@ const PropertyContainer = () => {
 
   const searchProperty = (e) => {
     e.preventDefault();
-    fetch(`${useServer()}api/search/property/?query=${searchInput}`)
+    const queryString = new URLSearchParams(searchInput).toString();
+    fetch(`${useServer()}api/search/property/?${queryString}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -35,6 +50,8 @@ const PropertyContainer = () => {
         }
       })
       .then((result) => {
+        (result);
+
         setSearchData(result);
         setLoading(false);
         setSearchError(null);
