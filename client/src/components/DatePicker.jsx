@@ -32,8 +32,8 @@ export function DatePicker({ className, onDateChange, initialDate }) {
     <div className={cn("grid lg:p-2 p-1", className)}>
       <Popover>
         <PopoverTrigger asChild>
-          <div className="flex text-sm items-center lg:justify-between justify-start divide-x-[1.5px] divide-solid space-x-1">
-            <div className="">
+          <div className="flex text-sm items-center lg:justify-between justify-start divide-x-[1.5px] divide-solid space-x-2 w-full">
+            <div className=" w-full">
               <label htmlFor="checkIn" className="block text-sm text-gray-500">
                 Check In
               </label>
@@ -45,11 +45,11 @@ export function DatePicker({ className, onDateChange, initialDate }) {
                   value={date?.from ? format(date.from, "LLL dd") : ""}
                   onClick={() => handleInputClick("checkIn")}
                   readOnly
-                  className="w-full border outline-none bg-none rounded-md lg:lg:p-2 p-1 cursor-pointer"
+                  className="w-full border-none outline-none bg-none rounded-md lg:lg:p-2 p-1 cursor-pointer"
                 />
               </div>
             </div>
-            <div className="lg:p-2 p-1">
+            <div className="px-2 w-full">
               <label htmlFor="checkOut" className="block text-sm text-gray-500">
                 Check Out
               </label>
@@ -61,7 +61,7 @@ export function DatePicker({ className, onDateChange, initialDate }) {
                   value={date?.to ? format(date.to, "LLL dd") : ""}
                   onClick={() => handleInputClick("checkOut")}
                   readOnly
-                  className="w-full border outline-none bg-none rounded-md lg:lg:p-2 p-1  cursor-pointer"
+                  className="w-full border-none outline-none bg-none rounded-md lg:lg:p-2 p-1  cursor-pointer"
                 />
               </div>
             </div>
@@ -73,6 +73,8 @@ export function DatePicker({ className, onDateChange, initialDate }) {
             mode="range"
             defaultMonth={date?.from}
             selected={date}
+            disabled={{ before: new Date() }}
+            required
             onSelect={handleDateChange}
             numberOfMonths={2}
           />

@@ -17,7 +17,7 @@ const PropertyContainer = () => {
     // maxPrice: 5000,
     // amenities: "Wi-Fi,Parking",
     // tags: "pet-friendly,beachfront",
-    guests: "",
+    guests: 1,
     // // bedrooms: 2,
     checkIn: new Date(),
     checkOut: addDays(new Date(), 1),
@@ -50,7 +50,7 @@ const PropertyContainer = () => {
         }
       })
       .then((result) => {
-        (result);
+        result;
 
         setSearchData(result);
         setLoading(false);
