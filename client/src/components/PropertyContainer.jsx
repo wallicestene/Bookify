@@ -8,6 +8,7 @@ import Filter from "./Filter";
 import { toast } from "sonner";
 import useServer from "../hooks/ServerUrl";
 import { addDays } from "date-fns";
+import AdvanceFilter from "./AdvanceFilter";
 
 const PropertyContainer = () => {
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -16,7 +17,7 @@ const PropertyContainer = () => {
     // minPrice: 1000,
     // maxPrice: 5000,
     // amenities: "Wi-Fi,Parking",
-    // tags: "pet-friendly,beachfront",
+    tags: "",
     guests: 1,
     // // bedrooms: 2,
     checkIn: new Date(),
@@ -50,8 +51,6 @@ const PropertyContainer = () => {
         }
       })
       .then((result) => {
-        result;
-
         setSearchData(result);
         setLoading(false);
         setSearchError(null);
@@ -71,6 +70,10 @@ const PropertyContainer = () => {
         searchInput={searchInput}
         setSearchInput={setSearchInput}
         searchProperty={searchProperty}
+      />
+      <AdvanceFilter
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
       />
       <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-x-5 md:gap-x-10 gap-x-5 gap-y-10 py-[50px] px-5 lg:px-10 ">
         {loading &&

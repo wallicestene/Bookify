@@ -67,7 +67,7 @@ export function DatePicker({ className, onDateChange, initialDate }) {
             </div>
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0 rounded-2xl" align="start">
           <Calendar
             initialFocus
             mode="range"
