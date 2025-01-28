@@ -74,6 +74,7 @@ const PropertyContainer = () => {
       <AdvanceFilter
         searchInput={searchInput}
         setSearchInput={setSearchInput}
+        searchProperty={searchProperty}
       />
       <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-x-5 md:gap-x-10 gap-x-5 gap-y-10 py-[50px] px-5 lg:px-10 ">
         {loading &&

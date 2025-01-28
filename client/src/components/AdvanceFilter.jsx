@@ -1,7 +1,13 @@
 /* eslint-disable react/prop-types */
 import { SlidersHorizontal } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useEffect } from "react";
 
-const AdvanceFilter = ({ searchInput, setSearchInput }) => {
+const AdvanceFilter = ({ searchInput, setSearchInput, searchProperty }) => {
   const propertyTags = [
     "Rooms",
     "Beach",
@@ -36,9 +42,16 @@ const AdvanceFilter = ({ searchInput, setSearchInput }) => {
     });
   };
 
+  // Trigger search whenever the tags change
+  useEffect(() => {
+    if (searchInput.tags || searchInput.tags === "") {
+      searchProperty({ preventDefault: () => {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput.tags]);
   return (
     <div className="grid  place-items-center gap-2 my-2 w-full px-5">
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-evenly w-full">
         <div>
           <ul className="flex flex-wrap gap-2 ">
             {propertyTags.map((tag, index) => (
@@ -54,9 +67,17 @@ const AdvanceFilter = ({ searchInput, setSearchInput }) => {
             ))}
           </ul>
         </div>
-        <div className="flex items-center gap-2 text-sm">
-          <SlidersHorizontal size={"1.205rem"} />
-          <p>Filter</p>
+
+        <div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex items-center gap-2 text-sm hover:bg-totem-pole-200 p-2 rounded-2xl cursor-pointer  ">
+                <SlidersHorizontal size={"1.14rem"} />
+                <p>Filter</p>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent>Place content for the popover here.</PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
