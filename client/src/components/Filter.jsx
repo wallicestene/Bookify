@@ -11,8 +11,6 @@ import { Minus, Plus } from "lucide-react";
 
 // eslint-disable-next-line react/prop-types
 const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
-  console.log(searchInput);
-
   const handleChange = (e) => {
     const { value, name } = e.target;
     setSearchInput((prevInput) => {

@@ -65,7 +65,7 @@ const PropertyContainer = () => {
       });
   };
   return (
-    <section>
+    <div>
       <Filter
         searchInput={searchInput}
         setSearchInput={setSearchInput}
@@ -105,7 +105,7 @@ const PropertyContainer = () => {
                 <Property key={property._id} property={property} />
               )))}
       </div>
-    </section>
+    </div>
   );
 };
 
