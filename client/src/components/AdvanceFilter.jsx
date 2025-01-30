@@ -100,7 +100,7 @@ const AdvanceFilter = ({ searchInput, setSearchInput, searchProperty }) => {
     };
   }, []);
   return (
-    <div className="w-full px-2 py-4 ">
+    <div className="w-full p-2 ">
       <div className=" flex items-center justify-between space-x-2 w-full max-w-4xl mx-auto ">
         <div className="relative overflow-hidden w-full max-w-3xl mx-auto p-2">
           {/* Left Scroll Button */}
@@ -115,7 +115,7 @@ const AdvanceFilter = ({ searchInput, setSearchInput, searchProperty }) => {
           </button>
           <div
             ref={scrollRef}
-            className="flex items-center overflow-x-auto no-scrollbar gap-2 scroll-smooth"
+            className="flex items-center overflow-x-auto no-scrollbar gap-2 scroll-smooth px-4"
           >
             {propertyTags.map((tag, index) => (
               <button
