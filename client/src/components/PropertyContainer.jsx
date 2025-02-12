@@ -11,6 +11,7 @@ import AdvanceFilter from "./AdvanceFilter";
 
 const PropertyContainer = () => {
   const isFirstRender = useRef(true);
+
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [searchInput, setSearchInput] = useState({
     location: "",
@@ -80,6 +81,8 @@ const PropertyContainer = () => {
         setLoading(false);
       });
   };
+  console.log(searchData);
+
   return (
     <div>
       <Filter
@@ -115,13 +118,17 @@ const PropertyContainer = () => {
           ))}
         {initialError && <Alert severity="error">{initialError}</Alert>}
         {!loading &&
-          (searchData.length > 0 && !isFirstRender.current // Ensure searchData is not used on first load
-            ? searchData.map((property) => (
-                <Property key={property._id} property={property} />
-              ))
-            : data.map((property) => (
-                <Property key={property._id} property={property} />
-              )))}
+          (searchData.length > 0 ? (
+            searchData.map((property) => (
+              <Property key={property._id} property={property} />
+            ))
+          ) : !isFirstRender.current && searchData.length === 0 ? (
+            <p>No properties found</p>
+          ) : (
+            data.map((property) => (
+              <Property key={property._id} property={property} />
+            ))
+          ))}
       </div>
     </div>
   );
