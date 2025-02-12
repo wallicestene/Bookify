@@ -8,18 +8,43 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Minus, Plus } from "lucide-react";
+import AddOrRemoveContainer from "./AddOrRemoveContainer";
+import { addDays } from "date-fns";
+import { useEffect, useState } from "react";
 
 // eslint-disable-next-line react/prop-types
 const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
+  const [hasInteracted, setHasInteracted] = useState(false);
   const handleChange = (e) => {
-    const { value, name } = e.target;
-    setSearchInput((prevInput) => {
-      return {
-        ...prevInput,
-        [name]: value,
-      };
-    });
+    const { name, value } = e.target;
+    // setHasInteracted(true);
+    setSearchInput((prevInput) => ({
+      ...prevInput,
+      [name]: value,
+    }));
   };
+
+  const addGuests = () => {
+    // setHasInteracted(true);
+    setSearchInput((prev) => ({
+      ...prev,
+      guests: prev.guests + 1,
+    }));
+  };
+
+  const removeGuests = () => {
+    // setHasInteracted(true);
+    setSearchInput((prev) => ({
+      ...prev,
+      guests: prev.guests <= 1 ? 1 : prev.guests - 1,
+    }));
+  };
+
+  // useEffect(() => {
+  //   if (hasInteracted) {
+  //     searchProperty();
+  //   }
+  // }, [searchInput]);
   return (
     <section className="p-1">
       <div className=" font-mulish mt-20">
@@ -52,8 +77,8 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   }));
                 }}
                 initialDate={{
-                  from: searchInput.checkIn,
-                  to: searchInput.checkOut,
+                  from: new Date(),
+                  to: addDays(new Date(), 1),
                 }}
               />{" "}
               <hr className=" border w-full lg:hidden" />
@@ -69,7 +94,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                         id="guests"
                         type="number"
                         name="guests"
-                        value={searchInput.guests}
+                        value={searchInput.guests || 1}
                         min={1}
                         readOnly={true}
                         className="h-full w-full border-none outline-none bg-none rounded-md p-2 cursor-pointer text-black "
@@ -81,38 +106,11 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                           <PeopleOutlined />
                           <p>Guests</p>
                         </div>
-                        <div className="flex items-center justify-between gap-3 space-x-2">
-                          <button
-                            onClick={() => {
-                              setSearchInput((prev) => {
-                                return {
-                                  ...prev,
-                                  guests:
-                                    prev.guests <= 1 ? 1 : prev.guests - 1,
-                                };
-                              });
-                            }}
-                            className="minus border border-black rounded-full p-1"
-                          >
-                            <Minus />
-                          </button>
-                          <div>
-                            <p>{searchInput.guests}</p>
-                          </div>
-                          <button
-                            onClick={() => {
-                              setSearchInput((prev) => {
-                                return {
-                                  ...prev,
-                                  guests: prev.guests + 1,
-                                };
-                              });
-                            }}
-                            className="add border border-black rounded-full p-1"
-                          >
-                            <Plus />
-                          </button>
-                        </div>
+                        <AddOrRemoveContainer
+                          add={addGuests}
+                          remove={removeGuests}
+                          value={searchInput.guests || 1}
+                        />
                       </div>
                     </PopoverContent>
                   </Popover>

@@ -232,7 +232,8 @@ const searchProperty = async (req, res) => {
       amenities,       // Matches `amenities` array
       tags,            // Matches `tags` array
       guests,          // Matches `guests`
-      // bedrooms,        // Matches `whereToSleep.bedroom`
+      bedrooms,        // Matches `whereToSleep.bedroom`
+      beds,            // Matches `whereToSleep.sleepingPosition`
       checkIn,
       checkOut,
     } = req.query;
@@ -269,10 +270,25 @@ const searchProperty = async (req, res) => {
     }
 
     // Bedrooms filter
-    // if (bedrooms) {
-    //   query["whereToSleep.bedroom"] = { $gte: parseInt(bedrooms, 10) }; // Minimum number of bedrooms
-    // }
-
+    if (bedrooms) {
+      query["whereToSleep.bedroom"] = { $gte: parseInt(bedrooms, 10) }; // Minimum number of bedrooms
+    }
+    if (beds) {
+      query.$expr = {
+        $gte: [
+          {
+            $sum: [
+              { $ifNull: ["$whereToSleep.sleepingPosition.kingBed", 0] },
+              { $ifNull: ["$whereToSleep.sleepingPosition.queenBed", 0] },
+              { $ifNull: ["$whereToSleep.sleepingPosition.sofa", 0] },
+              { $ifNull: ["$whereToSleep.sleepingPosition.singleBed", 0] }
+            ]
+          },
+          parseInt(beds, 10)
+        ]
+      };
+    }
+    
     if (checkIn && checkOut) {
       const bookedProperties = await Booking.find({
         $or: [{

@@ -295,6 +295,7 @@ const PlacesForm = () => {
                 <Amenities
                   selectedAmenities={amenities}
                   setSelectedAmenities={setAmenities}
+                  mode="listing"
                 />
               </div>
             )}
