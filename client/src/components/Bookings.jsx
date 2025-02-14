@@ -17,7 +17,7 @@ const Bookings = ({ booking }) => {
           toast.success("Booking Deleted successfully");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => (err));
   };
 
   const startDate = moment(booking?.checkIn);

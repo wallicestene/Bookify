@@ -62,7 +62,7 @@
 //       }),
 //     })
 //       .then((response) => response.json())
-//       .then((data) => console.log(data));
+//       .then((data) => (data));
 //   };
 //   return (
 //     <div className=" w-full grid place-items-center lg:w-1/2 font-mulish ">
