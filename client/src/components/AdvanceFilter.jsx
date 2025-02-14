@@ -118,7 +118,7 @@ const AdvanceFilter = ({
             <button
               key={index}
               onClick={() => handleOnclick(tag)}
-              className={`whitespace-nowrap shrink-0 px-4 py-2 border rounded-2xl text-sm first-letter:uppercase leading-4 cursor-pointer hover:bg-totem-pole-200 transition 
+              className={`whitespace-nowrap shrink-0 px-4 py-2 border rounded-2xl text-sm first-letter:uppercase leading-4 cursor-pointer hover:bg-totem-pole-200 transition
                 ${
                   searchInput.tags.includes(tag) ||
                   (!searchInput.tags && tag === "All")
@@ -132,7 +132,7 @@ const AdvanceFilter = ({
         </div>
 
         <button
-          className={`absolute top-1/2 right-0 -translate-y-1/2 z-20 bg-white p-2 rounded-full shadow-md transition hidden md:block lg:block ${
+          className={`absolute top-1/2 right-0 -translate-y-1/2 bg-white p-2 rounded-full shadow-md transition hidden md:block lg:block ${
             !canScrollRight ? "opacity-0" : ""
           }`}
           onClick={() => scroll("right")}
