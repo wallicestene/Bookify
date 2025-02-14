@@ -7,14 +7,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Minus, Plus } from "lucide-react";
+// import { Minus, Plus } from "lucide-react";
 import AddOrRemoveContainer from "./AddOrRemoveContainer";
 import { addDays } from "date-fns";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 // eslint-disable-next-line react/prop-types
 const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
-  const [hasInteracted, setHasInteracted] = useState(false);
+  // const [hasInteracted, setHasInteracted] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     // setHasInteracted(true);
