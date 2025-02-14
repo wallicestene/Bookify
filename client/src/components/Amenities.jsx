@@ -25,8 +25,6 @@ const Amenities = ({
   setSearchInput,
   mode,
 }) => {
-
-  //  
   const handleAmenities = (amenity) => {
     if (!selectedAmenities.includes(amenity)) {
       const updatedAmenities = [...selectedAmenities, amenity];

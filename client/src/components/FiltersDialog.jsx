@@ -49,13 +49,37 @@ const FiltersDialog = ({
       maxPrice: value[1],
     }));
   };
+  // clear filters
+  const clearFilters = () => {
+    setPriceRange([0, 500]);
+    setRoomsAndBeds({ bedrooms: 1 });
+    setSelectedAmenities([]);
+
+    // reset searchInput
+    setSearchInput((prev) => {
+      return {
+        ...prev,
+        location: "",
+        minPrice: null,
+        maxPrice: null,
+        amenities: "",
+        tags: "",
+        guests: 1,
+        bedrooms: null,
+        checkIn: null,
+        checkOut: null,
+      };
+    });
+    // reset searchData
+    setSearchData([]);
+  };
 
   // trigger search whenever price range changes
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       setSearchData([]);
-      return; 
+      return;
     }
 
     searchProperty();
@@ -99,9 +123,23 @@ const FiltersDialog = ({
                   />
                 </CardContent>
                 <CardFooter className="flex items-center justify-between">
-                  <DialogDescription>
-                    Adjust the price range to filter the properties
-                  </DialogDescription>
+                  {
+                    // If any filter is applied, show clear filters button
+                    priceRange[0] !== 0 || priceRange[1] !== 500 ? (
+                      <Button
+                        onClick={() => {
+                          clearFilters();
+                        }}
+                      >
+                        Clear filters
+                      </Button>
+                    ) : (
+                      <DialogDescription>
+                        Adjust the price range to filter the properties
+                      </DialogDescription>
+                    )
+                  }
+
                   <Button onClick={() => setOpen(false)}>
                     Show {numberOfProperties} place
                     {numberOfProperties > 1 && "s"}
@@ -144,9 +182,19 @@ const FiltersDialog = ({
                       />
                     </div>
                     <CardFooter className="flex items-center p-2 justify-between">
-                      <DialogDescription>
-                        Adjust the number of bedrooms to filter the properties
-                      </DialogDescription>
+                      {roomsAndBeds.bedrooms > 1 ? (
+                        <Button
+                          onClick={() => {
+                            clearFilters();
+                          }}
+                        >
+                          Clear filters
+                        </Button>
+                      ) : (
+                        <DialogDescription>
+                          Adjust the number of bedrooms to filter the properties
+                        </DialogDescription>
+                      )}
                       <Button onClick={() => setOpen(false)}>
                         Show {numberOfProperties} place
                         {numberOfProperties > 1 && "s"}
@@ -166,9 +214,19 @@ const FiltersDialog = ({
                 />
               </ScrollArea>
               <CardFooter className="flex items-center p-2 justify-between">
-                <DialogDescription>
-                  Select amenities to filter the properties
-                </DialogDescription>
+                {selectedAmenities.length > 0 ? (
+                  <Button
+                    onClick={() => {
+                      clearFilters();
+                    }}
+                  >
+                    Clear filters
+                  </Button>
+                ) : (
+                  <DialogDescription>
+                    Select the amenities to filter the properties
+                  </DialogDescription>
+                )}
                 <Button onClick={() => setOpen(false)}>
                   Show {numberOfProperties} place
                   {numberOfProperties > 1 && "s"}

@@ -81,7 +81,6 @@ const PropertyContainer = () => {
         setLoading(false);
       });
   };
-  console.log(searchData);
 
   return (
     <div>
