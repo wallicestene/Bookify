@@ -4,9 +4,9 @@ const { addBooking, deleteBooking, getUserBookings } = require("../controllers/b
 const requireAuth = require("../middleware/requireAuthentication")
 const router = express.Router()
 // require auth for all booking routes
-router.use(requireAuth)
-router.post("/api/property/booking", addBooking)
-router.get("/api/bookings/", getUserBookings)
-router.delete("/api/property/booking/:propertyId", deleteBooking)
+
+router.post("/api/property/booking", requireAuth, addBooking)
+router.get("/api/bookings/", requireAuth, getUserBookings)
+router.delete("/api/property/booking/:propertyId", requireAuth, deleteBooking)
 
 module.exports = router;

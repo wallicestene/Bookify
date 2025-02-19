@@ -166,23 +166,42 @@ const getPersonalizedRecommendations = async (req, res) => {
 };
 
 // get Popular Properties recommendations
-// const getPopularProperties = async (req, res) => {
-//    try {
-//      // aggregate to get properties with their booking counts
-//      const popularProperties = await Property.aggregate([{
+const getPopularProperties = async (req, res) => {
+    try {
+        // aggregate to get properties with their booking counts
+        const popularProperties = await Property.aggregate([{
 
-//         $lookup: {
-//             from: "bookings",
-//             localField: "_id",
-//             foreignField: "propertyId",
-//             as
-//         }
-//      }])
-//    } catch (error) {
-    
-//    }
-// }
+            $lookup: {
+                from: "bookings",
+                localField: "_id",
+                foreignField: "propertyId",
+                as: "bookings"
+            }
+        },
+        {
+            $addFields: {
+                bookingCount: { $size: "$bookings" }
+            }
+        },
+        {
+            $sort: { bookingCount: -1 }
+        }, {
+            $limit: 8
+        },
+        {
+            $project: {
+                bookings: 0
+            }
+        }
+        ])
+
+        res.status(200).json(popularProperties);
+    } catch (error) {
+        res.status(500).json({ error: "Error while finding popular properties: " + error });
+    }
+}
 module.exports = {
     getRecommendations,
     getPersonalizedRecommendations,
+    getPopularProperties
 }
