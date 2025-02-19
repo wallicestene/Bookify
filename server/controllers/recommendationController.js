@@ -168,38 +168,87 @@ const getPersonalizedRecommendations = async (req, res) => {
 // get Popular Properties recommendations
 const getPopularProperties = async (req, res) => {
     try {
-        // aggregate to get properties with their booking counts
-        const popularProperties = await Property.aggregate([{
+        const popularProperties = await Property.aggregate([
+            {
+                $lookup: {
+                    from: "bookings",
+                    localField: "_id",
+                    foreignField: "propertyId",
+                    as: "bookings"
+                }
+            },
+            {
+                $addFields: {
+                    bookingCount: { $size: "$bookings" },
+                    // Calculating booking frequency (bookings per month)
+                    bookingFrequency: {
+                        $divide: [
+                            { $size: "$bookings" },
+                            {
+                                $add: [
+                                    1,
+                                    {
+                                        $divide: [
+                                            {
+                                                $subtract: [
+                                                    new Date(),
+                                                    "$createdAt"
+                                                ]
+                                            },
+                                            1000 * 60 * 60 * 24 * 30 // Converting to months
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                $match: {
+                    bookingCount: { $gt: 0 } // including properties with bookings
+                }
+            },
+            {
+                $sort: {
+                    bookingFrequency: -1,
+                    bookingCount: -1,
+                }
+            },
+            {
+                $limit: 8
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    description: 1,
+                    price: 1,
+                    address: 1,
+                    images: 1,
+                    amenities: 1,
+                    tags: 1,
+                    bookingCount: 1,
+                    whereToSleep: 1,
+                    bookingFrequency: 1
+                }
+            }
+        ]);
 
-            $lookup: {
-                from: "bookings",
-                localField: "_id",
-                foreignField: "propertyId",
-                as: "bookings"
-            }
-        },
-        {
-            $addFields: {
-                bookingCount: { $size: "$bookings" }
-            }
-        },
-        {
-            $sort: { bookingCount: -1 }
-        }, {
-            $limit: 8
-        },
-        {
-            $project: {
-                bookings: 0
-            }
+        if (!popularProperties.length) {
+            const newestProperties = await Property.find()
+                .sort({ createdAt: -1 })
+                .limit(8);
+            return res.status(200).json(newestProperties);
         }
-        ])
 
         res.status(200).json(popularProperties);
     } catch (error) {
-        res.status(500).json({ error: "Error while finding popular properties: " + error });
+        res.status(500).json({
+            error: "Error while finding popular properties: " + error.message
+        });
     }
-}
+};
 module.exports = {
     getRecommendations,
     getPersonalizedRecommendations,
