@@ -19,7 +19,7 @@ const MyBookings = () => {
     const getMyBookings = () => {
       fetchWrapper(
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        `${useServer()}api/reservations/?userId=${user?.userId}`,
+        `${useServer()}api/bookings/?userId=${user?.userId}`,
         {
           method: "GET",
         }

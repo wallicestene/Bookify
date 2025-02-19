@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const reservationSchema = new Schema({
+const bookingSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
@@ -35,5 +35,9 @@ const reservationSchema = new Schema({
     },
   },
 });
+// indexes for faster booking lookups
+bookingSchema.index({ propertyId: 1 });
+bookingSchema.index({ userId: 1 });
+bookingSchema.index({ propertyId: 1, checkIn: 1, checkOut: 1 });
 
-module.exports = mongoose.model("reservation", reservationSchema);
+module.exports = mongoose.model("booking", bookingSchema);

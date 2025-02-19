@@ -7,7 +7,8 @@ const path = require("path");
 const fs = require("fs");
 const { extname } = require("path");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-const Booking = require("../models/reservationModel");
+const Booking = require("../models/bookingModel");
+const SearchHistory = require("../models/searchHistoryModel")
 require("dotenv").config();
 
 // const path = req
@@ -222,6 +223,55 @@ const findOneProperty = (req, res) => {
       res.status(500).json({ error: "failed to fetch the property" });
     });
 };
+
+// const searchProperty =  (req, res) => {
+//   const { query } = req.query;
+//   const searchRegex = new RegExp(query, "i");
+//   Property.find({
+//     $or: [
+//       {
+//         name: searchRegex,
+//       },
+//       {
+//         address: searchRegex,
+//       },
+//     ],
+//   })
+//     .sort({
+//       updatedAt: -1,
+//     })
+//     .then((properties) => {
+//       if (!properties) {
+//         res.status(404).json({ error: "No matching properties found!" });
+//       }
+//       res.status(200).json(properties);
+//     })
+//     .catch((error) => {
+//       res
+//         .status(500)
+//         .json({ error: "error in while searching for Property" });
+//     });
+// };
+// delete a Property
+const deleteProperty = (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json(`No Property with given id : ${id}`);
+  }
+
+  Property.findByIdAndDelete(id)
+
+    .then((result) => {
+      if (!result) {
+        return res.status(400).json({ error: "No such property" });
+      } else {
+        res.status(200).json(result);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "error in deleting the property" });
+    });
+};
 // find/search a Property by address, minPrice, maxPrice, amenities, tags, guests 
 const searchProperty = async (req, res) => {
   try {
@@ -237,6 +287,8 @@ const searchProperty = async (req, res) => {
       checkIn,
       checkOut,
     } = req.query;
+
+    const userId = req.user?.id; // Assuming user is authenticated
 
     // Build search query
     const query = {};
@@ -288,7 +340,7 @@ const searchProperty = async (req, res) => {
         ]
       };
     }
-    
+
     if (checkIn && checkOut) {
       const bookedProperties = await Booking.find({
         $or: [{
@@ -306,60 +358,25 @@ const searchProperty = async (req, res) => {
     const properties = await Property.find(query).sort({ updatedAt: -1 });
     // .skip((page - 1) * limit)
     // .limit(limit);
-
+    if (userId) {
+      await SearchHistory.create({
+        userId,
+        location,
+        minPrice: minPrice ? parseFloat(minPrice) : undefined,
+        maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+        amenities: amenities ? amenities.split(",") : [],
+        tags: tags ? tags.split(",") : [],
+        guests: guests ? parseInt(guests) : undefined,
+        bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
+      })
+    }
     res.status(200).json(properties);
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
-// const searchProperty =  (req, res) => {
-//   const { query } = req.query;
-//   const searchRegex = new RegExp(query, "i");
-//   Property.find({
-//     $or: [
-//       {
-//         name: searchRegex,
-//       },
-//       {
-//         address: searchRegex,
-//       },
-//     ],
-//   })
-//     .sort({
-//       updatedAt: -1,
-//     })
-//     .then((properties) => {
-//       if (!properties) {
-//         res.status(404).json({ error: "No matching properties found!" });
-//       }
-//       res.status(200).json(properties);
-//     })
-//     .catch((error) => {
-//       res
-//         .status(500)
-//         .json({ error: "error in while searching for Property" });
-//     });
-// };
-// delete a Property
-const deleteProperty = (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json(`No Property with given id : ${id}`);
-  }
 
-  Property.findByIdAndDelete(id)
-
-    .then((result) => {
-      if (!result) {
-        return res.status(400).json({ error: "No such property" });
-      } else {
-        res.status(200).json(result);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "error in deleting the property" });
-    });
-};
 module.exports = {
   addProperty,
   findAllProperties,
@@ -373,3 +390,4 @@ module.exports = {
   updateProperty,
   searchProperty,
 };
+

@@ -58,8 +58,14 @@ const PropertyContainer = () => {
     }
 
     const queryString = new URLSearchParams(filteredParams).toString();
-
-    fetch(`${serverUrl}api/search/property/?${queryString}`)
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.token;
+    fetch(`${serverUrl}api/search/property/?${queryString}`,{
+      headers:{
+        "Content-Type":"application/json",
+        authorization: `Bearer ${token}`
+      }
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");

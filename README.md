@@ -10,7 +10,7 @@ Here’s a documentation template you can add to the README file on GitHub for y
 - **Browse Properties**: Users can explore and search properties based on various filters.
 - **Property Search**: Advanced filtering to find Properties based on location, price range, amenities, etc.
 - **Property Listing**: Hosts can list their properties, set availability, and manage bookings.
-- **Booking System**: Users can book Properties, view booking history, and manage reservations.
+- **Booking System**: Users can book Properties, view booking history, and manage bookings.
 
 ## Tech Stack
 This app uses the following technologies:
