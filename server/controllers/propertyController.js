@@ -7,6 +7,8 @@ const path = require("path");
 const fs = require("fs");
 const { extname } = require("path");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const Booking = require("../models/bookingModel");
+const SearchHistory = require("../models/searchHistoryModel")
 require("dotenv").config();
 
 // const path = req
@@ -221,36 +223,36 @@ const findOneProperty = (req, res) => {
       res.status(500).json({ error: "failed to fetch the property" });
     });
 };
-// find/search a rProperty by name or address
-const searchProperty = (req, res) => {
-  const { query } = req.query;
-  const searchRegex = new RegExp(query, "i");
-  Property.find({
-    $or: [
-      {
-        name: searchRegex,
-      },
-      {
-        address: searchRegex,
-      },
-    ],
-  })
-    .sort({
-      updatedAt: -1,
-    })
-    .then((properties) => {
-      if (!properties) {
-        res.status(404).json({ error: "No matching properties found!" });
-      }
-      res.status(200).json(properties);
-    })
-    .catch((error) => {
-      res
-        .status(500)
-        .json({ error: "error in while searching for Property" });
-    });
-};
-// delete a rProperty
+
+// const searchProperty =  (req, res) => {
+//   const { query } = req.query;
+//   const searchRegex = new RegExp(query, "i");
+//   Property.find({
+//     $or: [
+//       {
+//         name: searchRegex,
+//       },
+//       {
+//         address: searchRegex,
+//       },
+//     ],
+//   })
+//     .sort({
+//       updatedAt: -1,
+//     })
+//     .then((properties) => {
+//       if (!properties) {
+//         res.status(404).json({ error: "No matching properties found!" });
+//       }
+//       res.status(200).json(properties);
+//     })
+//     .catch((error) => {
+//       res
+//         .status(500)
+//         .json({ error: "error in while searching for Property" });
+//     });
+// };
+// delete a Property
 const deleteProperty = (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -270,6 +272,111 @@ const deleteProperty = (req, res) => {
       res.status(500).json({ error: "error in deleting the property" });
     });
 };
+// find/search a Property by address, minPrice, maxPrice, amenities, tags, guests 
+const searchProperty = async (req, res) => {
+  try {
+    const {
+      location,        // This will now match `address`
+      minPrice,        // Matches `price`
+      maxPrice,        // Matches `price`
+      amenities,       // Matches `amenities` array
+      tags,            // Matches `tags` array
+      guests,          // Matches `guests`
+      bedrooms,        // Matches `whereToSleep.bedroom`
+      beds,            // Matches `whereToSleep.sleepingPosition`
+      checkIn,
+      checkOut,
+    } = req.query;
+
+    const userId = req.user?.id; // Assuming user is authenticated
+
+    // Build search query
+    const query = {};
+
+    // Address-based location search
+    if (location) query.address = { $regex: location, $options: "i" }; // Case-insensitive
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+      query.price = {
+        ...(minPrice && { $gte: parseFloat(minPrice) }),
+        ...(maxPrice && { $lte: parseFloat(maxPrice) }),
+      };
+    }
+
+    // Amenities filter
+    if (amenities) {
+      const amenitiesArray = amenities.split(",");
+      query.amenities = { $all: amenitiesArray }; // Ensure all specified amenities exist
+    }
+
+    // Tags filter
+    if (tags) {
+      const tagsArray = tags.split(",");
+      query.tags = { $in: tagsArray }; // Match any of the specified tags
+    }
+
+    // Guests filter
+    if (guests) {
+      query.guests = { $gte: parseInt(guests, 10) }; // Minimum number of guests
+    }
+
+    // Bedrooms filter
+    if (bedrooms) {
+      query["whereToSleep.bedroom"] = { $gte: parseInt(bedrooms, 10) }; // Minimum number of bedrooms
+    }
+    if (beds) {
+      query.$expr = {
+        $gte: [
+          {
+            $sum: [
+              { $ifNull: ["$whereToSleep.sleepingPosition.kingBed", 0] },
+              { $ifNull: ["$whereToSleep.sleepingPosition.queenBed", 0] },
+              { $ifNull: ["$whereToSleep.sleepingPosition.sofa", 0] },
+              { $ifNull: ["$whereToSleep.sleepingPosition.singleBed", 0] }
+            ]
+          },
+          parseInt(beds, 10)
+        ]
+      };
+    }
+
+    if (checkIn && checkOut) {
+      const bookedProperties = await Booking.find({
+        $or: [{
+          checkIn: { $lt: new Date(checkOut) },
+          checkOut: { $gt: new Date(checkIn) }
+        }]
+      }).select("propertyId")
+      const bookedPropertyIds = bookedProperties.map(booking => booking.propertyId)
+      query._id = { $nin: bookedPropertyIds }
+    }
+    // Execute query with pagination
+    // const page = parseInt(req.query.page, 10) || 1;
+    // const limit = parseInt(req.query.limit, 10) || 10;
+
+    const properties = await Property.find(query).sort({ updatedAt: -1 });
+    // .skip((page - 1) * limit)
+    // .limit(limit);
+    if (userId) {
+      await SearchHistory.create({
+        userId,
+        location,
+        minPrice: minPrice ? parseFloat(minPrice) : undefined,
+        maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+        amenities: amenities ? amenities.split(",") : [],
+        tags: tags ? tags.split(",") : [],
+        guests: guests ? parseInt(guests) : undefined,
+        bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
+      })
+    }
+    res.status(200).json(properties);
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   addProperty,
   findAllProperties,
@@ -283,3 +390,4 @@ module.exports = {
   updateProperty,
   searchProperty,
 };
+

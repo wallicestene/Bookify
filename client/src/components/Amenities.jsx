@@ -19,22 +19,42 @@ import {
 } from "@mui/icons-material";
 import AmenitiesOption from "./AmenitiesOption";
 
-const Amenities = ({ selectedAmenities, setSelectedAmenities }) => {
+const Amenities = ({
+  selectedAmenities,
+  setSelectedAmenities,
+  setSearchInput,
+  mode,
+}) => {
   const handleAmenities = (amenity) => {
     if (!selectedAmenities.includes(amenity)) {
-      setSelectedAmenities((prevAmenities) => {
-        return [...prevAmenities, amenity];
-      });
+      const updatedAmenities = [...selectedAmenities, amenity];
+      setSelectedAmenities(updatedAmenities);
+
+      // If filtering, update search input
+      if (mode === "filtering" && setSearchInput) {
+        setSearchInput((prev) => ({
+          ...prev,
+          amenities: updatedAmenities.join(","),
+        }));
+      }
     } else {
-      setSelectedAmenities((prevAmenities) =>
-        prevAmenities.filter((item) => item != amenity)
+      const updatedAmenities = selectedAmenities.filter(
+        (item) => item !== amenity
       );
+      setSelectedAmenities(updatedAmenities);
+
+      if (mode === "filtering" && setSearchInput) {
+        setSearchInput((prev) => ({
+          ...prev,
+          amenities: updatedAmenities.join(","),
+        }));
+      }
     }
   };
   return (
     <>
       <div className=" w-full mb-10">
-        <div className=" grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+        <div className=" grid grid-cols-3 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
           <AmenitiesOption
             Icon={<Wifi />}
             title={"Wifi"}
@@ -84,8 +104,10 @@ const Amenities = ({ selectedAmenities, setSelectedAmenities }) => {
             selectedAmenities={selectedAmenities}
           />
         </div>
-        <h2 className=" mt-10 text-[1.5rem] text-gray-500 font-poppins">Other Amenities</h2>
-        <div className=" grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+        <h2 className=" mt-10 text-[1.5rem] text-gray-500 font-poppins">
+          Other Amenities
+        </h2>
+        <div className=" grid grid-cols-3 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
           <AmenitiesOption
             Icon={<HotTub />}
             title={"Hot tub"}
@@ -117,26 +139,30 @@ const Amenities = ({ selectedAmenities, setSelectedAmenities }) => {
             selectedAmenities={selectedAmenities}
           />
         </div>
-        <h2 className=" mt-10 text-[1.5rem] text-gray-500 font-poppins">Safety Amenities</h2>
-        <div className=" grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
-        <AmenitiesOption
-          Icon={<FireExtinguisherOutlined />}
-          title={"Fire extinguisher"}
-          handleAmenities={handleAmenities}
-          selectedAmenities={selectedAmenities}
-        />
-        <AmenitiesOption
-          Icon={<MedicalServicesOutlined />}
-          title={"First aid kit"}
-          handleAmenities={handleAmenities}
-          selectedAmenities={selectedAmenities}
-        />
-        <AmenitiesOption
-          Icon={<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVR4nGNgGAUkgP9UxgNnAT6x/wT4uMTwS5AIcJrzFCphxUA+sIaa8QSbZDsVw78VmwVsUEtgPiEHP4EaDjILL1gO1ZBBRLBkQNWC9BANSNG0nATHwIEGGcGjwUAiICUunjMwMDAyjEjwn4yiYtQCBqoGETqguoEM9LZg8AEAeEuZ96V4tvUAAAAASUVORK5CYII="></img>}
-          title={"Smoke detector"}
-          handleAmenities={handleAmenities}
-          selectedAmenities={selectedAmenities}
-        />
+        <h2 className=" mt-10 text-[1.5rem] text-gray-500 font-poppins">
+          Safety Amenities
+        </h2>
+        <div className=" grid grid-cols-3 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+          <AmenitiesOption
+            Icon={<FireExtinguisherOutlined />}
+            title={"Fire extinguisher"}
+            handleAmenities={handleAmenities}
+            selectedAmenities={selectedAmenities}
+          />
+          <AmenitiesOption
+            Icon={<MedicalServicesOutlined />}
+            title={"First aid kit"}
+            handleAmenities={handleAmenities}
+            selectedAmenities={selectedAmenities}
+          />
+          <AmenitiesOption
+            Icon={
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVR4nGNgGAUkgP9UxgNnAT6x/wT4uMTwS5AIcJrzFCphxUA+sIaa8QSbZDsVw78VmwVsUEtgPiEHP4EaDjILL1gO1ZBBRLBkQNWC9BANSNG0nATHwIEGGcGjwUAiICUunjMwMDAyjEjwn4yiYtQCBqoGETqguoEM9LZg8AEAeEuZ96V4tvUAAAAASUVORK5CYII="></img>
+            }
+            title={"Smoke detector"}
+            handleAmenities={handleAmenities}
+            selectedAmenities={selectedAmenities}
+          />
         </div>
       </div>
     </>

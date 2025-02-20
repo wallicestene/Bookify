@@ -12,6 +12,7 @@ const {
   updateProperty,
   searchProperty,
 } = require("../controllers/propertyController");
+const optionalAuth = require("../middleware/optionalAuth");
 const router = express.Router();
 
 router.post("/api/property", addProperty);
@@ -31,5 +32,5 @@ router.post(
   uploadMenuImage
 );
 router.put("/api/property/:id", updateProperty);
-router.get("/api/search/property/", searchProperty);
+router.get("/api/search/property/", optionalAuth, searchProperty);
 module.exports = router;
