@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import useServer from "../hooks/ServerUrl";
 import AdvanceFilter from "../components/AdvanceFilter";
 import RecommendedProperties from "../components/RecommendedProperties";
+import { useUserContext } from "../hooks/Usercontext";
 const HomePage = () => {
   const isFirstRender = useRef(true);
   const [searchInput, setSearchInput] = useState({
@@ -28,6 +29,8 @@ const HomePage = () => {
 
   const [loading, setLoading] = useState(true);
   const [searchError, setSearchError] = useState(null);
+  const [{ user }] = useUserContext();
+
   const {
     data,
     isLoading: initialLoading,
@@ -105,7 +108,9 @@ const HomePage = () => {
         </div>
         {/* recommendations */}
         <div className="recommendations relative max-w-[98vw] mx-auto">
-          <RecommendedProperties />
+          <RecommendedProperties 
+            type={user?.token ? "personalized" : "popular"} 
+          />
         </div>
         <div>
           <PropertyContainer
