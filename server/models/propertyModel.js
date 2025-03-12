@@ -67,5 +67,18 @@ const propertySchema = new Schema({
 },{
   timestamps: true
 });
+// indexes for search and recommendations
+propertySchema.index({ address: 1 });
+propertySchema.index({ price: 1 });
+propertySchema.index({ tags: 1 });
+propertySchema.index({ amenities: 1 });
+propertySchema.index({ 
+  address: 1, 
+  price: 1, 
+  "whereToSleep.bedroom": 1 
+});
 
+
+// index for location searches
+propertySchema.index({ address: "text" });
 module.exports = mongoose.model("property", propertySchema);

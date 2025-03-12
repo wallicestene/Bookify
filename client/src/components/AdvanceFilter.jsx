@@ -73,6 +73,7 @@ const AdvanceFilter = ({
     }, 500); // Adjust debounce time
 
     return () => clearTimeout(debounceTimeout.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput.tags]);
 
   //   scroll function

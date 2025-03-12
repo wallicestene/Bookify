@@ -85,7 +85,7 @@ const PropertyDetailsPage = () => {
 
   const handleBooking = () => {
     if (user && date.startDate && date.endDate) {
-      fetchWrapper(`${useServer()}api/property/reservation`, {
+      fetchWrapper(`${useServer()}api/property/booking`, {
         method: "POST",
         body: JSON.stringify({
           userId: user?.userId,
@@ -108,7 +108,7 @@ const PropertyDetailsPage = () => {
               new Promise((resolve) => setTimeout(resolve, 2000));
             toast.promise(promise, {
               loading: "Loading...",
-              success: "Reservation Successful!",
+              success: "Booking Successful!",
               error: "Error",
             });
             setTimeout(navigate("/account/myBookings"), 2000);

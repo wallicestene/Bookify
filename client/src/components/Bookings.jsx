@@ -8,7 +8,7 @@ import useServer from "../hooks/ServerUrl";
 const Bookings = ({ booking }) => {
   const deleteBooking = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    fetchWrapper(`${useServer()}api/property/reservation/${booking._id}`, {
+    fetchWrapper(`${useServer()}api/property/booking/${booking._id}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
