@@ -45,8 +45,8 @@ const MyBookings = () => {
   }, [user?.token, user?.userId]);
   return (
     <>
-      <div className="lg:w-11/12  mx-auto w-full py-20 px-2 font-Mulish ">
-        <AccountNav />
+      <div className="w-full py-20 px-2 font-Mulish ">
+        {/* <AccountNav /> */}
         {error && (
           <div className="w-full h-48 flex items-center justify-center">
             <Alert severity="error">{error}</Alert>
@@ -58,7 +58,7 @@ const MyBookings = () => {
           </div>
         )}
         {!loading && !error && (
-          <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 p-2 lg:place-items-start place-items-center">
+          <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 p-6 lg:place-items-start place-items-center">
             {myBookings.map((booking) => (
               <Bookings key={booking?._id} booking={booking} />
             ))}

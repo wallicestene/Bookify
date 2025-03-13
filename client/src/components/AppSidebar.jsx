@@ -14,14 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar } from "@/components/ui/avatar";
 
-import {
-  BarChart,
-  Calendar,
-  Home,
-  // LayoutDashboard,
-  // LogOut,
-  User,
-} from "lucide-react";
+import { BarChart, Calendar, Home, LogOut, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useUserContext } from "../hooks/Usercontext";
 
@@ -103,6 +96,15 @@ const AppSidebar = () => {
                 </span>
                 <span className="truncate text-xs">{user?.email}</span>
               </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleLogOut}
+              className="flex items-center gap-2 w-full text-destructive hover:bg-destructive/10"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

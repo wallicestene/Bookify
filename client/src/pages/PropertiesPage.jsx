@@ -4,7 +4,7 @@ import useFetch from "../hooks/useFetch";
 import { Alert } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useUserContext } from "../hooks/Usercontext";
-import AccountNav from "../components/AccountNav";
+// import AccountNav from "../components/AccountNav";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
 const PropertiesPage = () => {
@@ -13,8 +13,7 @@ const PropertiesPage = () => {
     `${useServer()}api/properties/owner/${user?.userId}`
   );
   return (
-    <div className=" lg:w-11/12  mx-auto w-full py-28 px-2 font-Mulish">
-      <AccountNav />
+    <div className="w-full py-20 px-2 font-Mulish">
       <div className=" flex justify-center ">
         <Link
           className="inline-flex items-center justify-center gap-2 h-12 px-6 font-medium tracking-wide text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none"
