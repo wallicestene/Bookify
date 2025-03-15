@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import AddedProperties from "../components/AddedProperties";
 import useFetch from "../hooks/useFetch";
 import { Alert } from "@mui/material";
-import { Add } from "@mui/icons-material";
 import { Button } from "../components/ui/button";
 import { useUserContext } from "../hooks/Usercontext";
 // import AccountNav from "../components/AccountNav";
