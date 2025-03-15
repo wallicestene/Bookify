@@ -58,7 +58,7 @@ const MyBookings = () => {
           </div>
         )}
         {!loading && !error && (
-          <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 p-6 lg:place-items-start place-items-center">
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 m-3 p-2 lg:place-items-start place-items-center">
             {myBookings.map((booking) => (
               <Bookings key={booking?._id} booking={booking} />
             ))}
