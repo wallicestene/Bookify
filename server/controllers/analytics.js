@@ -15,7 +15,7 @@ const getOwnerAnalytics = async (req, res) => {
 
         // calculating total revenue
         const totalRevenue = bookings.reduce((sum, booking) => {
-            return sum + booking.propertyId.price
+            return sum + booking.totalPrice
         }, 0)
 
         // calculate bookings by month
@@ -40,7 +40,7 @@ const getOwnerAnalytics = async (req, res) => {
 
         bookings.forEach(booking => {
             const month = new Date(booking.checkIn).getMonth();
-            revenueByMonth[month].revenue += booking.propertyId.price
+            revenueByMonth[month].revenue += booking.totalPrice
         });
 
         // top Performing Properties
@@ -59,7 +59,7 @@ const getOwnerAnalytics = async (req, res) => {
                 }
             }
             propertyPerformance[propId].bookings++
-            propertyPerformance[propId].revenue += booking.propertyId.price
+            propertyPerformance[propId].revenue += booking.totalPrice
         })
 
         const topProperties = Object.values(propertyPerformance).sort((a, b) => b.revenue - a.revenue).slice(0, 5)

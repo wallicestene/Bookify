@@ -39,12 +39,11 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { Alert, CircularProgress } from "@mui/material";
 import { useUserContext } from "../hooks/Usercontext";
 import { toast } from "sonner";
-import { getUnit } from "@mui/material/styles/cssUtils";
-import Scroll from "../components/SmoothScroll";
 import BookingPage from "../components/BookingPage";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
 import fetchWrapper from "../utils/fetchWrapper";
+import moment from "moment";
 const PropertyDetailsPage = () => {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState({
@@ -83,6 +82,12 @@ const PropertyDetailsPage = () => {
     numberOfGuests();
   }, [adults, allGuests, children, data.guests]);
 
+  const startDate = moment(date?.startDate);
+  const endDate = moment(date?.endDate);
+  const days = moment.duration(endDate.diff(startDate)).asDays();
+  const duration = days == 1 ? days : days - 1;
+  const totalPrice = duration * data.price;
+
   const handleBooking = () => {
     if (user && date.startDate && date.endDate) {
       fetchWrapper(`${useServer()}api/property/booking`, {
@@ -97,6 +102,8 @@ const PropertyDetailsPage = () => {
             children,
             infants,
           },
+          duration: duration,
+          totalPrice: totalPrice,
         }),
       })
         .then((response) => response.json())

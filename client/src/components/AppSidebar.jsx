@@ -50,7 +50,6 @@ const AppSidebar = () => {
   const handleLogOut = () => {
     dispatch({ type: "LOGOUT_USER" });
   };
-  console.log(user?.first_name[0]);
 
   return (
     <Sidebar variant="sidebar" collapsible="icon" className="font-mulish ">

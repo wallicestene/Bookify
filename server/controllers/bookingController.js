@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const Booking = require("../models/bookingModel");
 const moment = require("moment");
 const addBooking = (req, res) => {
-  const { userId, propertyId, checkIn, checkOut, guests } = req.body;
+  const { userId, propertyId, checkIn, checkOut, guests, duration, totalPrice } = req.body;
 
   // Checking if the place's already reserved for the given date
   Booking.findOne({ propertyId, checkIn, checkOut })
     .then((bookingExists) => {
       if (!bookingExists) {
         // Create a new booking
-        Booking.create({ userId, propertyId, checkIn, checkOut, guests })
+        Booking.create({ userId, propertyId, checkIn, checkOut, guests, duration, totalPrice })
           .then((booking) => {
             // Return the created booking
             res.status(200).json(booking);
@@ -71,7 +71,7 @@ const deleteBooking = (req, res) => {
           })
           .catch((error) => {
             res.status(500).json({
-              error: `Error while trying to update table for booking deletion Error: ${error}`,
+              error: `Error while trying deletion! Error: ${error}`,
             });
           });
       }

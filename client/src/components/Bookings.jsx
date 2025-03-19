@@ -1,7 +1,6 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable react/prop-types */
 import { Circle, LocationOn } from "@mui/icons-material";
-import moment from "moment";
 import { toast } from "sonner";
 import fetchWrapper from "../utils/fetchWrapper";
 import useServer from "../hooks/ServerUrl";
@@ -19,11 +18,6 @@ const Bookings = ({ booking }) => {
       })
       .catch((err) => err);
   };
-
-  const startDate = moment(booking?.checkIn);
-  const endDate = moment(booking?.checkOut);
-  const days = moment.duration(endDate.diff(startDate)).asDays();
-  const duration = days == 1 ? days : days - 1;
 
   return (
     <>
@@ -64,16 +58,18 @@ const Bookings = ({ booking }) => {
           <div className="flex flex-wrap items-center gap-1">
             <p className="inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full max-w-[120px] overflow-hidden text-ellipsis">
               <span>
-                {duration} night
-                {duration == 1 ? "" : "s"}
+                {booking?.duration} night
+                {booking?.duration == 1 ? "" : "s"}
               </span>
             </p>
-            <p className="mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full max-w-[120px] overflow-hidden text-ellipsis">
-              {(booking?.propertyId?.price * duration).toLocaleString("en-US", {
-                style: "currency",
-                currency: "kes",
-              })}
-            </p>
+            {booking?.totalPrice && (
+              <p className="mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full max-w-[120px] overflow-hidden text-ellipsis">
+                {(booking?.totalPrice).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "kes",
+                })}
+              </p>
+            )}
           </div>
           <p className="text-xs mt-2 flex items-center">
             <LocationOn
