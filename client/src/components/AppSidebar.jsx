@@ -54,7 +54,11 @@ const AppSidebar = () => {
   return (
     <Sidebar variant="sidebar" collapsible="icon" className="font-mulish ">
       <SidebarHeader className=" text-totem-pole-500 tracking-tight text-base font-semibold leading-3 overflow-hidden whitespace-nowrap text-ellipsis">
-        Bookify
+        <SidebarMenuButton>
+          <Link to="/">
+            <span className=" text-lg">Bookify</span>
+          </Link>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

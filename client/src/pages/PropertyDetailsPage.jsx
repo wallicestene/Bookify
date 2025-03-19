@@ -128,6 +128,7 @@ const PropertyDetailsPage = () => {
       toast.error("Please select check in and check out to book!");
     }
   };
+  
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };

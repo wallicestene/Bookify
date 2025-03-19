@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import useServer from "../hooks/ServerUrl";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BarChart,
@@ -89,18 +95,22 @@ const Analytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalBookings}</div>
+            <div className="text-2xl font-bold truncate">
+              {stats.totalBookings}
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Revenue
+              Total Revenue(in Ksh)
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.totalRevenue}</div>
+            <div className="text-2xl font-bold truncate">
+              {stats.totalRevenue.toLocaleString()}
+            </div>
           </CardContent>
         </Card>
 
@@ -111,7 +121,9 @@ const Analytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.occupancyRate}%</div>
+            <div className="text-2xl font-bold truncate">
+              {stats.occupancyRate}%
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -187,7 +199,8 @@ const Analytics = () => {
                     </div>
                     <div className="text-right">
                       <p className="font-medium">
-                        {property.bookings} bookings
+                        {property.bookings} booking
+                        {property.bookings > 1 && "s"}
                       </p>
                       <p className="text-muted-foreground text-sm">
                         ${property.revenue} revenue
