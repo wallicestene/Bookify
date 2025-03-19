@@ -63,8 +63,6 @@ const Analytics = () => {
     }
   }, [user?.userId, user?.token, serverUrl]);
 
-  console.log(user);
-  
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -74,8 +72,13 @@ const Analytics = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
+    <div className="space-y-6 px-4 md:px-6 py-4 font-Mulish">
+      <div>
+        <h1 className="text-xl font-bold">Analytics Dashboard</h1>
+        <p className="text-gray-500 ">
+          Here you can view and analyze your property statistics
+        </p>
+      </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -173,7 +176,7 @@ const Analytics = () => {
               <div className="space-y-4">
                 {stats.topProperties.map((property) => (
                   <div
-                    key={property._id}
+                    key={property.id}
                     className="flex items-center justify-between border-b pb-3"
                   >
                     <div>

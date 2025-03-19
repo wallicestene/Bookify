@@ -14,7 +14,7 @@ const PropertiesPage = () => {
     `${useServer()}api/properties/owner/${user?.userId}`
   );
   return (
-    <div className="w-full px-4 md:px-6 py-6 font-Mulish">
+    <div className="px-4 md:px-6 py-6 font-Mulish">
       {/* header section */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -61,7 +61,7 @@ const PropertiesPage = () => {
       )}
 
       {!isLoading && data?.length > 0 && (
-        <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 m-3 p-2 lg:place-items-start place-items-center ">
+        <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24  px-2 lg:place-items-start place-items-center ">
           {/* New Property Card */}
           <Link to="/account/myProperties/new" className="w-full">
             <div className="h-full w-full min-h-[300px] rounded-lg border-2 border-dashed border-gray-200 hover:border-primary transition-colors p-6 flex flex-col items-center justify-center text-center group">

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useUserContext } from "../hooks/Usercontext";
 import Bookings from "../components/Bookings";
 import { useNavigate } from "react-router-dom";
-import AccountNav from "../components/AccountNav";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Alert } from "@mui/material";
 import useServer from "../hooks/ServerUrl";
@@ -45,8 +44,13 @@ const MyBookings = () => {
   }, [user?.token, user?.userId]);
   return (
     <>
-      <div className="w-full py-20 px-2 font-Mulish ">
-        {/* <AccountNav /> */}
+      <div className="space-y-6 px-4 md:px-6 py-6 font-Mulish ">
+        <div>
+          <h1 className="text-xl font-bold">My Bookings</h1>
+          <p className="text-gray-500 ">
+            Here you can view all your bookings and manage them
+          </p>
+        </div>
         {error && (
           <div className="w-full h-48 flex items-center justify-center">
             <Alert severity="error">{error}</Alert>
@@ -58,7 +62,7 @@ const MyBookings = () => {
           </div>
         )}
         {!loading && !error && (
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 m-3 p-2 lg:place-items-start place-items-center">
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 px-2 lg:place-items-start place-items-center">
             {myBookings.map((booking) => (
               <Bookings key={booking?._id} booking={booking} />
             ))}
