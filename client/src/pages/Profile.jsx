@@ -44,7 +44,6 @@ const Profile = () => {
   if (redirect) {
     return <Navigate to={redirect} />;
   }
-  console.log(user);
 
   // Format join date
   const joinDate = moment(user?.createdAt).format("LL");

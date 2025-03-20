@@ -85,7 +85,7 @@ const AppSidebar = () => {
       </SidebarContent>
       <SidebarFooter className="pl-2">
         <SidebarMenu>
-          <SidebarMenuItem asChild>
+          <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
