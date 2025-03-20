@@ -8,6 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -26,6 +27,16 @@ import {
 } from "recharts";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useUserContext } from "../hooks/Usercontext";
+import { Alert } from "@mui/material";
+import { Link } from "react-router-dom";
+import {
+  BarChart3,
+  Calendar,
+  Home,
+  LineChartIcon,
+  Plus,
+  TrendingUp,
+} from "lucide-react";
 
 const Analytics = () => {
   const [{ user }] = useUserContext();
@@ -78,6 +89,74 @@ const Analytics = () => {
     );
   }
 
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+  //   if no data because the user has not properties
+  if (!stats.totalBookings && !loading) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <Card className="border-dashed">
+          <CardContent className="pt-10 pb-10 flex flex-col items-center text-center">
+            <div className="rounded-full bg-primary/10 p-4 mb-6">
+              <BarChart3 className="h-12 w-12 text-primary" />
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-2">
+              No Analytics Available Yet
+            </h2>
+
+            <p className="text-muted-foreground max-w-md mb-8">
+              Start listing properties and receiving bookings to access your
+              analytics dashboard with valuable insights.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link to="/account/myListings">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Home className="h-4 w-4" />
+                  <span>View My Listings</span>
+                </Button>
+              </Link>
+
+              <Link to="/account/myProperties/new">
+                <Button className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  <span>Add New Property</span>
+                </Button>
+              </Link>
+            </div>
+
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+              <div className="p-4 rounded-lg bg-secondary/50">
+                <Calendar className="h-5 w-5 mb-1 text-muted-foreground" />
+                <h3 className="font-medium">Booking Insights</h3>
+                <p className="text-xs text-muted-foreground">
+                  Track occupancy rates
+                </p>
+              </div>
+
+              <div className="p-4 rounded-lg bg-secondary/50">
+                <LineChartIcon className="h-5 w-5 mb-1 text-muted-foreground" />
+                <h3 className="font-medium">Revenue Tracking</h3>
+                <p className="text-xs text-muted-foreground">
+                  Monitor earnings
+                </p>
+              </div>
+
+              <div className="p-4 rounded-lg bg-secondary/50">
+                <TrendingUp className="h-5 w-5 mb-1 text-muted-foreground" />
+                <h3 className="font-medium">Performance Stats</h3>
+                <p className="text-xs text-muted-foreground">
+                  Optimize listings
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   return (
     <div className="space-y-6 px-4 md:px-6 py-4 font-Mulish">
       <div>
