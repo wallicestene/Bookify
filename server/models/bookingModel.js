@@ -34,14 +34,6 @@ const bookingSchema = new Schema({
       },
     },
   },
-  duration: {
-    type: Number,
-    required: true
-  },
-  totalPrice: {
-    type: Number,
-    required: true
-  }
 });
 // indexes for faster booking lookups
 bookingSchema.index({ propertyId: 1 });

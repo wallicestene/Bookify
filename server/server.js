@@ -9,7 +9,6 @@ const userRoutes = require("./routes/UserRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const bookingRoutes = require("./routes/bookingRoute");
 const recommendationRoutes = require("./routes/recommendationRoutes");
-const analyticsRoutes = require("./routes/analyticsRoute");
 
 // initializing the app
 const app = express();
@@ -41,7 +40,6 @@ app.use(userRoutes);
 app.use(propertyRoutes);
 app.use(bookingRoutes);
 app.use(recommendationRoutes);
-app.use(analyticsRoutes)
 
 // fallback route for handling unknown routes
 

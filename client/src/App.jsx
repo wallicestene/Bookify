@@ -15,8 +15,6 @@ import PlacesForm from "./pages/PlacesForm";
 import MyBookings from "./pages/MyBookings";
 import ImageGallery from "./components/ImageGallery";
 import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "./pages/DashboardLayout";
-import Analytics from "./pages/Analytics";
 const App = () => {
   const [, dispatch] = useUserContext();
   // updating the auth state
@@ -55,17 +53,11 @@ const App = () => {
           <Route path="/property/:id" element={<PropertyDetailsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-
-          {/* dashboard routes */}
-          <Route path="/account" element={<DashboardLayout />}>
-            <Route index element={<Profile />} />
-            <Route path="myListings" element={<PropertiesPage />} />
-            <Route path="myBookings" element={<MyBookings />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="myProperties/new" element={<PlacesForm />} />
-            <Route path="myProperties/:id" element={<PlacesForm />} />
-          </Route>
-    
+          <Route path="/account" element={<Profile />} />
+          <Route path="/account/myListings" element={<PropertiesPage />} />
+          <Route path="/account/myBookings" element={<MyBookings />} />
+          <Route path="/account/myProperties/new" element={<PlacesForm />} />
+          <Route path="/account/myProperties/:id" element={<PlacesForm />} />
           <Route path="/imageGallery/:id" element={<ImageGallery />} />
         </Route>
       </Routes>
