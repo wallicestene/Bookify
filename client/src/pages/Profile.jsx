@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useUserContext } from "../hooks/Usercontext";
 import { Navigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +15,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import moment from "moment";
 import {
   Edit,
   LogOut,
@@ -43,16 +44,10 @@ const Profile = () => {
   if (redirect) {
     return <Navigate to={redirect} />;
   }
+  console.log(user);
 
   // Format join date
-  const joinDate = new Date(user?.createdAt || Date.now()).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
+  const joinDate = moment(user?.createdAt).format("LL");
 
   return (
     <div className="space-y-6 px-4 md:px-6 py-6 font-Mulish ">
@@ -133,23 +128,6 @@ const Profile = () => {
                     </dd>
                   </div>
                   <Separator />
-                  {/* <div className="flex flex-col sm:flex-row sm:gap-8">
-                    <dt className="text-sm font-medium text-muted-foreground sm:w-1/3">
-                      Phone
-                    </dt>
-                    <dd className="text-sm sm:w-2/3 mt-1 sm:mt-0">
-                      {user?.phone || "Not added"}
-                    </dd>
-                  </div>
-                  <Separator />
-                  <div className="flex flex-col sm:flex-row sm:gap-8">
-                    <dt className="text-sm font-medium text-muted-foreground sm:w-1/3">
-                      Location
-                    </dt>
-                    <dd className="text-sm sm:w-2/3 mt-1 sm:mt-0">
-                      {user?.location || "Not specified"}
-                    </dd>
-                  </div> */}
                 </dl>
               </CardContent>
             </Card>
