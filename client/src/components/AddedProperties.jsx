@@ -7,16 +7,16 @@ import { Link } from "react-router-dom";
 const AddedProperties = ({ property }) => {
   return (
     <>
-      <div className=" relative h-64 w-fit">
+      <div className=" relative h-64 w-full  shadow-xl shadow-gray-400 rounded-xl inline-block ">
         <div className=" h-full w-full overflow-hidden shadow-xl shadow-gray-400 rounded-xl inline-block ">
           <img
             src={property?.images[0]}
             alt={`${property?.name} image 1 `}
-            className=" h-full object-cover brightness-[0.9]"
+            className=" lg:h-72 h-[360px] w-full object-cover  brightness-[0.9]"
           />
         </div>
         <div className=" p-[18px] absolute w-11/12 -bottom-20 left-1/2 -translate-x-1/2 rounded-xl shadow-gray-400 shadow-lg bg-white">
-          <div className=" flex items-center gap-1 text-[0.9rem] text-gray-700">
+          <div className=" flex items-center gap-1 text-[0.8rem] text-gray-700">
             <p>
               <Circle
                 sx={{
@@ -38,35 +38,23 @@ const AddedProperties = ({ property }) => {
             </p>
           </div>
 
-          <h2 className="text-lg font-semibold  ">{property?.name}</h2>
+          <h2 className=" font-semibold truncate  ">{property?.name}</h2>
           <div>
-            {/* <p className=" inline-block font-light text-gray-100 bg-black text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
-              <span>
-                {duration.asDays() == 1
-                  ? duration.asDays()
-                  : duration.asDays() - 1}{" "}
-                Night
-                {duration.asDays() == 1 || duration.asDays() - 1 == 1
-                  ? ""
-                  : "s"}
-              </span>
-            </p> */}
             <p className=" mx-1 inline-block font-light text-gray-100 bg-gray-900 text-sm lg:py-[6px] py-[4px] px-[10px] rounded-full">
               {(property?.price).toLocaleString("en-US", {
                 style: "currency",
-                currency: "USD",
+                currency: "KES",
               })}{" "}
               <span>night</span>
             </p>
           </div>
-          <p className="text-sm mt-2 flex items-center">
+          <p className="text-xs mt-2 flex items-center">
             <LocationOn
               sx={{
-                fontSize: "1.1rem",
-                color: "red",
+                fontSize: "1rem",
               }}
             />
-            <span className="">{property?.address}</span>
+            <span className=" truncate leading-4 text-gray-600 tracking-tight">{property?.address}</span>
           </p>
         </div>
         <Link
@@ -78,7 +66,7 @@ const AddedProperties = ({ property }) => {
           <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-gray-100">
             Edit
           </span>
-          <span className="absolute inset-0 border-2 border-red-600 rounded-full"></span>
+          <span className="absolute inset-0 border-2 rounded-full"></span>
         </Link>
       </div>
     </>

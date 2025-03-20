@@ -7,7 +7,7 @@ import { useUserContext } from "../hooks/Usercontext";
 import AccountNav from "../components/AccountNav";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
-const AccommodationPage = () => {
+const PropertyPage = () => {
   const [{ user }] = useUserContext();
   const { data, isLoading, error } = useFetch(
     `${useServer()}api/properties/owner/${user?.userId}`
@@ -36,8 +36,8 @@ const AccommodationPage = () => {
       )}
       {!isLoading && data.length > 0 && (
         <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-24 p-6 lg:place-items-start place-items-center">
-          {data?.map((accommodation) => (
-            <AddedProperties key={accommodation._id} accommodation={accommodation} />
+          {data?.map((property) => (
+            <AddedProperties key={property._id} property={property} />
           ))}
         </div>
       )}
@@ -45,4 +45,4 @@ const AccommodationPage = () => {
   );
 };
 
-export default AccommodationPage;
+export default PropertyPage;
