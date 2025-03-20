@@ -8,6 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BarChart,
@@ -187,26 +188,29 @@ const Analytics = () => {
             <CardContent>
               <div className="space-y-4">
                 {stats.topProperties.map((property) => (
-                  <div
-                    key={property.id}
-                    className="flex items-center justify-between border-b pb-3"
-                  >
-                    <div>
-                      <p className="font-medium">{property.name}</p>
-                      <p className="text-muted-foreground text-sm">
-                        {property.address}
-                      </p>
+                  <>
+                    <div
+                      key={property.id}
+                      className="flex items-center justify-between"
+                    >
+                      <div>
+                        <p className="font-medium">{property.name}</p>
+                        <p className="text-muted-foreground text-sm">
+                          {property.address}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">
+                          {property.bookings} booking
+                          {property.bookings > 1 && "s"}
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          ${property.revenue} revenue
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        {property.bookings} booking
-                        {property.bookings > 1 && "s"}
-                      </p>
-                      <p className="text-muted-foreground text-sm">
-                        ${property.revenue} revenue
-                      </p>
-                    </div>
-                  </div>
+                    <Separator />
+                  </>
                 ))}
               </div>
             </CardContent>
