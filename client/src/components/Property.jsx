@@ -53,7 +53,7 @@ const Property = ({ property }) => {
               <img
                 src={image}
                 alt={` image ${index + 1}`}
-                className=" lg:h-72 h-[360px] object-cover brightness-[0.9]"
+                className=" lg:h-72 h-[360px] object-cover"
               />
             </div>
           </Link>
