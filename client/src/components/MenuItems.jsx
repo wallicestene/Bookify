@@ -14,24 +14,27 @@ const WhereToSleepItems = ({
   setBedroom,
   sleepingPosition,
   setSleepingPosition,
-  whereToSleep,
-  setWhereToSleep,
+  formData,
+  setFormData,
 }) => {
   const [showPosition, setShowPosition] = useState(false);
 
   const addwhereToSleep = (e) => {
     e.preventDefault();
     if (bedroom) {
-      setWhereToSleep((prevValue) => {
-        return [
-          ...prevValue,
-          {
-            bedroom,
-            sleepingPosition: {
-              ...sleepingPosition,
+      setFormData((prevData) => {
+        return {
+          ...prevData,
+          whereToSleep: [
+            ...prevData.whereToSleep,
+            {
+              bedroom,
+              sleepingPosition: {
+                ...sleepingPosition,
+              },
             },
-          },
-        ];
+          ],
+        };
       });
       setBedroom("");
       setSleepingPosition("");
@@ -49,9 +52,9 @@ const WhereToSleepItems = ({
   };
   return (
     <div>
-      {whereToSleep.length > 0 && (
+      {formData.whereToSleep.length > 0 && (
         <ul className="flex gap-2 flex-wrap py-2 px-3">
-          {whereToSleep.map((whereToSleepItem, index) => (
+          {formData.whereToSleep.map((whereToSleepItem, index) => (
             <li
               key={index}
               className=" relative flex items-center gap-1 border border-totem-pole-400 py-2 px-3 rounded-lg"
@@ -61,12 +64,15 @@ const WhereToSleepItems = ({
               </p>
               <span
                 onClick={() => {
-                  setWhereToSleep((prevItems) => {
-                    return [
-                      ...prevItems.filter(
-                        (item) => item.bedroom !== whereToSleepItem.bedroom
-                      ),
-                    ];
+                  formData((prevData) => {
+                    return {
+                      ...prevData,
+                      whereToSleep: [
+                        ...prevData.whereToSleep.filter(
+                          (item) => item.bedroom !== whereToSleepItem.bedroom
+                        ),
+                      ],
+                    };
                   });
                 }}
                 className=" absolute -top-1 -right-1 z-10 border border-totem-pole-400 bg-white flex items-center justify-center rounded-full text-slate-900 cursor-pointer"

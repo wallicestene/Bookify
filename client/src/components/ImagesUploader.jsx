@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { CloudUploadOutlined, DeleteOutlineRounded } from "@mui/icons-material";
 import useServer from "../hooks/ServerUrl";
-const ImagesUploader = ({ images, setImages, imageLink, setImageLink }) => {
+const ImagesUploader = ({ imageLink, setImageLink, formData, setFormData }) => {
   const uploadByLink = (e) => {
     e.preventDefault();
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -14,8 +14,11 @@ const ImagesUploader = ({ images, setImages, imageLink, setImageLink }) => {
     })
       .then((res) => res.json())
       .then((image) => {
-        setImages((prevImages) => {
-          return [...prevImages, image];
+        setFormData((prevData) => {
+          return {
+            ...prevData,
+            images: [...prevData.images, image],
+          };
         });
       })
       .catch((err) => console.log(err));
@@ -34,15 +37,21 @@ const ImagesUploader = ({ images, setImages, imageLink, setImageLink }) => {
     })
       .then((response) => response.json())
       .then((images) => {
-        setImages((prevImages) => {
-          return [...prevImages, ...images];
+        setFormData((prevData) => {
+          return {
+            ...prevData,
+            images: [...prevData.images, images],
+          };
         });
       });
   };
 
   const removeImage = (image) => {
-    setImages((prevImages) => {
-      return [...prevImages.filter((img) => img !== image)];
+    setFormData((prevData) => {
+      return {
+        ...prevData,
+        images: prevData.images.filter((img) => img !== image),
+      };
     });
   };
   return (
@@ -63,8 +72,8 @@ const ImagesUploader = ({ images, setImages, imageLink, setImageLink }) => {
         </button>
       </div>
       <div className=" grid grid-cols-3 gap-3 mt-2 w-full">
-        {images.length > 0 &&
-          images.map((image, index) => (
+        {formData.images.length > 0 &&
+          formData.images.map((image, index) => (
             <div key={index} className=" relative">
               <img
                 src={image}
