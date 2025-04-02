@@ -110,8 +110,6 @@ const PlacesForm = () => {
   const navigate = useNavigate();
   const serverUrl = useServer();
 
-  console.log(formData);
-
   // Validate current step
   const validateStep = () => {
     const newErrors = {};
@@ -160,15 +158,13 @@ const PlacesForm = () => {
           newErrors.price = "Price must be at least $10";
         }
         break;
-
-      // Add validation for other steps as needed
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle next step
+  // next step
   const nextStep = () => {
     if (validateStep()) {
       if (currentStep < steps.length - 1) {
@@ -178,7 +174,7 @@ const PlacesForm = () => {
     }
   };
 
-  // Handle previous step
+  //  previous step
   const prevStep = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
@@ -229,7 +225,7 @@ const PlacesForm = () => {
     }
   };
 
-  // Fetch property data if editing
+  // Fetch property data for editing
   useEffect(() => {
     const getProperty = async () => {
       try {
@@ -251,8 +247,6 @@ const PlacesForm = () => {
           amenities: data.amenities || [],
           tags: data.tags || [],
         });
-
-        // Set other component states
         setBedroom(data.bedroom || "");
         if (data.whereToSleep && data.whereToSleep.length > 0) {
           setSleepingPosition(
@@ -343,7 +337,6 @@ const PlacesForm = () => {
                   setSleepingPosition={setSleepingPosition}
                   formData={formData}
                   setFormData={setFormData}
-                  // setWhereToSleep={setWhereToSleep}
                 />
               </FormStep>
             )}
@@ -372,10 +365,7 @@ const PlacesForm = () => {
                 setFormData={setFormData}
                 errors={errors}
               >
-                <Tags
-                 formData={formData}
-                 setFormData={setFormData}
-                />
+                <Tags formData={formData} setFormData={setFormData} />
               </FormStep>
             )}
 
