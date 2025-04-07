@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Calendar, CalendarDays, Home, Search, Star } from "lucide-react";
 import { Button } from "../components/ui/button";
+import RecommendedProperties from "../components/RecommendedProperties";
 // eslint-disable-next-line react/prop-types
 const MyBookings = () => {
   const [myBookings, setMyBookings] = useState([]);
@@ -129,6 +130,11 @@ const MyBookings = () => {
           ))}
         </div>
       )}
+      
+      {/* recommendations */}
+      <div className=" w-full py-12 px-4 md:px-6 lg:px-12">
+        <RecommendedProperties type="general" />
+      </div>
     </div>
   );
 };
