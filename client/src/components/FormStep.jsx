@@ -111,7 +111,7 @@ export function FormStep({
       return (
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="price">Price Per Night ($)</Label>
+            <Label htmlFor="price">Price Per Night (KES)</Label>
             <Input
               id="price"
               name="price"

@@ -47,7 +47,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
   // }, [searchInput]);
   return (
     <section className="p-1">
-      <div className=" font-mulish mt-20">
+      <div className=" font-mulish mt-16">
         <form className=" flex items-center justify-center gap-3 ">
           <div className=" lg:divide-x-[1.5px] border-[1px] border-gray-300 shadow-lg h-fit lg:w-9/12 w-10/12 flex lg:flex-row flex-col items-center justify-between gap-1 rounded-2xl">
             <div className="w-full p-2">

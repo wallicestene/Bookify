@@ -63,7 +63,7 @@ const steps = [
     id: "price",
     title: "Price",
     description: "Add a Price for your place",
-    subtitle: "How much do you charge for this place in $?",
+    subtitle: "How much do you charge for this place in KES?",
   },
   {
     id: "amenities",
@@ -155,7 +155,7 @@ const PlacesForm = () => {
 
       case "price":
         if (!formData.price || formData.price < 10) {
-          newErrors.price = "Price must be at least $10";
+          newErrors.price = "Price must be at least KES 1000";
         }
         break;
     }

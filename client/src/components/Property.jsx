@@ -88,7 +88,7 @@ const Property = ({ property }) => {
               <span className=" font-semibold">
                 {(property?.price).toLocaleString("en-US", {
                   style: "currency",
-                  currency: "USD",
+                  currency: "KES",
                 })}{" "}
               </span>
               <span>night</span>

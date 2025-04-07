@@ -83,35 +83,42 @@ const uploadMiddleware = multer({
   storage,
 });
 // uploading images
-const uploadImages = (req, res) => {
-  const uploadedImages = [];
-  for (let i = 0; i < req.files.length; i++) {
-    const { filename } = req.files[i];
-    const params = {
-      Bucket: bucketName,
-      Key: filename,
-      Body: fs.readFileSync(req.files[i].path),
-      ContentType: req.files[i].mimetype,
-    };
-    const command = new PutObjectCommand(params);
-    s3.send(command, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(data);
-      }
-    });
-    uploadedImages.push(
-      `https://bookify-app-bucket.s3.amazonaws.com/${filename}`
-    );
+const uploadImages = async (req, res) => {
+  try {
+    const uploadPromises = [];
+    const uploadedImages = [];
+
+    for (let i = 0; i < req.files.length; i++) {
+      const { filename } = req.files[i];
+      const params = {
+        Bucket: bucketName,
+        Key: filename,
+        Body: fs.readFileSync(req.files[i].path),
+        ContentType: req.files[i].mimetype,
+      };
+
+      const command = new PutObjectCommand(params);
+      const uploadPromise = s3.send(command)
+        .then(() => {
+          const imageUrl = `https://bookify-app-bucket.s3.amazonaws.com/${filename}`;
+          uploadedImages.push(imageUrl);
+          fs.unlinkSync(req.files[i].path);
+          return imageUrl;
+        });
+
+      uploadPromises.push(uploadPromise);
+    }
+
+    // Wait for all uploads to complete
+    await Promise.all(uploadPromises);
+
+    res.json(uploadedImages);
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    res.status(500).json({ error: "Failed to upload images" });
   }
-  res.json(uploadedImages);
 };
-// uploading menu item image
-const uploadMenuImage = (req, res) => {
-  const { filename } = req.file;
-  return res.json(filename);
-};
+
 
 const uploadImageByLink = (req, res) => {
   const { link } = req.body;
@@ -385,7 +392,6 @@ module.exports = {
   uploadImages,
   uploadMiddleware,
   uploadImageByLink,
-  uploadMenuImage,
   getPropertyByOwner,
   updateProperty,
   searchProperty,

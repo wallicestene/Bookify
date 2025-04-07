@@ -7,7 +7,6 @@ const {
   uploadImages,
   uploadMiddleware,
   uploadImageByLink,
-  uploadMenuImage,
   getPropertyByOwner,
   updateProperty,
   searchProperty,
@@ -26,11 +25,6 @@ router.post(
   uploadImages
 );
 router.post("/api/upload-by-link", uploadImageByLink);
-router.post(
-  "/api/upload-menu-image",
-  uploadMiddleware.single("itemImage"),
-  uploadMenuImage
-);
 router.put("/api/property/:id", updateProperty);
 router.get("/api/search/property/", optionalAuth, searchProperty);
 module.exports = router;

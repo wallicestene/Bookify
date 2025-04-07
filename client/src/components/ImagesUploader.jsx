@@ -40,7 +40,9 @@ const ImagesUploader = ({ imageLink, setImageLink, formData, setFormData }) => {
         setFormData((prevData) => {
           return {
             ...prevData,
-            images: [...prevData.images, images],
+            images: Array.isArray(images)
+              ? [...prevData.images, ...images]
+              : [...prevData.images, images],
           };
         });
       });
