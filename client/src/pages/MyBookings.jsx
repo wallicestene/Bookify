@@ -10,9 +10,6 @@ import fetchWrapper from "../utils/fetchWrapper";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { Calendar, CalendarDays, Home, Search, Star } from "lucide-react";
 import { Button } from "../components/ui/button";
