@@ -16,7 +16,7 @@ const HomePage = () => {
     maxPrice: null,
     amenities: "",
     tags: "",
-    guests: 1,
+    guests: null,
     bedrooms: null,
     // beds: 1,
     checkIn: null,
@@ -26,6 +26,7 @@ const HomePage = () => {
   });
 
   const [searchData, setSearchData] = useState([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [searchError, setSearchError] = useState(null);
@@ -54,6 +55,7 @@ const HomePage = () => {
     // If no filters are applied, reset search data
     if (Object.keys(filteredParams).length === 0) {
       setSearchData([]);
+      setHasSearched(false);
       return;
     }
 
@@ -77,6 +79,7 @@ const HomePage = () => {
         setSearchData(result);
         setLoading(false);
         setSearchError(null);
+        setHasSearched(true); // Set the flag when search is complete
 
         if (result.length === 0) {
           setSearchError("No place found!");
@@ -103,22 +106,41 @@ const HomePage = () => {
             searchInput={searchInput}
             setSearchInput={setSearchInput}
             searchProperty={searchProperty}
-            numberOfProperties={searchData.length}
+            numberOfProperties={hasSearched ? searchData.length : 0}
           />
         </div>
-        {/* recommendations */}
-        <div className="recommendations relative max-w-[98vw] mx-auto">
-          <RecommendedProperties 
-            type={user?.token ? "personalized" : "popular"} 
-          />
-        </div>
+
+        {/* Only show recommendations when there's no active search */}
+        {(!hasSearched || searchData.length === 0) && (
+          <div className="recommendations relative max-w-[98vw] mx-auto">
+            <RecommendedProperties
+              type={user?.token ? "personalized" : "popular"}
+            />
+          </div>
+        )}
+
+        {/* Only when search has been performed AND has results */}
+        {hasSearched && searchData.length > 0 && (
+          <div className="px-10 pt-6">
+            <button
+              onClick={() => {
+                setSearchData([]);
+                setHasSearched(false);
+              }}
+              className="text-sm text-totem-pole-500 hover:text-totem-pole-600 flex items-center gap-1"
+            >
+              <span>← Clear filters</span>
+            </button>
+          </div>
+        )}
+
         <div>
           <PropertyContainer
             loading={loading}
             initialError={initialError}
-            searchData={searchData}
+            searchData={hasSearched ? searchData : []}
             isFirstRender={isFirstRender}
-            data={data}
+            data={!hasSearched ? data : []}
           />
         </div>
       </div>

@@ -28,23 +28,27 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
     // setHasInteracted(true);
     setSearchInput((prev) => ({
       ...prev,
-      guests: prev.guests + 1,
+      guests: prev.guests === null ? 1 : prev.guests + 1,
     }));
   };
 
   const removeGuests = () => {
     // setHasInteracted(true);
-    setSearchInput((prev) => ({
-      ...prev,
-      guests: prev.guests <= 1 ? 1 : prev.guests - 1,
-    }));
+    setSearchInput((prev) => {
+      if (prev.guests === null || prev.guests <= 1) {
+        return {
+          ...prev,
+          guests: null,
+        };
+      }
+      return {
+        ...prev,
+        guests: prev.guests - 1,
+      };
+    });
   };
 
-  // useEffect(() => {
-  //   if (hasInteracted) {
-  //     searchProperty();
-  //   }
-  // }, [searchInput]);
+
   return (
     <section className="p-1">
       <div className=" font-mulish mt-16">
@@ -92,12 +96,12 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                     <PopoverTrigger asChild>
                       <input
                         id="guests"
-                        type="number"
+                        type="text" // Changed from number to text for better display of empty/placeholder
                         name="guests"
-                        value={searchInput.guests || 1}
-                        min={1}
+                        value={searchInput.guests === null ? "1" : searchInput.guests}
+                        placeholder="Guests"
                         readOnly={true}
-                        className="h-full w-full border-none outline-none bg-none rounded-md p-2 cursor-pointer text-black "
+                        className="h-full w-full border-none outline-none bg-none rounded-md p-2 cursor-pointer text-black"
                       />
                     </PopoverTrigger>
                     <PopoverContent className=" rounded-2xl p-5 ">
@@ -109,7 +113,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                         <AddOrRemoveContainer
                           add={addGuests}
                           remove={removeGuests}
-                          value={searchInput.guests || 1}
+                          value={searchInput.guests === null ? 1 : searchInput.guests}
                         />
                       </div>
                     </PopoverContent>

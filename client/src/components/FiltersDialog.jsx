@@ -39,7 +39,7 @@ const FiltersDialog = ({
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   const isFirstRender = useRef(true);
-  const [priceRange, setPriceRange] = useState([0, 500]); // Default min and max price
+  const [priceRange, setPriceRange] = useState([100, 5000]); // Default min and max price
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
@@ -51,7 +51,7 @@ const FiltersDialog = ({
   };
   // clear filters
   const clearFilters = () => {
-    setPriceRange([0, 500]);
+    setPriceRange([100, 5000]);
     setRoomsAndBeds({ bedrooms: 1 });
     setSelectedAmenities([]);
 
@@ -109,14 +109,14 @@ const FiltersDialog = ({
                 <CardHeader>
                   <CardTitle>Price range</CardTitle>
                   <CardDescription>
-                    ${priceRange[0]} - ${priceRange[1]}
+                    KES {priceRange[0]} - KES {priceRange[1]}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Slider
-                    min={0}
-                    max={1000}
-                    step={10}
+                    min={100}
+                    max={10000}
+                    step={1}
                     value={priceRange} // Controlled component
                     onValueChange={handlePriceChange}
                     className="mt-2"
@@ -125,7 +125,7 @@ const FiltersDialog = ({
                 <CardFooter className="flex items-center justify-between">
                   {
                     // If any filter is applied, show clear filters button
-                    priceRange[0] !== 0 || priceRange[1] !== 500 ? (
+                    priceRange[0] !== 1000 || priceRange[1] !== 5000 ? (
                       <Button
                         onClick={() => {
                           clearFilters();

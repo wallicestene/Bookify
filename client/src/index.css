@@ -99,6 +99,7 @@ input[type="text"],
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
 @layer base {
   * {
     @apply border-border;
@@ -117,4 +118,7 @@ input[type="text"],
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+}
+.fade-transition {
+  transition: opacity 0.3s ease-in-out;
 }
