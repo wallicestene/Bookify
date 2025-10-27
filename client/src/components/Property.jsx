@@ -119,7 +119,7 @@ const Property = ({ property }) => {
           <div className="text-sm pt-1">
             <p className="flex items-baseline gap-1">
               <span className="font-semibold text-gray-900">
-                {(property?.price || 0).toLocaleString("en-US", {
+                {(property?.price || 0).toLocaleString("en-KE", {
                   style: "currency",
                   currency: "KES",
                 })}{" "}

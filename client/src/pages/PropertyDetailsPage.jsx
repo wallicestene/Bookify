@@ -170,10 +170,10 @@ const PropertyDetailsPage = () => {
         </div>
       )}
       {!isLoading && !error && data && (
-        <div className="py-6 w-full mx-auto font-Mulish relative">
-          <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="pt-20 pb-6 w-full mx-auto font-Mulish relative">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 mb-4">
             <button
-              className="flex items-center gap-2 text-sm hover:bg-gray-50 w-fit px-3 py-2 rounded-lg transition-colors mb-4"
+              className="flex items-center gap-2 text-sm hover:bg-gray-50 w-fit px-3 py-2 rounded-lg transition-colors border border-gray-200"
               onClick={() => navigate(-1)}
             >
               <KeyboardBackspace fontSize="small" />
