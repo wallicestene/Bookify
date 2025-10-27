@@ -170,30 +170,30 @@ const PropertyDetailsPage = () => {
         </div>
       )}
       {!isLoading && !error && data && (
-        <div className="py-8 lg:w-full md:w-11/12 w-full mx-auto font-Mulish relative">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="py-6 w-full mx-auto font-Mulish relative">
+          <div className="max-w-7xl mx-auto px-4 md:px-6">
             <button
-              className="flex items-center gap-2 text-base hover:bg-orange-50 w-fit px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 mb-6"
+              className="flex items-center gap-2 text-sm hover:bg-gray-50 w-fit px-3 py-2 rounded-lg transition-colors mb-4"
               onClick={() => navigate(-1)}
             >
-              <KeyboardBackspace />
-              <span className="font-medium">Back</span>
+              <KeyboardBackspace fontSize="small" />
+              <span>Back</span>
             </button>
           </div>
-          <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
+          <div className="relative mx-auto max-w-7xl px-4 md:px-6">
             <div>
-              <div className="px-2 mb-4">
-                <h1 className="text-3xl font-bold text-gray-900 first-letter:uppercase">
+              <div className="mb-4">
+                <h1 className="text-xl font-semibold text-gray-900 mb-2">
                   {data?.name}
                 </h1>
-                <div className="flex items-center gap-2 mt-2 text-gray-600">
-                  <LocationOn className="text-orange-500" fontSize="small" />
-                  <span className="text-sm">{data?.address}</span>
+                <div className="flex items-center gap-1 text-sm text-gray-600">
+                  <LocationOn style={{ fontSize: '16px' }} className="text-gray-400" />
+                  <span>{data?.address}</span>
                 </div>
               </div>
             </div>
             <div
-              className={`top hidden lg:grid gap-3 h-[500px] overflow-hidden rounded-2xl shadow-xl ${
+              className={`top hidden lg:grid gap-2 h-96 overflow-hidden rounded-xl ${
                 data?.images && data.images.length == 1 && "grid-cols-1 h-64 w-7/12 mx-auto"
               }
             ${
@@ -213,7 +213,7 @@ const PropertyDetailsPage = () => {
                 />
               </div>
               <div
-                className={`imgright grid gap-3 h-[500px] w-full overflow-hidden ${
+                className={`imgright grid gap-2 h-96 w-full overflow-hidden ${
                   data?.images && data.images.slice(1).length <= 2 && "grid-cols-1"
                 }
               ${data?.images && data.images.slice(1).length >= 3 && "grid-cols-2"}
@@ -234,10 +234,10 @@ const PropertyDetailsPage = () => {
               <div>
                 <Link
                   to={`/imageGallery/${id}`}
-                  className="hidden absolute bottom-4 right-8 bg-white/90 backdrop-blur-md text-sm lg:flex items-center gap-2 font-semibold py-3 px-5 rounded-xl hover:cursor-pointer shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border border-gray-200"
+                  className="hidden absolute bottom-3 right-6 bg-white/95 backdrop-blur-sm text-xs lg:flex items-center gap-2 font-medium py-2 px-4 rounded-lg hover:cursor-pointer shadow-md hover:shadow-lg transition-shadow border border-gray-200"
                 >
                   <img
-                    className="h-5 w-5"
+                    className="h-4 w-4"
                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAQ0lEQVR4nO2TwQkAIAzEMp7S/RdQ91AKnUA4ELlAXznoK/ATASxgAl3gSbHrhsAjf9BrlLIJvHmAcAe4AxPuAHfABQd26G3wlQ9gxwAAAABJRU5ErkJggg=="
                     alt="gallery"
                   />
@@ -260,10 +260,10 @@ const PropertyDetailsPage = () => {
                   interval={5000}
                   showArrows={false}
                   useKeyboardArrows={true}
-                  className="relative lg:hidden w-full overflow-hidden rounded-2xl shadow-lg"
+                  className="relative lg:hidden w-full overflow-hidden rounded-xl"
                 >
                   {data?.images.map((image, index) => (
-                    <div key={index} className="overflow-hidden h-80 w-full">
+                    <div key={index} className="overflow-hidden h-64 w-full">
                       <img
                         src={image}
                         alt={data.name}
@@ -276,145 +276,122 @@ const PropertyDetailsPage = () => {
             )}
           </div>
 
-          <div className=" grid lg:grid-cols-3 grid-cols-1 relative gap-x-2 py-2">
-            <div className=" lg:col-span-2 p-2">
+          <div className="grid lg:grid-cols-3 grid-cols-1 gap-6 py-6 px-4 md:px-6">
+            <div className="lg:col-span-2 space-y-6">
               {data && !isLoading && (
-                <div className="flex items-center gap-x-2 ">
-                  <p className="text-sm  font-semibold flex items-center">
-                    <LocationOn
-                      sx={{
-                        fontSize: "1.4rem",
-                      }}
-                    />
-                    <span className=" ">{data?.address}</span>
-                  </p>
-                  <div className=" flex items-center gap-x-2 text-sm font-extralight">
-                    <p className=" flex items-center justify-center gap-x-[2px]">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <p className="flex items-center gap-1">
                       <Circle
                         sx={{
-                          height: "0.12em",
-                          width: "0.12em",
+                          height: "0.25rem",
+                          width: "0.25rem",
                         }}
-                      />{" "}
-                      {data?.guests} Guest(s)
+                      />
+                      {data?.guests} Guest{data?.guests !== 1 ? 's' : ''}
                     </p>
-                    <p className=" flex items-center justify-center gap-x-[2px]">
+                    <p className="flex items-center gap-1">
                       <Circle
                         sx={{
-                          height: "0.12em",
-                          width: "0.12em",
+                          height: "0.25rem",
+                          width: "0.25rem",
                         }}
-                      />{" "}
-                      {data?.whereToSleep.length} Bedroom(s)
+                      />
+                      {data?.whereToSleep.length} Bedroom{data?.whereToSleep.length !== 1 ? 's' : ''}
                     </p>
                   </div>
-                  <div
-                    style={{
-                      height: "0.01rem",
-                    }}
-                    className=" bg-black opacity-20 my-5"
-                  />
+                  <div className="h-px bg-gray-200 my-4" />
                 </div>
               )}
               {data && !isLoading && (
-                <div className=" px-2">
-                  <h2 className=" my-2 text-lg font-semibold ">
+                <div className="space-y-2">
+                  <h2 className="text-base font-semibold text-gray-900">
                     About this place
                   </h2>
-                  <p className="text-md text-gray-900 text-sm  line-clamp-[4]">
+                  <p className="text-sm text-gray-600 leading-relaxed">
                     {data?.description}
                   </p>
-                  <div
-                    style={{
-                      height: "0.01rem",
-                    }}
-                    className=" bg-black opacity-20 my-5"
-                  />
+                  <div className="h-px bg-gray-200 my-4" />
                 </div>
               )}
               {data && !isLoading && data?.amenities && Array.isArray(data.amenities) && data.amenities.length > 0 && (
-                <div className=" px-2">
-                  <h2 className=" my-2 text-lg font-semibold ">
-                    Amenities in this place
+                <div className="space-y-3">
+                  <h2 className="text-base font-semibold text-gray-900">
+                    What this place offers
                   </h2>
-                  <ul className=" grid lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-3">
+                  <ul className="grid lg:grid-cols-2 grid-cols-1 gap-2">
                     {data.amenities
                       .slice(0, allAmenities)
                       .map((amenity, index) => (
                         <li
-                          className="first-letter:uppercase p-2 flex w-full items-center gap-x-1 rounded-md"
+                          className="first-letter:uppercase py-2 flex items-center gap-2 text-sm text-gray-700"
                           key={index}
                         >
-                          <div>
-                            {(amenity === "Wifi" && <Wifi />) ||
-                              (amenity === "Outdoor dining" && <Deck />) ||
-                              (amenity === "TV" && <Tv />) ||
-                              (amenity === "Kitchen" && <Kitchen />) ||
+                          <div className="text-gray-500">
+                            {(amenity === "Wifi" && <Wifi fontSize="small" />) ||
+                              (amenity === "Outdoor dining" && <Deck fontSize="small" />) ||
+                              (amenity === "TV" && <Tv fontSize="small" />) ||
+                              (amenity === "Kitchen" && <Kitchen fontSize="small" />) ||
                               (amenity === "Washer" && (
-                                <LocalLaundryServiceOutlined />
+                                <LocalLaundryServiceOutlined fontSize="small" />
                               )) ||
-                              (amenity === "Free parking" && <TimeToLeave />) ||
+                              (amenity === "Free parking" && <TimeToLeave fontSize="small" />) ||
                               (amenity === "Paid parking" && (
-                                <PaidOutlined />
+                                <PaidOutlined fontSize="small" />
                               )) ||
                               (amenity === "Air conditioning" && (
-                                <AcUnitRounded />
+                                <AcUnitRounded fontSize="small" />
                               )) ||
-                              (amenity === "Workspace" && <Work />) ||
-                              (amenity === "Hot tub" && <HotTub />) ||
-                              (amenity === "Pool" && <Pool />) ||
+                              (amenity === "Workspace" && <Work fontSize="small" />) ||
+                              (amenity === "Hot tub" && <HotTub fontSize="small" />) ||
+                              (amenity === "Pool" && <Pool fontSize="small" />) ||
                               (amenity === "Outdoor grill" && (
-                                <OutdoorGrill />
+                                <OutdoorGrill fontSize="small" />
                               )) ||
-                              (amenity === "Fire place" && <Fireplace />) ||
+                              (amenity === "Fire place" && <Fireplace fontSize="small" />) ||
                               (amenity === "Fire extinguisher" && (
-                                <FireExtinguisherOutlined />
+                                <FireExtinguisherOutlined fontSize="small" />
                               )) ||
                               (amenity === "First aid kit" && (
-                                <MedicalServicesOutlined />
+                                <MedicalServicesOutlined fontSize="small" />
                               )) ||
                               (amenity === "Smoke detector" && (
-                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVR4nGNgGAUkgP9UxgNnAT6x/wT4uMTwS5AIcJrzFCphxUA+sIaa8QSbZDsVw78VmwVsUEtgPiEHP4EaDjILL1gO1ZBBRLBkQNWC9BANSNG0nATHwIEGGcGjwUAiICUunjMwMDAyjEjwn4yiYtQCBqoGETqguoEM9LZg8AEAeEuZ96V4tvUAAAAASUVORK5CYII="></img>
+                                <img className="w-4 h-4" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVR4nGNgGAUkgP9UxgNnAT6x/wT4uMTwS5AIcJrzFCphxUA+sIaa8QSbZDsVw78VmwVsUEtgPiEHP4EaDjILL1gO1ZBBRLBkQNWC9BANSNG0nATHwIEGGcGjwUAiICUunjMwMDAyjEjwn4yiYtQCBqoGETqguoEM9LZg8AEAeEuZ96V4tvUAAAAASUVORK5CYII=" alt="Smoke detector" />
                               ))}
                           </div>
                           <p>{amenity}</p>
                         </li>
                       ))}{" "}
                   </ul>
-                  {data?.amenities && data.amenities.length > 3 && (
+                  {data?.amenities && data.amenities.length > 8 && (
                     <button
                       onClick={() => showAllAmenities(data.amenities)}
-                      className=" mt-3 py-2 px-3 border border-black rounded-md hover:bg-gray-100 hover:transition-colors duration-150 delay-75"
+                      className="mt-2 py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                     >
                       {allAmenities === data.amenities.length
                         ? "Show less"
-                        : `Show all (${data.amenities.length})`}
+                        : `Show all ${data.amenities.length} amenities`}
                     </button>
                   )}
-                  <div
-                    style={{
-                      height: "0.01rem",
-                    }}
-                    className=" bg-black opacity-20 my-5"
-                  />{" "}
+                  <div className="h-px bg-gray-200 my-4" />
                 </div>
               )}
               {data && !isLoading && data?.whereToSleep && Array.isArray(data.whereToSleep) && data.whereToSleep.length > 0 && (
-                <div className=" px-2">
-                  <h2 className=" my-2 text-lg font-semibold ">
-                    Where you&#39;ll sleep
+                <div className="space-y-3">
+                  <h2 className="text-base font-semibold text-gray-900">
+                    Where you&apos;ll sleep
                   </h2>
-                  <div className=" grid lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-x-4 gap-y-2">
+                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
                     {data?.whereToSleep && data.whereToSleep.map((place, index) => (
                       <div
                         key={index}
-                        className=" border border-black py-4 px-3 rounded-md flex flex-col gap-y-2"
+                        className="border border-gray-200 py-4 px-4 rounded-lg space-y-2 hover:border-gray-300 transition-colors"
                       >
-                        <BedOutlined />
-                        <div>
-                          <p>Bedroom {place?.bedroom}</p>
+                        <BedOutlined className="text-gray-500" fontSize="small" />
+                        <div className="space-y-1">
+                          <p className="font-medium text-sm text-gray-900">Bedroom {place?.bedroom}</p>
                           {place?.sleepingPosition?.kingBed > 0 && (
-                            <p className=" mt-[1.7px] text-[0.8em] text-gray-600">
+                            <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.kingBed} King bed
                               {`${
                                 place?.sleepingPosition?.kingBed > 1 ? "s" : ""
@@ -422,7 +399,7 @@ const PropertyDetailsPage = () => {
                             </p>
                           )}
                           {place?.sleepingPosition?.queenBedBed > 0 && (
-                            <p className=" mt-[1.7px] text-[0.8em] text-gray-600">
+                            <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.queenBed} Queen bed
                               {`${
                                 place?.sleepingPosition?.queenBed > 1 ? "s" : ""
@@ -430,7 +407,7 @@ const PropertyDetailsPage = () => {
                             </p>
                           )}
                           {place?.sleepingPosition?.singleBed > 0 && (
-                            <p className=" mt-[1.7px] text-[0.8em] text-gray-600">
+                            <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.singleBed} Single bed
                               {`${
                                 place?.sleepingPosition?.singleBed > 1
@@ -440,7 +417,7 @@ const PropertyDetailsPage = () => {
                             </p>
                           )}
                           {place?.sleepingPosition?.sofa > 0 && (
-                            <p className=" mt-[1.7px] text-[0.8em] text-gray-600">
+                            <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.sofa} Sofa
                               {`${
                                 place?.sleepingPosition?.sofa > 1 ? "s" : ""
@@ -454,59 +431,54 @@ const PropertyDetailsPage = () => {
                 </div>
               )}
             </div>
-            <div className=" lg:col-span-1 flex flex-col items-center">
-              <div className="lg:hidden fixed bottom-[40px] right-4 flex justify-end items-end w-full">
+            <div className="lg:col-span-1 flex flex-col items-center">
+              <div className="lg:hidden fixed bottom-6 right-4 z-20">
                 <button
-                  className=" py-2 inline-flex items-center justify-center h-12 px-6 font-medium  text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none"
+                  className="py-2.5 px-6 inline-flex items-center justify-center font-medium text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 rounded-lg shadow-lg text-sm"
                   onClick={() => setShowBookingMobile(true)}
                 >
-                  Book
+                  Reserve
                 </button>
               </div>
               {data && !isLoading && (
                 <div
-                  className={`lg:sticky lg:top-20 lg:left-0 lg:bottom-0  w-full  shadow-2xl rounded-md  lg:flex flex-col gap-y-2  font-mulish ${
+                  className={`lg:sticky lg:top-20 w-full rounded-xl lg:flex flex-col gap-y-3 font-mulish ${
                     showBookingMobile
-                      ? "  lg:h-fit fixed top-0 z-10 backdrop-blur-md bg-white/70 h-screen flex flex-col justify-center"
+                      ? "fixed inset-0 z-50 backdrop-blur-sm bg-black/20 flex items-center justify-center p-4"
                       : "hidden"
                   }`}
                 >
-                  <div className=" bg-white flex flex-col gap-4 p-3 rounded-md border">
-                    <div className=" flex w-full justify-between">
+                  <div className="bg-white flex flex-col gap-4 p-5 rounded-xl border border-gray-200 shadow-md max-w-md mx-auto w-full">
+                    <div className="flex w-full justify-between items-start">
                       <div>
-                        <p className=" ">
-                          <span className="text-[1.2em] font-semibold ">
-                            {data.price.toLocaleString("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            })}
-                          </span>{" "}
-                          <span>per night</span>
+                        <p className="text-lg font-semibold text-gray-900">
+                          {data.price.toLocaleString("en-KE", {
+                            style: "currency",
+                            currency: "KES",
+                          })}{" "}
+                          <span className="text-sm font-normal text-gray-600">/ night</span>
                         </p>
                       </div>
-                      <div className="lg:hidden flex items-center justify-end">
-                        <Close
+                      <div className="lg:hidden">
+                        <button
                           onClick={() => setShowBookingMobile(false)}
-                          sx={{
-                            ":hover": {
-                              cursor: "pointer",
-                            },
-                          }}
-                        />
+                          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                        >
+                          <Close fontSize="small" />
+                        </button>
                       </div>
                     </div>
-                    <div className="rounded-lg border border-totem-pole-400 flex flex-col gap-2 p-2">
-                      <div>
-                        <h3>
-                          Add <strong>check in</strong> and{" "}
-                          <strong>check out</strong>
+                    <div className="rounded-lg border border-gray-200 flex flex-col divide-y divide-gray-200">
+                      <div className="p-3">
+                        <h3 className="text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                          Dates
                         </h3>
                         <Datepicker
                           inputClassName={
-                            "placeholder:text-sm border-none outline-none font-extralight"
+                            "placeholder:text-sm border-none outline-none text-sm text-gray-700"
                           }
                           containerClassName={
-                            "relative h-14 border border-black flex items-center rounded-lg"
+                            "relative h-10 border border-gray-300 hover:border-gray-400 flex items-center rounded-lg px-3 transition-colors"
                           }
                           useRange={true}
                           value={date}
@@ -519,14 +491,14 @@ const PropertyDetailsPage = () => {
                         />
                       </div>
 
-                      <div className="relative flex flex-col ">
+                      <div className="relative p-3">
                         <div>
-                          <h3>Guests</h3>
+                          <h3 className="text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Guests</h3>
                           <div
-                            className=" flex items-center justify-between py-2 h-14 rounded-lg border border-black px-2 hover:cursor-pointer"
+                            className="flex items-center justify-between py-2 h-10 rounded-lg border border-gray-300 hover:border-gray-400 px-3 cursor-pointer transition-colors"
                             onClick={() => setShowGuests(!showGuests)}
                           >
-                            <div className=" font-extralight">
+                            <div className="text-sm text-gray-700">
                               {allGuests >= 1 && (
                                 <span>{`${allGuests} ${
                                   allGuests !== 1 ? "guests" : "guest"
@@ -539,29 +511,46 @@ const PropertyDetailsPage = () => {
                               )}
                             </div>
                             {showGuests ? (
-                              <KeyboardArrowUp />
+                              <KeyboardArrowUp fontSize="small" />
                             ) : (
-                              <KeyboardArrowDown />
+                              <KeyboardArrowDown fontSize="small" />
                             )}
                           </div>
                         </div>
                         {showGuests && (
                           <div
-                            className={`absolute top-[80px] bg-white shadow-xl border w-full px-2 py-3 flex flex-col gap-5 rounded-md`}
+                            className={`absolute top-[90px] left-3 right-3 bg-white shadow-xl border border-gray-200 px-4 py-4 flex flex-col gap-4 rounded-xl z-50`}
                           >
-                            <div className=" flex items-center justify-between">
+                            <div className="flex items-center justify-between">
                               <div>
-                                <p>Adult</p>
-                                <span className=" font-extralight text-sm">
+                                <p className="font-medium text-sm text-gray-900">Adult</p>
+                                <span className="text-xs text-gray-500">
                                   Age 15+
                                 </span>
                               </div>
-                              <div className=" flex flex-row-reverse items-center gap-3">
+                              <div className="flex items-center gap-3">
+                                <button
+                                  disabled={adults == 1}
+                                  className={`border border-gray-300 rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-50 transition-colors text-sm ${
+                                    adults == 1 &&
+                                    "text-gray-300 border-gray-200 cursor-not-allowed"
+                                  }`}
+                                  onClick={() => {
+                                    setAdults((prevValue) => {
+                                      return prevValue <= 1 ? 1 : prevValue - 1;
+                                    });
+                                  }}
+                                >
+                                  <Remove
+                                    sx={{ height: "0.875rem", width: "0.875rem" }}
+                                  />
+                                </button>
+                                <span className="w-6 text-center text-sm text-gray-900">{adults}</span>
                                 <button
                                   disabled={disableGuests}
-                                  className={`border border-black rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-100 transition-colors duration-150 delay-75 ${
+                                  className={`border border-gray-300 rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-50 transition-colors text-sm ${
                                     disableGuests &&
-                                    " text-gray-300 border-gray-300"
+                                    "text-gray-300 border-gray-200 cursor-not-allowed"
                                   }`}
                                   onClick={() =>
                                     setAdults((prevValue) =>
@@ -572,42 +561,41 @@ const PropertyDetailsPage = () => {
                                   }
                                 >
                                   <Add
-                                    sx={{ height: "1.2rem", width: "1.2rem" }}
-                                  />
-                                </button>
-
-                                {adults}
-                                <button
-                                  disabled={adults == 1}
-                                  className={`border border-black rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-100 transition-colors duration-150 delay-75 ${
-                                    adults == 1 &&
-                                    " text-gray-300 border-gray-300"
-                                  }`}
-                                  onClick={() => {
-                                    setAdults((prevValue) => {
-                                      return prevValue <= 1 ? 1 : prevValue - 1;
-                                    });
-                                  }}
-                                >
-                                  <Remove
-                                    sx={{ height: "1.2rem", width: "1.2rem" }}
+                                    sx={{ height: "0.875rem", width: "0.875rem" }}
                                   />
                                 </button>
                               </div>
                             </div>
-                            <div className=" flex  items-center justify-between">
+                            <div className="flex items-center justify-between">
                               <div>
-                                <p>Children</p>
-                                <span className=" font-extralight text-sm">
+                                <p className="font-medium text-sm text-gray-900">Children</p>
+                                <span className="text-xs text-gray-500">
                                   Ages 2–14
                                 </span>
                               </div>
-                              <div className=" flex flex-row-reverse items-center gap-3">
+                              <div className="flex items-center gap-3">
+                                <button
+                                  disabled={children == 0}
+                                  className={`border border-gray-300 rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-50 transition-colors text-sm ${
+                                    children == 0 &&
+                                    "text-gray-300 border-gray-200 cursor-not-allowed"
+                                  }`}
+                                  onClick={() =>
+                                    setChildren((prevValue) => {
+                                      return prevValue <= 0 ? 0 : prevValue - 1;
+                                    })
+                                  }
+                                >
+                                  <Remove
+                                    sx={{ height: "0.875rem", width: "0.875rem" }}
+                                  />
+                                </button>
+                                <span className="w-6 text-center text-sm text-gray-900">{children}</span>
                                 <button
                                   disabled={disableGuests}
-                                  className={`border border-black rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-100 transition-colors duration-150 delay-75 ${
+                                  className={`border border-gray-300 rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-50 transition-colors text-sm ${
                                     disableGuests &&
-                                    " text-gray-300 border-gray-300"
+                                    "text-gray-300 border-gray-200 cursor-not-allowed"
                                   }`}
                                   onClick={() =>
                                     setChildren((prevValue) =>
@@ -618,60 +606,24 @@ const PropertyDetailsPage = () => {
                                   }
                                 >
                                   <Add
-                                    sx={{ height: "1.2rem", width: "1.2rem" }}
-                                  />
-                                </button>
-
-                                {children}
-                                <button
-                                  disabled={children == 0}
-                                  className={`border border-black rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-100 transition-colors duration-150 delay-75 ${
-                                    children == 0 &&
-                                    " text-gray-300 border-gray-300"
-                                  }`}
-                                  onClick={() =>
-                                    setChildren((prevValue) => {
-                                      return prevValue <= 0 ? 0 : prevValue - 1;
-                                    })
-                                  }
-                                >
-                                  <Remove
-                                    sx={{ height: "1.2rem", width: "1.2rem" }}
+                                    sx={{ height: "0.875rem", width: "0.875rem" }}
                                   />
                                 </button>
                               </div>
                             </div>
-                            <div className=" flex items-center justify-between">
+                            <div className="flex items-center justify-between">
                               <div>
-                                <p>Infant</p>
-                                <span className=" text-sm font-extralight">
+                                <p className="font-medium text-sm text-gray-900">Infant</p>
+                                <span className="text-xs text-gray-500">
                                   Under 2
                                 </span>
                               </div>
-                              <div className=" flex flex-row-reverse items-center gap-3">
-                                <button
-                                  disabled={infants === 2}
-                                  className={`border border-black rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-100 transition-colors duration-150 delay-75 ${
-                                    infants === 2 &&
-                                    " text-gray-300 border-gray-300"
-                                  }`}
-                                  onClick={() =>
-                                    setInfants((prevValue) =>
-                                      infants >= 2 ? 2 : prevValue + 1
-                                    )
-                                  }
-                                >
-                                  <Add
-                                    sx={{ height: "1.2rem", width: "1.2rem" }}
-                                  />
-                                </button>
-
-                                {infants}
+                              <div className="flex items-center gap-3">
                                 <button
                                   disabled={infants === 0}
-                                  className={`border border-black rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-100 transition-colors duration-150 delay-75 ${
+                                  className={`border border-gray-300 rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-50 transition-colors text-sm ${
                                     infants === 0 &&
-                                    " text-gray-300 border-gray-300"
+                                    "text-gray-300 border-gray-200 cursor-not-allowed"
                                   }`}
                                   onClick={() =>
                                     setInfants((prevValue) => {
@@ -680,7 +632,18 @@ const PropertyDetailsPage = () => {
                                   }
                                 >
                                   <Remove
-                                    sx={{ height: "1.2rem", width: "1.2rem" }}
+                                    sx={{ height: "0.875rem", width: "0.875rem" }}
+                                  />
+                                </button>
+                                <span className="w-6 text-center text-sm text-gray-900">{infants}</span>
+                                <button
+                                  className="border border-gray-300 rounded-full flex items-center justify-center h-7 w-7 hover:bg-gray-50 transition-colors text-sm"
+                                  onClick={() =>
+                                    setInfants((prevValue) => prevValue + 1)
+                                  }
+                                >
+                                  <Add
+                                    sx={{ height: "0.875rem", width: "0.875rem" }}
                                   />
                                 </button>
                               </div>
@@ -689,30 +652,44 @@ const PropertyDetailsPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className=" flex gap-1 text-totem-pole-50">
-                      <button
-                        className="inline-flex w-full items-center justify-center h-12 px-6 font-medium  text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none"
-                        onClick={
-                          user
-                            ? () => {
-                                if (date.startDate && date.endDate) {
-                                  setShowDetails(true),
-                                    window.scrollTo({
-                                      top: 300,
-                                      behavior: "smooth",
-                                    });
-                                } else {
-                                  toast.error(
-                                    "Please select check in and check out to book!"
-                                  );
-                                }
+                    <button
+                      className="w-full py-2.5 font-medium text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 rounded-lg text-sm"
+                      onClick={
+                        user
+                          ? () => {
+                              if (date.startDate && date.endDate) {
+                                setShowDetails(true),
+                                  window.scrollTo({
+                                    top: 300,
+                                    behavior: "smooth",
+                                  });
+                              } else {
+                                toast.error(
+                                  "Please select check in and check out to book!"
+                                );
                               }
-                            : () => navigate("/login")
-                        }
-                      >
-                        Book
-                      </button>
-                    </div>
+                            }
+                          : () => navigate("/login")
+                      }
+                    >
+                      {user ? "Reserve" : "Sign in to book"}
+                    </button>
+                    {date.startDate && date.endDate && duration > 0 && (
+                      <div className="pt-3 border-t border-gray-200 space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">
+                            ${data.price} × {duration} night{duration !== 1 ? 's' : ''}
+                          </span>
+                          <span className="text-gray-900">
+                            ${(data.price * duration).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between font-semibold text-sm pt-2 border-t border-gray-200">
+                          <span className="text-gray-900">Total</span>
+                          <span className="text-gray-900">${totalPrice.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
