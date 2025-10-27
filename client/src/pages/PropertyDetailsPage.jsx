@@ -678,15 +678,15 @@ const PropertyDetailsPage = () => {
                       <div className="pt-3 border-t border-gray-200 space-y-2">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">
-                            ${data.price} × {duration} night{duration !== 1 ? 's' : ''}
+                            KES {data.price.toLocaleString()} × {duration} night{duration !== 1 ? 's' : ''}
                           </span>
                           <span className="text-gray-900">
-                            ${(data.price * duration).toLocaleString()}
+                            KES {(data.price * duration).toLocaleString()}
                           </span>
                         </div>
                         <div className="flex justify-between font-semibold text-sm pt-2 border-t border-gray-200">
                           <span className="text-gray-900">Total</span>
-                          <span className="text-gray-900">${totalPrice.toLocaleString()}</span>
+                          <span className="text-gray-900">KES {totalPrice.toLocaleString()}</span>
                         </div>
                       </div>
                     )}
