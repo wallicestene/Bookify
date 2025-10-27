@@ -10,43 +10,83 @@ const PropertyContainer = ({
   isFirstRender,
   data,
 }) => {
-  const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const skeleton = [1, 2, 3, 4, 5, 6, 7, 8];
+
+  // Ensure data is always an array - handle null, undefined, or non-array values
+  const safeData = Array.isArray(data) ? data : (data ? [] : []);
+  const safeSearchData = Array.isArray(searchData) ? searchData : [];
 
   return (
-    <div>
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-x-5 md:gap-x-10 gap-x-5 gap-y-10 py-[50px] px-5 lg:px-10 ">
+    <div className="py-8">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-6 px-6 max-w-7xl mx-auto">
+        {/* Loading Skeletons */}
         {loading &&
-          skeleton.map((skeleton, index) => (
+          skeleton.map((_, index) => (
             <div
               key={index}
-              className=" shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]  rounded-xl overflow-hidden transition-shadow"
+              className="shadow-md rounded-2xl overflow-hidden transition-all animate-pulse"
             >
               <Skeleton variant="rounded" width="100%" height={285} />
-              <div className=" p-2">
-                <Skeleton width="90%" height="35px" />
-                <div className=" flex flex-row gap-x-2">
-                  <Skeleton width="100%" height="50px" />
-                  <Skeleton width="100%" height="50px" />
-                  <Skeleton width="100%" height="50px" />
+              <div className="p-3 space-y-3">
+                <Skeleton width="90%" height={28} />
+                <div className="flex gap-2">
+                  <Skeleton width="30%" height={32} className="rounded-full" />
+                  <Skeleton width="30%" height={32} className="rounded-full" />
+                  <Skeleton width="30%" height={32} className="rounded-full" />
                 </div>
-                <Skeleton width="60%" height="35px" />
+                <Skeleton width="60%" height={28} />
               </div>
             </div>
           ))}
-        {initialError && <Alert severity="error">{initialError}</Alert>}
+
+        {/* Error State */}
+        {initialError && (
+          <div className="col-span-full">
+            <Alert severity="error" className="rounded-xl">
+              {initialError}
+            </Alert>
+          </div>
+        )}
+
+        {/* Properties Grid */}
         {!loading &&
-          (searchData.length > 0 ? (
-            searchData.map((property) => (
+          (safeSearchData.length > 0 ? (
+            safeSearchData.map((property) => (
               <Property key={property._id} property={property} />
             ))
-          ) : !isFirstRender.current && searchData.length === 0 ? (
-            <p>No properties found</p>
+          ) : !isFirstRender.current && safeSearchData.length === 0 ? (
+            <div className="col-span-full text-center py-16">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="text-6xl">🏠</div>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  No properties found
+                </h3>
+                <p className="text-gray-600">
+                  Try adjusting your filters or search criteria to find more properties.
+                </p>
+              </div>
+            </div>
           ) : (
-            data.map((property) => (
+            safeData.map((property) => (
               <Property key={property._id} property={property} />
             ))
           ))}
       </div>
+
+      {/* Empty State for no data at all */}
+      {!loading && !initialError && safeData.length === 0 && safeSearchData.length === 0 && (
+        <div className="col-span-full text-center py-16">
+          <div className="max-w-md mx-auto space-y-4">
+            <div className="text-6xl">🌍</div>
+            <h3 className="text-2xl font-bold text-gray-900">
+              Start exploring
+            </h3>
+            <p className="text-gray-600">
+              Use the search filters above to find your perfect accommodation.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

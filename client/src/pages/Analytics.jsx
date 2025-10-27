@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import useServer from "../hooks/ServerUrl";
+import { analyticsAPI } from "../services/api";
 import {
   Card,
   CardContent,
@@ -51,24 +51,13 @@ const Analytics = () => {
     revenueByMonth: [],
     topProperties: [],
   });
-  const serverUrl = useServer();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${serverUrl}api/analytics/owner`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch analytics");
-        }
-
-        const data = await response.json();
-        setStats(data);
+        const analyticsData = await analyticsAPI.getOwnerStats();
+        setStats(analyticsData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -79,7 +68,7 @@ const Analytics = () => {
     if (user?.userId) {
       fetchAnalytics();
     }
-  }, [user?.userId, user?.token, serverUrl]);
+  }, [user?.userId]);
 
   if (loading) {
     return (

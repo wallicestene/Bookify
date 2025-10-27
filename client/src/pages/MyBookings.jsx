@@ -5,8 +5,7 @@ import Bookings from "../components/Bookings";
 import { useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Alert } from "@mui/material";
-import useServer from "../hooks/ServerUrl";
-import fetchWrapper from "../utils/fetchWrapper";
+import { bookingAPI } from "../services/api";
 import {
   Card,
   CardContent,
@@ -14,6 +13,7 @@ import {
 import { Calendar, CalendarDays, Home, Search, Star } from "lucide-react";
 import { Button } from "../components/ui/button";
 import RecommendedProperties from "../components/RecommendedProperties";
+
 // eslint-disable-next-line react/prop-types
 const MyBookings = () => {
   const [myBookings, setMyBookings] = useState([]);
@@ -21,34 +21,29 @@ const MyBookings = () => {
   const [error, setError] = useState(null);
   const [{ user }] = useUserContext();
   const navigate = useNavigate();
+  
   useEffect(() => {
-    const getMyBookings = () => {
-      fetchWrapper(
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        `${useServer()}api/bookings/?userId=${user?.userId}`,
-        {
-          method: "GET",
-        }
-      )
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          } else {
-            return response.json();
-          }
-        })
-        .then((bookings) => {
-          setMyBookings(bookings);
-          setLoading(false);
-          setError(null);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setLoading(false);
-        });
+    const getMyBookings = async () => {
+      if (!user?.userId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const bookings = await bookingAPI.getUserBookings(user.userId);
+        const safeBookings = Array.isArray(bookings) ? bookings : [];
+        setMyBookings(safeBookings);
+      } catch (err) {
+        setError(err.message || "Failed to fetch bookings");
+      } finally {
+        setLoading(false);
+      }
     };
+
     getMyBookings();
-  }, [user?.token, user?.userId]);
+  }, [user?.userId]);
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 px-4 md:px-6 py-6 font-Mulish">

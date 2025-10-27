@@ -234,7 +234,9 @@ const PlacesForm = () => {
           throw new Error("Failed to fetch property");
         }
 
-        const data = await response.json();
+        const result = await response.json();
+        // Handle new API response format
+        const data = result.data || result;
 
         setFormData({
           name: data.name || "",

@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import { Close, KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import useServer from "../hooks/ServerUrl";
 
 const ImageGallery = () => {

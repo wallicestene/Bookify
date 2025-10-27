@@ -13,7 +13,9 @@ const ImagesUploader = ({ imageLink, setImageLink, formData, setFormData }) => {
       body: JSON.stringify({ link: imageLink }),
     })
       .then((res) => res.json())
-      .then((image) => {
+      .then((result) => {
+        // Handle new API response format
+        const image = result.data || result;
         setFormData((prevData) => {
           return {
             ...prevData,
@@ -36,7 +38,9 @@ const ImagesUploader = ({ imageLink, setImageLink, formData, setFormData }) => {
       body: formData,
     })
       .then((response) => response.json())
-      .then((images) => {
+      .then((result) => {
+        // Handle new API response format
+        const images = result.data || result;
         setFormData((prevData) => {
           return {
             ...prevData,

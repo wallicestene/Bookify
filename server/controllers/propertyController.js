@@ -2,21 +2,22 @@ const mongoose = require("mongoose");
 const Property = require("../models/propertyModel");
 const multer = require("multer");
 const imageDownloader = require("image-downloader");
-const { request } = require("express");
 const path = require("path");
-const fs = require("fs");
-const { extname } = require("path");
+const fs = require("fs").promises;
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const Booking = require("../models/bookingModel");
-const SearchHistory = require("../models/searchHistoryModel")
+const SearchHistory = require("../models/searchHistoryModel");
+const asyncHandler = require("../utils/asyncHandler");
+const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../utils/ApiResponse");
 require("dotenv").config();
 
-// const path = req
-// add a Property
+// S3 configuration
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
 const secretKey = process.env.SECRET_KEY;
+
 const s3 = new S3Client({
   credentials: {
     accessKeyId: accessKey,
@@ -24,7 +25,9 @@ const s3 = new S3Client({
   },
   region: bucketRegion,
 });
-const addProperty = (req, res) => {
+
+// Add a property
+const addProperty = asyncHandler(async (req, res) => {
   const {
     owner,
     name,
@@ -37,7 +40,8 @@ const addProperty = (req, res) => {
     amenities,
     tags,
   } = req.body;
-  Property.create({
+
+  const property = await Property.create({
     owner,
     name,
     address,
@@ -48,136 +52,142 @@ const addProperty = (req, res) => {
     price,
     amenities,
     tags,
-  })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      
-      res.status(400).json({ error: err.message });
-    });
-};
-// get all Properties by the owner
-const getPropertyByOwner = (req, res) => {
+  });
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, property, "Property created successfully"));
+});
+
+// Get all properties by owner
+const getPropertyByOwner = asyncHandler(async (req, res) => {
   const { owner } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(owner)) {
-    return res.status(400).json("No user with that Id");
+    throw new ApiError(400, "Invalid user ID");
   }
-  Property.find({ owner })
-    .then((properties) => {
-      if (!properties) {
-        return res.status(404).send("no Properties found");
-      }
-      res.status(200).json(properties);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: "failed to fetch the Properties" });
-    });
-};
-// custom filename and destination
+
+  const properties = await Property.find({ owner }).sort({ updatedAt: -1 });
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, properties, "Properties fetched successfully")
+    );
+});
+
+// Multer configuration
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, "photo" + Date.now() + path.extname(file.originalname));
   },
 });
+
 const uploadMiddleware = multer({
   storage,
-});
-// uploading images
-const uploadImages = async (req, res) => {
-  try {
-    const uploadPromises = [];
-    const uploadedImages = [];
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = allowedTypes.test(file.mimetype);
 
-    for (let i = 0; i < req.files.length; i++) {
-      const { filename } = req.files[i];
-      const params = {
-        Bucket: bucketName,
-        Key: filename,
-        Body: fs.readFileSync(req.files[i].path),
-        ContentType: req.files[i].mimetype,
-      };
-
-      const command = new PutObjectCommand(params);
-      const uploadPromise = s3.send(command)
-        .then(() => {
-          const imageUrl = `https://bookify-app-bucket.s3.amazonaws.com/${filename}`;
-          uploadedImages.push(imageUrl);
-          fs.unlinkSync(req.files[i].path);
-          return imageUrl;
-        });
-
-      uploadPromises.push(uploadPromise);
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new ApiError(400, "Only image files are allowed"));
     }
+  },
+});
 
-    // Wait for all uploads to complete
-    await Promise.all(uploadPromises);
-
-    res.json(uploadedImages);
-  } catch (error) {
-    console.error("Error uploading images:", error);
-    res.status(500).json({ error: "Failed to upload images" });
+// Upload images to S3
+const uploadImages = asyncHandler(async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    throw new ApiError(400, "No files uploaded");
   }
-};
+
+  const uploadPromises = req.files.map(async (file) => {
+    const { filename, path: filePath, mimetype } = file;
+
+    const fileContent = await fs.readFile(filePath);
+
+    const params = {
+      Bucket: bucketName,
+      Key: filename,
+      Body: fileContent,
+      ContentType: mimetype,
+    };
+
+    const command = new PutObjectCommand(params);
+    await s3.send(command);
+
+    // Clean up local file
+    await fs.unlink(filePath);
+
+    return `https://${bucketName}.s3.amazonaws.com/${filename}`;
+  });
+
+  const uploadedImages = await Promise.all(uploadPromises);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, uploadedImages, "Images uploaded successfully"));
+});
 
 
-const uploadImageByLink = (req, res) => {
+// Upload image by link
+const uploadImageByLink = asyncHandler(async (req, res) => {
   const { link } = req.body;
+
+  if (!link) {
+    throw new ApiError(400, "Image link is required");
+  }
+
   const newName = "photo" + Date.now() + ".jpg";
   const filePath = `${__dirname}/uploads/${newName}`;
 
-  imageDownloader
-    .image({
-      url: link,
-      dest: filePath,
-    })
-    .then(() => {
-      // Upload the image to S3
-      const fileStream = fs.createReadStream(filePath);
-      const params = {
-        Bucket: bucketName,
-        Key: newName,
-        Body: fileStream,
-        ContentType: "image/jpeg",
-      };
-      const command = new PutObjectCommand(params);
+  await imageDownloader.image({
+    url: link,
+    dest: filePath,
+  });
 
-      s3.send(command, (err, data) => {
-        if (err) {
-          console.error("Error uploading image to S3:", err);
-          res.status(500).json({ error: "Failed to upload image to S3" });
-        } else {
-          console.log("Image uploaded successfully.");
-          //Deleting the local file after uploading to S3
-          fs.unlinkSync(filePath);
+  const fileStream = await fs.readFile(filePath);
+  const params = {
+    Bucket: bucketName,
+    Key: newName,
+    Body: fileStream,
+    ContentType: "image/jpeg",
+  };
 
-          return res.json(
-            `https://bookify-app-bucket.s3.amazonaws.com/${newName}`
-          );
-        }
-      });
-    })
-    .catch((err) => {
-      console.error("Error downloading image:", err);
-      res.status(500).json({ error: "Failed to download image" });
-    });
-};
-// find all properties
-const findAllProperties = (req, res) => {
-  Property.find()
-    .sort({
-      updatedAt: -1,
-    })
-    .then((properties) => {
-      res.status(200).json(properties);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: `Failed to fetch all property error` });
-    });
-};
-// update Property details
-const updateProperty = (req, res) => {
+  const command = new PutObjectCommand(params);
+  await s3.send(command);
+
+  // Clean up local file
+  await fs.unlink(filePath);
+
+  const imageUrl = `https://${bucketName}.s3.amazonaws.com/${newName}`;
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, imageUrl, "Image uploaded successfully"));
+});
+
+// Find all properties
+const findAllProperties = asyncHandler(async (req, res) => {
+  const properties = await Property.find().sort({ updatedAt: -1 });
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, properties, "Properties fetched successfully")
+    );
+});
+
+// Update property
+const updateProperty = asyncHandler(async (req, res) => {
   const {
     name,
     address,
@@ -190,48 +200,54 @@ const updateProperty = (req, res) => {
     tags,
   } = req.body;
   const { id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json("No property with that id");
+    throw new ApiError(404, "Invalid property ID");
   }
-  Property.findByIdAndUpdate(id, {
-    name,
-    address,
-    description,
-    images,
-    whereToSleep,
-    guests,
-    price,
-    amenities,
-    tags,
-  })
-    .then((property) => {
-      if (!property) {
-        res.json(`no property found with that ${id}`);
-      }
-      res.status(200).json(property);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "failed to fetch the property" });
-    });
-};
-// find a single rProperty
-const findOneProperty = (req, res) => {
+
+  const property = await Property.findByIdAndUpdate(
+    id,
+    {
+      name,
+      address,
+      description,
+      images,
+      whereToSleep,
+      guests,
+      price,
+      amenities,
+      tags,
+    },
+    { new: true, runValidators: true }
+  );
+
+  if (!property) {
+    throw new ApiError(404, "Property not found");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, property, "Property updated successfully"));
+});
+
+// Find one property
+const findOneProperty = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json("No record with that id");
+    throw new ApiError(404, "Invalid property ID");
   }
-  Property.findById(id)
-    .then((property) => {
-      if (!property) {
-        return res.status(404).json(`no property found with that ${id}`);
-      } else {
-        res.status(200).json(property);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "failed to fetch the property" });
-    });
-};
+
+  const property = await Property.findById(id);
+
+  if (!property) {
+    throw new ApiError(404, "Property not found");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, property, "Property fetched successfully"));
+});
 
 // const searchProperty =  (req, res) => {
 //   const { query } = req.query;
@@ -261,130 +277,141 @@ const findOneProperty = (req, res) => {
 //         .json({ error: "error in while searching for Property" });
 //     });
 // };
-// delete a Property
-const deleteProperty = (req, res) => {
+
+// Delete a property
+const deleteProperty = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json(`No Property with given id : ${id}`);
+    throw new ApiError(404, "Invalid property ID");
   }
 
-  Property.findByIdAndDelete(id)
+  const result = await Property.findByIdAndDelete(id);
 
-    .then((result) => {
-      if (!result) {
-        return res.status(400).json({ error: "No such property" });
-      } else {
-        res.status(200).json(result);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "error in deleting the property" });
-    });
-};
-// find/search a Property by address, minPrice, maxPrice, amenities, tags, guests 
-const searchProperty = async (req, res) => {
-  try {
-    const {
-      location,        // This will now match `address`
-      minPrice,        // Matches `price`
-      maxPrice,        // Matches `price`
-      amenities,       // Matches `amenities` array
-      tags,            // Matches `tags` array
-      guests,          // Matches `guests`
-      bedrooms,        // Matches `whereToSleep.bedroom`
-      beds,            // Matches `whereToSleep.sleepingPosition`
-      checkIn,
-      checkOut,
-    } = req.query;
+  if (!result) {
+    throw new ApiError(404, "Property not found");
+  }
 
-    const userId = req.user?.id; // Assuming user is authenticated
+  res
+    .status(200)
+    .json(new ApiResponse(200, result, "Property deleted successfully"));
+});
 
-    // Build search query
-    const query = {};
+// Search properties with filters
+const searchProperty = asyncHandler(async (req, res) => {
+  const {
+    location,
+    minPrice,
+    maxPrice,
+    amenities,
+    tags,
+    guests,
+    bedrooms,
+    beds,
+    checkIn,
+    checkOut,
+  } = req.query;
 
-    // Address-based location search
-    if (location) query.address = { $regex: location, $options: "i" }; // Case-insensitive
+  const userId = req.user?.id;
 
-    // Price range filter
-    if (minPrice || maxPrice) {
-      query.price = {
-        ...(minPrice && { $gte: parseFloat(minPrice) }),
-        ...(maxPrice && { $lte: parseFloat(maxPrice) }),
-      };
-    }
+  // Build search query
+  const query = {};
 
-    // Amenities filter
-    if (amenities) {
-      const amenitiesArray = amenities.split(",");
-      query.amenities = { $all: amenitiesArray }; // Ensure all specified amenities exist
-    }
+  // Location search (case-insensitive)
+  if (location) {
+    query.address = { $regex: location, $options: "i" };
+  }
 
-    // Tags filter
-    if (tags) {
-      const tagsArray = tags.split(",");
-      query.tags = { $in: tagsArray }; // Match any of the specified tags
-    }
+  // Price range filter
+  if (minPrice || maxPrice) {
+    query.price = {
+      ...(minPrice && { $gte: parseFloat(minPrice) }),
+      ...(maxPrice && { $lte: parseFloat(maxPrice) }),
+    };
+  }
 
-    // Guests filter
-    if (guests) {
-      query.guests = { $gte: parseInt(guests, 10) }; // Minimum number of guests
-    }
+  // Amenities filter
+  if (amenities) {
+    const amenitiesArray = amenities.split(",").map((a) => a.trim());
+    query.amenities = { $all: amenitiesArray };
+  }
 
-    // Bedrooms filter
-    if (bedrooms) {
-      query["whereToSleep.bedroom"] = { $gte: parseInt(bedrooms, 10) }; // Minimum number of bedrooms
-    }
-    if (beds) {
-      query.$expr = {
-        $gte: [
-          {
-            $sum: [
-              { $ifNull: ["$whereToSleep.sleepingPosition.kingBed", 0] },
-              { $ifNull: ["$whereToSleep.sleepingPosition.queenBed", 0] },
-              { $ifNull: ["$whereToSleep.sleepingPosition.sofa", 0] },
-              { $ifNull: ["$whereToSleep.sleepingPosition.singleBed", 0] }
-            ]
-          },
-          parseInt(beds, 10)
-        ]
-      };
-    }
+  // Tags filter
+  if (tags) {
+    const tagsArray = tags.split(",").map((t) => t.trim());
+    query.tags = { $in: tagsArray };
+  }
 
-    if (checkIn && checkOut) {
-      const bookedProperties = await Booking.find({
-        $or: [{
+  // Guests filter
+  if (guests) {
+    query.guests = { $gte: parseInt(guests, 10) };
+  }
+
+  // Bedrooms filter
+  if (bedrooms) {
+    query["whereToSleep.bedroom"] = { $gte: parseInt(bedrooms, 10) };
+  }
+
+  // Beds filter
+  if (beds) {
+    query.$expr = {
+      $gte: [
+        {
+          $sum: [
+            { $ifNull: ["$whereToSleep.sleepingPosition.kingBed", 0] },
+            { $ifNull: ["$whereToSleep.sleepingPosition.queenBed", 0] },
+            { $ifNull: ["$whereToSleep.sleepingPosition.sofa", 0] },
+            { $ifNull: ["$whereToSleep.sleepingPosition.singleBed", 0] },
+          ],
+        },
+        parseInt(beds, 10),
+      ],
+    };
+  }
+
+  // Availability filter (exclude booked properties)
+  if (checkIn && checkOut) {
+    const bookedProperties = await Booking.find({
+      $or: [
+        {
           checkIn: { $lt: new Date(checkOut) },
-          checkOut: { $gt: new Date(checkIn) }
-        }]
-      }).select("propertyId")
-      const bookedPropertyIds = bookedProperties.map(booking => booking.propertyId)
-      query._id = { $nin: bookedPropertyIds }
-    }
-    // Execute query with pagination
-    // const page = parseInt(req.query.page, 10) || 1;
-    // const limit = parseInt(req.query.limit, 10) || 10;
+          checkOut: { $gt: new Date(checkIn) },
+        },
+      ],
+    }).select("propertyId");
 
-    const properties = await Property.find(query).sort({ updatedAt: -1 });
-    // .skip((page - 1) * limit)
-    // .limit(limit);
-    if (userId) {
-      await SearchHistory.create({
-        userId,
-        location,
-        minPrice: minPrice ? parseFloat(minPrice) : undefined,
-        maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-        amenities: amenities ? amenities.split(",") : [],
-        tags: tags ? tags.split(",") : [],
-        guests: guests ? parseInt(guests) : undefined,
-        bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
-      })
-    }
-    res.status(200).json(properties);
-
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    const bookedPropertyIds = bookedProperties.map(
+      (booking) => booking.propertyId
+    );
+    query._id = { $nin: bookedPropertyIds };
   }
-}
+
+  const properties = await Property.find(query).sort({ updatedAt: -1 });
+
+  // Save search history if user is authenticated
+  if (userId) {
+    await SearchHistory.create({
+      userId,
+      location,
+      minPrice: minPrice ? parseFloat(minPrice) : undefined,
+      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+      amenities: amenities ? amenities.split(",").map((a) => a.trim()) : [],
+      tags: tags ? tags.split(",").map((t) => t.trim()) : [],
+      guests: guests ? parseInt(guests) : undefined,
+      bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
+    });
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        properties,
+        `Found ${properties.length} properties`
+      )
+    );
+});
 
 module.exports = {
   addProperty,

@@ -2,21 +2,18 @@
 /* eslint-disable react/prop-types */
 import { Circle, LocationOn } from "@mui/icons-material";
 import { toast } from "sonner";
-import fetchWrapper from "../utils/fetchWrapper";
-import useServer from "../hooks/ServerUrl";
+import { bookingAPI } from "../services/api";
+
 const Bookings = ({ booking }) => {
-  const deleteBooking = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    fetchWrapper(`${useServer()}api/property/booking/${booking._id}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          toast.success("Booking Deleted successfully");
-        }
-      })
-      .catch((err) => err);
+  const deleteBooking = async () => {
+    try {
+      await bookingAPI.delete(booking._id);
+      toast.success("Booking Deleted successfully");
+      // Optionally refresh the page or update state
+      window.location.reload();
+    } catch (error) {
+      toast.error(error.message || "Failed to delete booking");
+    }
   };
 
   return (

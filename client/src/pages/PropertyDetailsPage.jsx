@@ -42,7 +42,7 @@ import { toast } from "sonner";
 import BookingPage from "../components/BookingPage";
 import BeatLoader from "react-spinners/BeatLoader";
 import useServer from "../hooks/ServerUrl";
-import fetchWrapper from "../utils/fetchWrapper";
+import { bookingAPI } from "../services/api";
 import moment from "moment";
 const PropertyDetailsPage = () => {
   const [value, setValue] = useState(0);
@@ -70,9 +70,12 @@ const PropertyDetailsPage = () => {
     `${useServer()}api/property/${id}`
   );
   useEffect(() => {
+    // Don't run if data is not yet loaded
+    if (!data || !data.guests) return;
+    
     const numberOfGuests = () => {
       const guestsNumber = adults + children;
-      setAllGuests(guestsNumber >= data.guests ? data?.guests : guestsNumber);
+      setAllGuests(guestsNumber >= data.guests ? data.guests : guestsNumber);
       if (data.guests <= guestsNumber) {
         setDisableGuests(true);
       } else {
@@ -80,20 +83,19 @@ const PropertyDetailsPage = () => {
       }
     };
     numberOfGuests();
-  }, [adults, allGuests, children, data.guests]);
+  }, [adults, allGuests, children, data?.guests, data]);
 
   const startDate = moment(date?.startDate);
   const endDate = moment(date?.endDate);
   const days = moment.duration(endDate.diff(startDate)).asDays();
   const duration = days == 1 ? days : days - 1;
-  const totalPrice = duration * data.price;
+  const totalPrice = duration * (data?.price || 0);
 
-  const handleBooking = () => {
-    if (user && date.startDate && date.endDate) {
-      fetchWrapper(`${useServer()}api/property/booking`, {
-        method: "POST",
-        body: JSON.stringify({
-          userId: user?.userId,
+  const handleBooking = async () => {
+    if (user && date.startDate && date.endDate && data?._id) {
+      try {
+        const bookingData = {
+          userId: user.userId,
           propertyId: data._id,
           checkIn: date.startDate,
           checkOut: date.endDate,
@@ -104,26 +106,21 @@ const PropertyDetailsPage = () => {
           },
           duration: duration,
           totalPrice: totalPrice,
-        }),
-      })
-        .then((response) => response.json())
-        .then((result) => {
-          if (result.error) {
-            throw new Error(result?.error);
-          } else {
-            const promise = () =>
-              new Promise((resolve) => setTimeout(resolve, 2000));
-            toast.promise(promise, {
-              loading: "Loading...",
-              success: "Booking Successful!",
-              error: "Error",
-            });
-            setTimeout(navigate("/account/myBookings"), 2000);
-          }
-        })
-        .catch((err) => {
-          toast.error(err.message);
+        };
+
+        await bookingAPI.create(bookingData);
+
+        const promise = () =>
+          new Promise((resolve) => setTimeout(resolve, 2000));
+        toast.promise(promise, {
+          loading: "Loading...",
+          success: "Booking Successful!",
+          error: "Error",
         });
+        setTimeout(() => navigate("/account/myBookings"), 2000);
+      } catch (err) {
+        toast.error(err.message || "Booking failed. Please try again.");
+      }
     } else {
       toast.error("Please select check in and check out to book!");
     }
@@ -140,84 +137,110 @@ const PropertyDetailsPage = () => {
   return (
     <>
       {isLoading && (
-        <div className="w-screen h-screen flex items-center justify-center">
-          <BeatLoader color="#ff7a00" size={20} speedMultiplier={0.8} />
+        <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white">
+          <div className="text-center space-y-4">
+            <BeatLoader color="#f97316" size={20} speedMultiplier={0.8} />
+            <p className="text-gray-600 font-medium">Loading property details...</p>
+          </div>
         </div>
       )}
       {error && (
-        <div className="w-screen h-screen flex items-center justify-center">
-          {" "}
-          <Alert severity="error">{error}</Alert>
+        <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white p-4">
+          <div className="max-w-md w-full">
+            <Alert severity="error" className="rounded-xl shadow-lg">
+              {error}
+            </Alert>
+          </div>
         </div>
       )}
-      {!isLoading && !error && (
-        <div className=" py-16 lg:w-11/12 md:w-11/12 w-full mx-auto font-Mulish relative">
-          <div className="px-1">
+      {!isLoading && !error && !data && (
+        <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white p-4">
+          <div className="max-w-md w-full text-center space-y-4">
+            <div className="text-6xl">🏠</div>
+            <Alert severity="info" className="rounded-xl shadow-lg">
+              Property not found
+            </Alert>
             <button
-              className=" flex items-center justify-between text-base hover:bg-totem-pole-100 w-fit  p-2 rounded-md transition-colors delay-150 duration-300"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/')}
+              className="mt-4 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
             >
-              <span>
-                <KeyboardBackspace />
-              </span>
-              <span className=" text-[1rem]">Back</span>
+              Back to Home
             </button>
           </div>
-          <div className=" relative mx-auto lg:px-3 md:px-3 ">
+        </div>
+      )}
+      {!isLoading && !error && data && (
+        <div className="py-8 lg:w-full md:w-11/12 w-full mx-auto font-Mulish relative">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+            <button
+              className="flex items-center gap-2 text-base hover:bg-orange-50 w-fit px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 mb-6"
+              onClick={() => navigate(-1)}
+            >
+              <KeyboardBackspace />
+              <span className="font-medium">Back</span>
+            </button>
+          </div>
+          <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
             <div>
-              <div className="px-2 font-semibold my-2 text-lg  first-letter:uppercase ">
-                <h1>{data?.name}</h1>
+              <div className="px-2 mb-4">
+                <h1 className="text-3xl font-bold text-gray-900 first-letter:uppercase">
+                  {data?.name}
+                </h1>
+                <div className="flex items-center gap-2 mt-2 text-gray-600">
+                  <LocationOn className="text-orange-500" fontSize="small" />
+                  <span className="text-sm">{data?.address}</span>
+                </div>
               </div>
             </div>
             <div
-              className={`top hidden lg:grid gap-2 h-80 overflow-hidden rounded-xl ${
-                data?.images.length == 1 && "grid-cols-1 h-64 w-7/12 mx-auto"
+              className={`top hidden lg:grid gap-3 h-[500px] overflow-hidden rounded-2xl shadow-xl ${
+                data?.images && data.images.length == 1 && "grid-cols-1 h-64 w-7/12 mx-auto"
               }
             ${
-              data?.images.slice(1).length == 2 && "grid-cols-1 w-7/12  mx-auto"
+              data?.images && data.images.slice(1).length == 2 && "grid-cols-1 w-7/12 mx-auto"
             }
             ${
-              data?.images.slice(1).length == 1 && "grid-cols-1 w-7/12  mx-auto"
+              data?.images && data.images.slice(1).length == 1 && "grid-cols-1 w-7/12 mx-auto"
             }
-            ${data?.images.length > 1 && "grid-cols-2"}
+            ${data?.images && data.images.length > 1 && "grid-cols-2"}
             `}
             >
-              <div className="imgLeft">
+              <div className="imgLeft overflow-hidden">
                 <img
-                  src={data?.images[0]}
-                  className=" h-full w-full object-cover object-center"
+                  src={data?.images?.[0] || ''}
+                  className="h-full w-full object-cover object-center hover:scale-105 transition-transform duration-500"
                   alt=""
                 />
               </div>
               <div
-                className={`imgright grid gap-2 h-80 w-full overflow-hidden ${
-                  data.images.slice(1).length <= 2 && " grid-cols-1"
+                className={`imgright grid gap-3 h-[500px] w-full overflow-hidden ${
+                  data?.images && data.images.slice(1).length <= 2 && "grid-cols-1"
                 }
-              ${data.images.slice(1).length >= 3 && "grid-cols-2"}
+              ${data?.images && data.images.slice(1).length >= 3 && "grid-cols-2"}
               `}
               >
-                {data?.images.slice(1, 5).map((image, index) => (
-                  <div key={index} className="overflow-hidden">
+                {data?.images && data.images.slice(1, 5).map((image, index) => (
+                  <div key={index} className="overflow-hidden rounded-lg">
                     <img
                       src={image}
                       alt={data?.name}
-                      className="h-40 w-full  object-cover object-center"
+                      className="h-full w-full object-cover object-center hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                 ))}
               </div>
             </div>
-            {data?.images.length > 5 && (
+            {data?.images && data.images.length > 5 && (
               <div>
                 <Link
                   to={`/imageGallery/${id}`}
-                  className=" hidden absolute bottom-2 right-4 bg-white/70 backdrop-blur-md text-xs  lg:flex items-center font-semibold gap-1 py-1 px-2 rounded-md hover:cursor-pointer"
+                  className="hidden absolute bottom-4 right-8 bg-white/90 backdrop-blur-md text-sm lg:flex items-center gap-2 font-semibold py-3 px-5 rounded-xl hover:cursor-pointer shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border border-gray-200"
                 >
-                  {/* <PhotoRounded fontSize="small" /> */}
                   <img
-                    className=" h-4 w-4"
+                    className="h-5 w-5"
                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAQ0lEQVR4nO2TwQkAIAzEMp7S/RdQ91AKnUA4ELlAXznoK/ATASxgAl3gSbHrhsAjf9BrlLIJvHmAcAe4AxPuAHfABQd26G3wlQ9gxwAAAABJRU5ErkJggg=="
-                  ></img>
+                    alt="gallery"
+                  />
                   <span>Show all photos</span>
                 </Link>
               </div>
@@ -237,14 +260,14 @@ const PropertyDetailsPage = () => {
                   interval={5000}
                   showArrows={false}
                   useKeyboardArrows={true}
-                  className=" relative lg:hidden w-full overflow-hidden"
+                  className="relative lg:hidden w-full overflow-hidden rounded-2xl shadow-lg"
                 >
                   {data?.images.map((image, index) => (
-                    <div key={index} className="  overflow-hidden h-80 w-full">
+                    <div key={index} className="overflow-hidden h-80 w-full">
                       <img
                         src={image}
                         alt={data.name}
-                        className=" w-full h-full object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   ))}
@@ -309,7 +332,7 @@ const PropertyDetailsPage = () => {
                   />
                 </div>
               )}
-              {data && !isLoading && data?.amenities.length > 0 && (
+              {data && !isLoading && data?.amenities && Array.isArray(data.amenities) && data.amenities.length > 0 && (
                 <div className=" px-2">
                   <h2 className=" my-2 text-lg font-semibold ">
                     Amenities in this place
@@ -358,7 +381,7 @@ const PropertyDetailsPage = () => {
                         </li>
                       ))}{" "}
                   </ul>
-                  {data.amenities.length > 3 && (
+                  {data?.amenities && data.amenities.length > 3 && (
                     <button
                       onClick={() => showAllAmenities(data.amenities)}
                       className=" mt-3 py-2 px-3 border border-black rounded-md hover:bg-gray-100 hover:transition-colors duration-150 delay-75"
@@ -376,13 +399,13 @@ const PropertyDetailsPage = () => {
                   />{" "}
                 </div>
               )}
-              {data && !isLoading && data?.whereToSleep.length > 0 && (
+              {data && !isLoading && data?.whereToSleep && Array.isArray(data.whereToSleep) && data.whereToSleep.length > 0 && (
                 <div className=" px-2">
                   <h2 className=" my-2 text-lg font-semibold ">
-                    Where to sleep
+                    Where you&#39;ll sleep
                   </h2>
                   <div className=" grid lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-x-4 gap-y-2">
-                    {data.whereToSleep.map((place, index) => (
+                    {data?.whereToSleep && data.whereToSleep.map((place, index) => (
                       <div
                         key={index}
                         className=" border border-black py-4 px-3 rounded-md flex flex-col gap-y-2"
