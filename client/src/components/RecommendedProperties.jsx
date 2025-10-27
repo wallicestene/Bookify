@@ -79,20 +79,15 @@ const RecommendedProperties = ({ type = "popular" }) => {
 
   if (loading) {
     return (
-      <section className="recommendations my-12 px-4 md:px-8 lg:px-10">
+      <section className="recommendations my-8 px-4 md:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-8 w-64 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg animate-pulse"></div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="h-6 w-48 bg-gray-200 rounded-lg animate-pulse mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="space-y-3 animate-pulse"
-              >
-                <div className="bg-gradient-to-r from-gray-200 to-gray-300 h-64 rounded-2xl"></div>
-                <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-3/4"></div>
-                <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-1/2"></div>
+              <div key={i} className="space-y-3 animate-pulse">
+                <div className="bg-gray-200 h-56 rounded-xl"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
               </div>
             ))}
           </div>
@@ -103,9 +98,9 @@ const RecommendedProperties = ({ type = "popular" }) => {
 
   if (error && recommendations.length === 0) {
     return (
-      <section className="recommendations my-12 px-4 md:px-8 lg:px-10">
+      <section className="recommendations my-8 px-4 md:px-6">
         <div className="max-w-7xl mx-auto">
-          <Alert severity="error" className="rounded-xl">
+          <Alert severity="error" className="rounded-lg">
             {error}
           </Alert>
         </div>
@@ -118,13 +113,13 @@ const RecommendedProperties = ({ type = "popular" }) => {
   }
 
   return (
-    <section className="recommendations my-12 px-4 md:px-8 lg:px-10 bg-gradient-to-b from-white to-orange-50/30 py-12">
+    <section className="recommendations my-8 px-4 md:px-6 bg-gray-50/50 py-10">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">
             {titles[type]}
           </h2>
-          <div className="text-sm text-gray-500">
+          <div className="text-xs text-gray-500">
             {recommendations.length} {recommendations.length === 1 ? 'property' : 'properties'}
           </div>
         </div>
@@ -148,10 +143,10 @@ const RecommendedProperties = ({ type = "popular" }) => {
               ))}
             </CarouselContent>
             <div className="absolute -left-4 top-1/2 -translate-y-1/2 z-10">
-              <CarouselPrevious className="h-12 w-12 rounded-full border-2 backdrop-blur-sm bg-white/90 shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300" />
+              <CarouselPrevious className="h-10 w-10 rounded-full border bg-white/95 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200" />
             </div>
             <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-10">
-              <CarouselNext className="h-12 w-12 rounded-full border-2 backdrop-blur-sm bg-white/90 shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300" />
+              <CarouselNext className="h-10 w-10 rounded-full border bg-white/95 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200" />
             </div>
           </Carousel>
         </div>

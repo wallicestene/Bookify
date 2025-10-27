@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import Property from "./Property";
-import { Alert, Skeleton } from "@mui/material";
+import { Alert } from "@mui/material";
 
 const PropertyContainer = ({
   loading,
@@ -17,24 +17,24 @@ const PropertyContainer = ({
   const safeSearchData = Array.isArray(searchData) ? searchData : [];
 
   return (
-    <div className="py-8">
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-6 px-6 max-w-7xl mx-auto">
+    <div className="py-6">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 px-4 md:px-6 max-w-7xl mx-auto">
         {/* Loading Skeletons */}
         {loading &&
           skeleton.map((_, index) => (
             <div
               key={index}
-              className="shadow-md rounded-2xl overflow-hidden transition-all animate-pulse"
+              className="rounded-xl overflow-hidden animate-pulse border border-gray-100"
             >
-              <Skeleton variant="rounded" width="100%" height={285} />
-              <div className="p-3 space-y-3">
-                <Skeleton width="90%" height={28} />
-                <div className="flex gap-2">
-                  <Skeleton width="30%" height={32} className="rounded-full" />
-                  <Skeleton width="30%" height={32} className="rounded-full" />
-                  <Skeleton width="30%" height={32} className="rounded-full" />
+              <div className="bg-gray-200 w-full h-56"></div>
+              <div className="p-3 space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="flex gap-1.5">
+                  <div className="h-6 bg-gray-200 rounded-md w-16"></div>
+                  <div className="h-6 bg-gray-200 rounded-md w-16"></div>
+                  <div className="h-6 bg-gray-200 rounded-md w-16"></div>
                 </div>
-                <Skeleton width="60%" height={28} />
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
               </div>
             </div>
           ))}
@@ -42,7 +42,7 @@ const PropertyContainer = ({
         {/* Error State */}
         {initialError && (
           <div className="col-span-full">
-            <Alert severity="error" className="rounded-xl">
+            <Alert severity="error" className="rounded-lg">
               {initialError}
             </Alert>
           </div>
@@ -55,14 +55,14 @@ const PropertyContainer = ({
               <Property key={property._id} property={property} />
             ))
           ) : !isFirstRender.current && safeSearchData.length === 0 ? (
-            <div className="col-span-full text-center py-16">
-              <div className="max-w-md mx-auto space-y-4">
-                <div className="text-6xl">🏠</div>
-                <h3 className="text-2xl font-bold text-gray-900">
+            <div className="col-span-full text-center py-12">
+              <div className="max-w-md mx-auto space-y-3">
+                <div className="text-5xl">🏠</div>
+                <h3 className="text-xl font-semibold text-gray-900">
                   No properties found
                 </h3>
-                <p className="text-gray-600">
-                  Try adjusting your filters or search criteria to find more properties.
+                <p className="text-sm text-gray-500">
+                  Try adjusting your filters to find more properties
                 </p>
               </div>
             </div>
@@ -75,14 +75,14 @@ const PropertyContainer = ({
 
       {/* Empty State for no data at all */}
       {!loading && !initialError && safeData.length === 0 && safeSearchData.length === 0 && (
-        <div className="col-span-full text-center py-16">
-          <div className="max-w-md mx-auto space-y-4">
-            <div className="text-6xl">🌍</div>
-            <h3 className="text-2xl font-bold text-gray-900">
+        <div className="col-span-full text-center py-12">
+          <div className="max-w-md mx-auto space-y-3">
+            <div className="text-5xl">🌍</div>
+            <h3 className="text-xl font-semibold text-gray-900">
               Start exploring
             </h3>
-            <p className="text-gray-600">
-              Use the search filters above to find your perfect accommodation.
+            <p className="text-sm text-gray-500">
+              Use the search filters above to find your perfect accommodation
             </p>
           </div>
         </div>

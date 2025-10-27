@@ -50,27 +50,26 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
 
 
   return (
-    <section className="p-4">
-      <div className="font-mulish mt-6">
+    <section className="py-4 px-4">
+      <div className="font-mulish">
         <form className="flex items-center justify-center">
-          <div className="lg:divide-x-[1.5px] border-2 border-orange-200 shadow-xl hover:shadow-2xl transition-shadow duration-300 h-fit lg:w-9/12 w-11/12 flex lg:flex-row flex-col items-center justify-between gap-1 rounded-3xl bg-white backdrop-blur-sm">
-            <div className="w-full p-4">
-              <label htmlFor="location" className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                Where do you want to go?
+          <div className="lg:divide-x border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 h-fit lg:w-10/12 w-full flex lg:flex-row flex-col items-center justify-between rounded-2xl bg-white">
+            <div className="w-full p-3 lg:p-4">
+              <label htmlFor="location" className="text-xs font-medium text-gray-500 mb-1 block">
+                Where
               </label>
-              <br />
               <input
                 id="location"
                 type="text"
                 name="location"
-                placeholder="Search destinations..."
+                placeholder="Search destinations"
                 value={searchInput.location}
                 onChange={handleChange}
-                className="w-full border-none outline-none bg-none rounded-md text-gray-900 font-medium placeholder:text-gray-400 mt-1"
+                className="w-full border-none outline-none bg-transparent text-gray-900 text-sm placeholder:text-gray-400"
               />
             </div>
-            <hr className="border border-gray-200 w-full lg:hidden" />
-            <div className="text-sm p-1 flex lg:flex-row flex-col lg:items-center items-start justify-between gap-2 h-full w-full lg:divide-x-[1.5px]">
+            <hr className="border-gray-100 w-full lg:hidden" />
+            <div className="text-sm flex lg:flex-row flex-col lg:items-center items-start justify-between h-full w-full lg:divide-x">
               <DatePicker
                 className="w-full"
                 onDateChange={(selectedDate) => {
@@ -85,14 +84,13 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   to: addDays(new Date(), 1),
                 }}
               />
-              <hr className="border border-gray-200 w-full lg:hidden" />
-              <div className="p-3 h-full flex items-center justify-between space-x-3 w-full">
+              <hr className="border-gray-100 w-full lg:hidden" />
+              <div className="p-3 lg:p-4 h-full flex items-center justify-between gap-3 w-full">
                 <label
                   htmlFor="guests"
-                  className="text-sm w-full text-gray-500"
+                  className="text-sm w-full text-gray-500 flex-1"
                 >
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Guests</span>
-                  <br />
+                  <span className="text-xs font-medium text-gray-500 mb-1 block">Guests</span>
                   <Popover>
                     <PopoverTrigger asChild>
                       <input
@@ -100,15 +98,15 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                         type="text"
                         name="guests"
                         value={searchInput.guests === null ? "1" : searchInput.guests}
-                        placeholder="Guests"
+                        placeholder="Add guests"
                         readOnly={true}
-                        className="h-full w-full border-none outline-none bg-none rounded-md cursor-pointer text-gray-900 font-medium mt-1"
+                        className="h-full w-full border-none outline-none bg-transparent cursor-pointer text-gray-900 text-sm"
                       />
                     </PopoverTrigger>
-                    <PopoverContent className="rounded-2xl p-5 shadow-xl border-2 border-orange-100">
+                    <PopoverContent className="rounded-xl p-4 shadow-lg border border-gray-200">
                       <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                          <PeopleOutlined className="text-orange-500" />
+                        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                          <PeopleOutlined className="text-gray-600" fontSize="small" />
                           <p>Guests</p>
                         </div>
                         <AddOrRemoveContainer
@@ -121,11 +119,11 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   </Popover>
                 </label>
                 <button
-                  className="p-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl w-full text-white text-sm font-semibold hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
+                  className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 rounded-xl text-white text-sm font-medium transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2 whitespace-nowrap"
                   onClick={searchProperty}
                 >
-                  <span>Let's go</span>
-                  <ArrowForward />
+                  <span>Search</span>
+                  <ArrowForward fontSize="small" />
                 </button>
               </div>
             </div>

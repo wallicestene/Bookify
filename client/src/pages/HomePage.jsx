@@ -73,27 +73,27 @@ const HomePage = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-orange-50/30 to-white">
+    <section className="min-h-screen bg-white">
       <div>
-        {/* Hero Section */}
+        {/* Hero Section - Calm and Minimal */}
         {!hasSearched && (
-          <div className="relative pt-24 pb-12 px-6 text-center">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight">
+          <div className="relative pt-20 pb-8 px-4">
+            <div className="max-w-3xl mx-auto text-center space-y-4">
+              <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight leading-tight">
                 Find Your Perfect{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-pink-600">
+                <span className="text-orange-500">
                   Getaway
                 </span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-                Discover amazing places to stay around the world. Book unique homes and experiences.
+              <p className="text-base text-gray-600 max-w-xl mx-auto leading-relaxed">
+                Discover unique places to stay around the world
               </p>
             </div>
           </div>
         )}
 
-        {/* Search Filters - Sticky */}
-        <div className="sticky top-16 z-10 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200">
+        {/* Search Filters - Clean and Minimal */}
+        <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100">
           <Filter
             searchInput={searchInput}
             setSearchInput={setSearchInput}
@@ -108,12 +108,12 @@ const HomePage = () => {
           />
         </div>
 
-        {/* Search Results Header */}
+        {/* Search Results Header - Subtle */}
         {hasSearched && searchData.length > 0 && (
-          <div className="max-w-7xl mx-auto px-6 pt-8 pb-4">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 pt-6 pb-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {searchData.length} {searchData.length === 1 ? 'property' : 'properties'} found
+              <h2 className="text-lg font-medium text-gray-700">
+                {searchData.length} {searchData.length === 1 ? 'property' : 'properties'}
               </h2>
               <button
                 onClick={() => {
@@ -131,18 +131,18 @@ const HomePage = () => {
                     checkOut: null,
                   });
                 }}
-                className="text-sm px-4 py-2 text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition-colors flex items-center gap-2 font-medium"
+                className="text-sm px-3 py-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-1.5"
               >
-                <span>✕</span>
-                <span>Clear all filters</span>
+                <span className="text-xs">✕</span>
+                <span>Clear filters</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* Recommendations Section */}
+        {/* Recommendations Section - Spacious */}
         {(!hasSearched || searchData.length === 0) && (
-          <div className="recommendations relative max-w-[98vw] mx-auto py-8">
+          <div className="recommendations max-w-7xl mx-auto py-6">
             <RecommendedProperties
               type={user?.token ? "personalized" : "popular"}
             />
