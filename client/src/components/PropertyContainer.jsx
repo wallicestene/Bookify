@@ -1,18 +1,14 @@
 /* eslint-disable react/prop-types */
 
+import { Earth } from "lucide-react";
 import Property from "./Property";
 import { Alert } from "@mui/material";
 
-const PropertyContainer = ({
-  loading,
-  initialError,
-  searchData,
-  data,
-}) => {
+const PropertyContainer = ({ loading, initialError, searchData, data }) => {
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8];
 
   // Ensure data is always an array - handle null, undefined, or non-array values
-  const safeData = Array.isArray(data) ? data : (data ? [] : []);
+  const safeData = Array.isArray(data) ? data : data ? [] : [];
   const safeSearchData = Array.isArray(searchData) ? searchData : [];
 
   return (
@@ -64,7 +60,7 @@ const PropertyContainer = ({
               // Show empty state only when both are truly empty
               <div className="col-span-full text-center py-12">
                 <div className="max-w-md mx-auto space-y-3">
-                  <div className="text-5xl">�</div>
+                  <Earth size={100} className="mx-auto" />
                   <h3 className="text-xl font-semibold text-gray-900">
                     No properties found
                   </h3>

@@ -50,12 +50,12 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
 
 
   return (
-    <section className="py-4 px-4">
+    <section className="py-4 px-4 md:px-6">
       <div className="font-mulish">
         <form className="flex items-center justify-center">
-          <div className="lg:divide-x border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 h-fit lg:w-10/12 w-full flex lg:flex-row flex-col items-center justify-between rounded-2xl bg-white">
+          <div className="lg:divide-x border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 h-fit lg:w-10/12 w-full flex lg:flex-row flex-col items-center justify-between rounded-xl bg-white">
             <div className="w-full p-3 lg:p-4">
-              <label htmlFor="location" className="text-xs font-medium text-gray-500 mb-1 block">
+              <label htmlFor="location" className="text-xs font-medium text-gray-600 mb-1.5 block uppercase tracking-wide">
                 Where
               </label>
               <input
@@ -65,7 +65,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                 placeholder="Search destinations"
                 value={searchInput.location}
                 onChange={handleChange}
-                className="w-full border-none outline-none bg-transparent text-gray-900 text-sm placeholder:text-gray-400"
+                className="w-full border-none outline-none bg-transparent text-gray-900 text-sm placeholder:text-gray-400 focus:placeholder:text-gray-500"
               />
             </div>
             <hr className="border-gray-100 w-full lg:hidden" />
@@ -90,7 +90,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   htmlFor="guests"
                   className="text-sm w-full text-gray-500 flex-1"
                 >
-                  <span className="text-xs font-medium text-gray-500 mb-1 block">Guests</span>
+                  <span className="text-xs font-medium text-gray-600 mb-1.5 block uppercase tracking-wide">Guests</span>
                   <Popover>
                     <PopoverTrigger asChild>
                       <input
@@ -106,7 +106,7 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                     <PopoverContent className="rounded-xl p-4 shadow-lg border border-gray-200">
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                          <PeopleOutlined className="text-gray-600" fontSize="small" />
+                          <PeopleOutlined className="text-gray-500" sx={{ fontSize: '18px' }} />
                           <p>Guests</p>
                         </div>
                         <AddOrRemoveContainer
@@ -119,11 +119,11 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   </Popover>
                 </label>
                 <button
-                  className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 rounded-xl text-white text-sm font-medium transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2 whitespace-nowrap"
+                  className="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 rounded-lg text-white text-sm font-medium transition-all duration-200 hover:shadow-md flex items-center justify-center gap-2 whitespace-nowrap"
                   onClick={searchProperty}
                 >
                   <span>Search</span>
-                  <ArrowForward fontSize="small" />
+                  <ArrowForward sx={{ fontSize: '18px' }} />
                 </button>
               </div>
             </div>

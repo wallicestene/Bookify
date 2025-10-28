@@ -33,9 +33,9 @@ const Property = ({ property }) => {
             hasPrev && (
               <span
                 onClick={onClickHandler}
-                className="h-7 w-7 flex items-center justify-center bg-white/90 rounded-full cursor-pointer absolute top-1/2 left-2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:scale-105"
+                className="h-7 w-7 flex items-center justify-center bg-white/90 rounded-full cursor-pointer absolute top-1/2 left-2 -translate-y-1/2 z-[5] opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:scale-105"
               >
-                <KeyboardArrowLeft fontSize="small" />
+                <KeyboardArrowLeft fontSize="medium" />
               </span>
             )
           }
@@ -43,9 +43,9 @@ const Property = ({ property }) => {
             hasNext && (
               <span
                 onClick={onClickHandler}
-                className="h-7 w-7 flex items-center justify-center bg-white/90 rounded-full cursor-pointer absolute top-1/2 right-2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:scale-105"
+                className="h-7 w-7 flex items-center justify-center bg-white/90 rounded-full cursor-pointer absolute top-1/2 right-2 -translate-y-1/2 z-[5] opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:scale-105"
               >
-                <KeyboardArrowRight fontSize="small" />
+                <KeyboardArrowRight fontSize="medium" />
               </span>
             )
           }
@@ -70,7 +70,7 @@ const Property = ({ property }) => {
             </Link>
           )}
         </Carousel>
-        
+
         {/* Rating badge */}
         {property?.rating && (
           <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm px-2 py-0.5 rounded-lg shadow-sm flex items-center gap-1">
@@ -81,7 +81,10 @@ const Property = ({ property }) => {
       </div>
 
       <div className="flex flex-col justify-between text-start p-3 gap-2">
-        <Link to={`/Property/${property._id}`} className="hover:opacity-70 transition-opacity">
+        <Link
+          to={`/Property/${property._id}`}
+          className="hover:opacity-70 transition-opacity"
+        >
           <div className="flex items-center gap-1 text-sm">
             <LocationOn
               className="text-gray-400"
@@ -97,23 +100,25 @@ const Property = ({ property }) => {
 
         <div className="flex flex-col gap-2 justify-between h-full">
           {/* Tags */}
-          {property?.tags && Array.isArray(property.tags) && property.tags.length > 0 && (
-            <div className="flex flex-row gap-1.5 flex-wrap">
-              {property.tags.slice(0, 3).map((tag, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 text-gray-600 py-0.5 px-2 rounded-md text-xs"
-                >
-                  {tag}
-                </div>
-              ))}
-              {property.tags.length > 3 && (
-                <div className="bg-gray-50 text-gray-500 py-0.5 px-2 rounded-md text-xs">
-                  +{property.tags.length - 3}
-                </div>
-              )}
-            </div>
-          )}
+          {property?.tags &&
+            Array.isArray(property.tags) &&
+            property.tags.length > 0 && (
+              <div className="flex flex-row gap-1.5 flex-wrap">
+                {property.tags.slice(0, 3).map((tag, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-50 text-gray-600 py-0.5 px-2 rounded-md text-xs"
+                  >
+                    {tag}
+                  </div>
+                ))}
+                {property.tags.length > 3 && (
+                  <div className="bg-gray-50 text-gray-500 py-0.5 px-2 rounded-md text-xs">
+                    +{property.tags.length - 3}
+                  </div>
+                )}
+              </div>
+            )}
 
           {/* Price */}
           <div className="text-sm pt-1">
