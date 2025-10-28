@@ -1,75 +1,82 @@
-// import React from "react";
-import HomePage from "./pages/HomePage";
+import { lazy, Suspense, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import PropertyDetailsPage from "./pages/PropertyDetailsPage";
-import Layout from "./layouts/Layout";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-// import AccountPage from "./pages/AccountPage";
-import Profile from "./pages/Profile";
 import { toast, Toaster } from "sonner";
-import { useUserContext } from "./hooks/Usercontext";
-import { useEffect } from "react";
-import PropertiesPage from "./pages/PropertiesPage";
-import PlacesForm from "./pages/PlacesForm";
-import MyBookings from "./pages/MyBookings";
-import ImageGallery from "./components/ImageGallery";
 import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "./pages/DashboardLayout";
-import Analytics from "./pages/Analytics";
+import { useUserContext } from "./hooks/Usercontext";
+import Layout from "./layouts/Layout";
+import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorBoundary from "./components/ErrorBoundary";
+
+// Lazy load pages for better performance
+const HomePage = lazy(() => import("./pages/HomePage"));
+const PropertyDetailsPage = lazy(() => import("./pages/PropertyDetailsPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const SignupPage = lazy(() => import("./pages/SignupPage"));
+const Profile = lazy(() => import("./pages/Profile"));
+const PropertiesPage = lazy(() => import("./pages/PropertiesPage"));
+const PlacesForm = lazy(() => import("./pages/PlacesForm"));
+const MyBookings = lazy(() => import("./pages/MyBookings"));
+const ImageGallery = lazy(() => import("./components/ImageGallery"));
+const DashboardLayout = lazy(() => import("./pages/DashboardLayout"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+
 const App = () => {
   const [, dispatch] = useUserContext();
-  // updating the auth state
+
+  // Update auth state on mount
   useEffect(() => {
     const updateAuthState = () => {
       const userFromStorage = localStorage.getItem("user");
       const loggedUser = userFromStorage ? JSON.parse(userFromStorage) : null;
+
       if (loggedUser) {
         const isTokenExpired =
           jwtDecode(loggedUser?.token).exp * 1000 < Date.now();
 
         if (isTokenExpired) {
-          // Notify the logged-in user about the session expiration
           toast("Your session has expired. Please log in again.");
-          // Remove the user from local storage
           localStorage.removeItem("user");
           dispatch({ type: "LOGOUT_USER" });
           return;
         }
 
-        // User has a valid token
         dispatch({ type: "SET_USER", payload: loggedUser });
       } else {
-        // No logged-in user; assume visitor
         dispatch({ type: "LOGOUT_USER" });
       }
     };
+
     updateAuthState();
   }, [dispatch]);
-  return (
-    <Router>
-      <Toaster position="top-left" richColors />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index path="/" element={<HomePage />} />
-          <Route path="/property/:id" element={<PropertyDetailsPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
 
-          {/* dashboard routes */}
-          <Route path="/account" element={<DashboardLayout />}>
-            <Route index element={<Profile />} />
-            <Route path="myListings" element={<PropertiesPage />} />
-            <Route path="myBookings" element={<MyBookings />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="myProperties/new" element={<PlacesForm />} />
-            <Route path="myProperties/:id" element={<PlacesForm />} />
-          </Route>
-    
-          <Route path="/imageGallery/:id" element={<ImageGallery />} />
-        </Route>
-      </Routes>
-    </Router>
+  return (
+    <ErrorBoundary>
+      <Router>
+        <Toaster position="top-right" richColors expand={false} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="/property/:id" element={<PropertyDetailsPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+
+              {/* Dashboard routes */}
+              <Route path="/account" element={<DashboardLayout />}>
+                <Route index element={<Profile />} />
+                <Route path="myListings" element={<PropertiesPage />} />
+                <Route path="myBookings" element={<MyBookings />} />
+                <Route path="analytics" element={<Analytics />} />
+                <Route path="myProperties/new" element={<PlacesForm />} />
+                <Route path="myProperties/:id" element={<PlacesForm />} />
+              </Route>
+
+              <Route path="/imageGallery/:id" element={<ImageGallery />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </Router>
+    </ErrorBoundary>
   );
 };
 

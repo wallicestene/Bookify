@@ -50,27 +50,26 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
 
 
   return (
-    <section className="p-1">
-      <div className=" font-mulish mt-16">
-        <form className=" flex items-center justify-center gap-3 ">
-          <div className=" lg:divide-x-[1.5px] border-[1px] border-gray-300 shadow-lg h-fit lg:w-9/12 w-10/12 flex lg:flex-row flex-col items-center justify-between gap-1 rounded-2xl">
-            <div className="w-full p-2">
-              <label htmlFor="location" className=" text-sm text-gray-500">
-                Where do you want to go?
+    <section className="py-4 px-4 md:px-6">
+      <div className="font-mulish">
+        <form className="flex items-center justify-center">
+          <div className="lg:divide-x border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 h-fit lg:w-10/12 w-full flex lg:flex-row flex-col items-center justify-between rounded-xl bg-white">
+            <div className="w-full p-3 lg:p-4">
+              <label htmlFor="location" className="text-xs font-medium text-gray-600 mb-1.5 block uppercase tracking-wide">
+                Where
               </label>
-              <br />
               <input
                 id="location"
                 type="text"
                 name="location"
-                placeholder="Location"
+                placeholder="Search destinations"
                 value={searchInput.location}
                 onChange={handleChange}
-                className="w-full border-none outline-none bg-none  rounded-md "
+                className="w-full border-none outline-none bg-transparent text-gray-900 text-sm placeholder:text-gray-400 focus:placeholder:text-gray-500"
               />
             </div>
-            <hr className=" border w-full lg:hidden" />
-            <div className=" text-sm p-1 flex lg:flex-row flex-col lg:items-center items-start justify-between gap-2 h-full w-full lg:divide-x-[1.5px]">
+            <hr className="border-gray-100 w-full lg:hidden" />
+            <div className="text-sm flex lg:flex-row flex-col lg:items-center items-start justify-between h-full w-full lg:divide-x">
               <DatePicker
                 className="w-full"
                 onDateChange={(selectedDate) => {
@@ -84,30 +83,30 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   from: new Date(),
                   to: addDays(new Date(), 1),
                 }}
-              />{" "}
-              <hr className=" border w-full lg:hidden" />
-              <div className=" p-2  h-full flex items-center justify-between space-x-2 w-full">
+              />
+              <hr className="border-gray-100 w-full lg:hidden" />
+              <div className="p-3 lg:p-4 h-full flex items-center justify-between gap-3 w-full">
                 <label
                   htmlFor="guests"
-                  className="text-sm w-full text-gray-500"
+                  className="text-sm w-full text-gray-500 flex-1"
                 >
-                  Guests <br />
+                  <span className="text-xs font-medium text-gray-600 mb-1.5 block uppercase tracking-wide">Guests</span>
                   <Popover>
                     <PopoverTrigger asChild>
                       <input
                         id="guests"
-                        type="text" // Changed from number to text for better display of empty/placeholder
+                        type="text"
                         name="guests"
                         value={searchInput.guests === null ? "1" : searchInput.guests}
-                        placeholder="Guests"
+                        placeholder="Add guests"
                         readOnly={true}
-                        className="h-full w-full border-none outline-none bg-none rounded-md p-2 cursor-pointer text-black"
+                        className="h-full w-full border-none outline-none bg-transparent cursor-pointer text-gray-900 text-sm"
                       />
                     </PopoverTrigger>
-                    <PopoverContent className=" rounded-2xl p-5 ">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 text-sm">
-                          <PeopleOutlined />
+                    <PopoverContent className="rounded-xl p-4 shadow-lg border border-gray-200">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                          <PeopleOutlined className="text-gray-500" sx={{ fontSize: '18px' }} />
                           <p>Guests</p>
                         </div>
                         <AddOrRemoveContainer
@@ -120,21 +119,15 @@ const Filter = ({ searchInput, setSearchInput, searchProperty }) => {
                   </Popover>
                 </label>
                 <button
-                  className=" p-3 bg-totem-pole-500 rounded-2xl w-full text-orange-50 text-sm hover:bg-totem-pole-600 transition-all delay-100 duration-150 hover:transform hover:scale-105 ease-linear flex items-center justify-center space-x-2"
+                  className="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 rounded-lg text-white text-sm font-medium transition-all duration-200 hover:shadow-md flex items-center justify-center gap-2 whitespace-nowrap"
                   onClick={searchProperty}
                 >
-                  <span>Let's go</span>
-                  <ArrowForward />
+                  <span>Search</span>
+                  <ArrowForward sx={{ fontSize: '18px' }} />
                 </button>
               </div>
             </div>
           </div>
-          {/* <button
-            className="p-3 bg-totem-pole-500 rounded-full text-orange-50 text-sm hover:bg-totem-pole-600 transition-all delay-100 duration-150 hover:transform hover:scale-105 ease-linear"
-            onClick={searchProperty}
-          >
-            <Search />
-          </button> */}
         </form>
       </div>
     </section>

@@ -8,6 +8,7 @@ const AdvanceFilter = ({
   searchProperty,
   numberOfProperties,
   setSearchData,
+  setHasSearched,
 }) => {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -54,8 +55,6 @@ const AdvanceFilter = ({
       };
     });
   };
-
-  // Trigger search whenever the tags change
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -68,12 +67,14 @@ const AdvanceFilter = ({
       if (searchInput.tags !== "") {
         searchProperty({ preventDefault: () => {} });
       } else {
-        setSearchData([]); // Reset search results when "All" is selected
+        // Reset to show all properties when tags are cleared
+        setSearchData([]);
+        setHasSearched(false);
       }
     }, 500); // Adjust debounce time
 
     return () => clearTimeout(debounceTimeout.current);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput.tags]);
 
   //   scroll function
@@ -98,33 +99,34 @@ const AdvanceFilter = ({
     return () => window.removeEventListener("resize", checkScrollPosition);
   }, []);
   return (
-    <div className=" flex items-center gap-2 mx-2 ">
-      <div className=" relative overflow-hidden w-full p-2">
+    <div className="flex items-center gap-2 px-4 md:px-6">
+      <div className="relative overflow-hidden w-full py-3">
         {/* Left Scroll Button */}
         <button
-          className={` absolute top-1/2 left-0 -translate-y-1/2 bg-white p-2 rounded-full shadow-md  transition hidden md:block lg:block ${
-            !canScrollLeft ? "opacity-0" : ""
+          className={`absolute top-1/2 left-0 -translate-y-1/2 bg-white h-8 w-8 grid place-items-center rounded-full shadow-sm border border-gray-200 hover:border-gray-300 hover:shadow transition-all hidden md:block lg:block z-[2] ${
+            !canScrollLeft ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
           onClick={() => scroll("left")}
           disabled={!canScrollLeft}
+          aria-label="Scroll left"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={16} className="text-gray-600" />
         </button>
         <div
           ref={scrollRef}
           onScroll={checkScrollPosition}
-          className="flex items-center overflow-x-auto gap-4 no-scrollbar scroll-smooth px-4 w-full"
+          className="flex items-center overflow-x-auto gap-3 no-scrollbar scroll-smooth px-1 w-full"
         >
           {propertyTags.map((tag, index) => (
             <button
               key={index}
               onClick={() => handleOnclick(tag)}
-              className={`whitespace-nowrap shrink-0 px-4 py-2 border rounded-2xl text-sm first-letter:uppercase leading-4 cursor-pointer hover:bg-totem-pole-200 transition
+              className={`whitespace-nowrap shrink-0 px-4 py-2 border rounded-lg text-sm font-medium leading-4 cursor-pointer transition-all
                 ${
                   searchInput.tags.includes(tag) ||
                   (!searchInput.tags && tag === "All")
-                    ? "border-totem-pole-500 bg-totem-pole-100"
-                    : "border-gray-300"
+                    ? "border-orange-500 bg-orange-50 text-orange-700 hover:bg-orange-100"
+                    : "border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
                 }`}
             >
               {tag}
@@ -133,16 +135,17 @@ const AdvanceFilter = ({
         </div>
 
         <button
-          className={`absolute top-1/2 right-0 -translate-y-1/2 bg-white p-2 rounded-full shadow-md transition hidden md:block lg:block ${
-            !canScrollRight ? "opacity-0" : ""
+          className={`absolute top-1/2 right-0 -translate-y-1/2 bg-white h-8 w-8 grid place-items-center rounded-full shadow-sm border border-gray-200 hover:border-gray-300 hover:shadow transition-all hidden md:block lg:block z-[2] ${
+            !canScrollRight ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
           onClick={() => scroll("right")}
           disabled={!canScrollRight}
+          aria-label="Scroll right"
         >
-          <ChevronRight size={20} />
+          <ChevronRight size={16} className="text-gray-600" />
         </button>
       </div>
-      <div className="">
+      <div className="shrink-0">
         <FiltersDialog
           searchInput={searchInput}
           setSearchInput={setSearchInput}
