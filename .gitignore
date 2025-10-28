@@ -45,6 +45,7 @@ logs/
 *-summary.md
 SUMMARY*.md
 .github/copilot-*.md
+.github/copilot-instructions.md
 MODERNIZATION.md
 UPGRADE_GUIDE.md
 UPGRADE_SUMMARY.md
