@@ -11,7 +11,6 @@ import { useUserContext } from "../hooks/Usercontext";
 import { propertyAPI } from "../services/api";
 
 const HomePage = () => {
-  const isFirstRender = useRef(true);
   const [searchInput, setSearchInput] = useState({
     location: "",
     minPrice: null,
@@ -75,7 +74,7 @@ const HomePage = () => {
   return (
     <section className="min-h-screen bg-white">
       <div>
-        {/* Hero Section - Calm and Minimal */}
+        {/* Hero Section */}
         {!hasSearched && (
           <div className="relative pt-20 pb-8 px-4">
             <div className="max-w-3xl mx-auto text-center space-y-4">
@@ -92,7 +91,7 @@ const HomePage = () => {
           </div>
         )}
 
-        {/* Search Filters - Clean and Minimal */}
+        {/* Search Filters  */}
         <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100">
           <Filter
             searchInput={searchInput}
@@ -104,13 +103,14 @@ const HomePage = () => {
             searchInput={searchInput}
             setSearchInput={setSearchInput}
             searchProperty={searchProperty}
+            setHasSearched={setHasSearched}
             numberOfProperties={hasSearched ? searchData.length : 0}
           />
         </div>
 
-        {/* Search Results Header - Subtle */}
+        {/* Search Results Header */}
         {hasSearched && searchData.length > 0 && (
-          <div className="max-w-7xl mx-auto px-4 md:px-6 pt-6 pb-2">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 pt-24 pb-2">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium text-gray-700">
                 {searchData.length} {searchData.length === 1 ? 'property' : 'properties'}
@@ -131,16 +131,16 @@ const HomePage = () => {
                     checkOut: null,
                   });
                 }}
-                className="text-sm px-3 py-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-1.5"
+                className="text-sm px-4 py-2 text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow"
               >
-                <span className="text-xs">✕</span>
-                <span>Clear filters</span>
+                <span className="text-base">✕</span>
+                <span className="font-medium">Clear filters</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* Recommendations Section - Spacious */}
+        {/* Recommendations Section */}
         {(!hasSearched || searchData.length === 0) && (
           <div className="recommendations max-w-7xl mx-auto py-6">
             <RecommendedProperties
@@ -155,7 +155,6 @@ const HomePage = () => {
             loading={loading}
             initialError={initialError}
             searchData={hasSearched ? searchData : []}
-            isFirstRender={isFirstRender}
             data={!hasSearched ? data : []}
           />
         </div>

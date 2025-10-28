@@ -7,7 +7,6 @@ const PropertyContainer = ({
   loading,
   initialError,
   searchData,
-  isFirstRender,
   data,
 }) => {
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -17,7 +16,7 @@ const PropertyContainer = ({
   const safeSearchData = Array.isArray(searchData) ? searchData : [];
 
   return (
-    <div className="py-6">
+    <div className="py-6 pb-32">
       <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 px-4 md:px-6 max-w-7xl mx-auto">
         {/* Loading Skeletons */}
         {loading &&
@@ -49,44 +48,35 @@ const PropertyContainer = ({
         )}
 
         {/* Properties Grid */}
-        {!loading &&
-          (safeSearchData.length > 0 ? (
-            safeSearchData.map((property) => (
-              <Property key={property._id} property={property} />
-            ))
-          ) : !isFirstRender.current && safeSearchData.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <div className="max-w-md mx-auto space-y-3">
-                <div className="text-5xl">🏠</div>
-                <h3 className="text-xl font-semibold text-gray-900">
-                  No properties found
-                </h3>
-                <p className="text-sm text-gray-500">
-                  Try adjusting your filters to find more properties
-                </p>
+        {!loading && !initialError && (
+          <>
+            {safeSearchData.length > 0 ? (
+              // Show search results
+              safeSearchData.map((property) => (
+                <Property key={property._id} property={property} />
+              ))
+            ) : safeData.length > 0 ? (
+              // Show default properties
+              safeData.map((property) => (
+                <Property key={property._id} property={property} />
+              ))
+            ) : (
+              // Show empty state only when both are truly empty
+              <div className="col-span-full text-center py-12">
+                <div className="max-w-md mx-auto space-y-3">
+                  <div className="text-5xl">�</div>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    No properties found
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Try adjusting your filters to find more properties
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
-            safeData.map((property) => (
-              <Property key={property._id} property={property} />
-            ))
-          ))}
+            )}
+          </>
+        )}
       </div>
-
-      {/* Empty State for no data at all */}
-      {!loading && !initialError && safeData.length === 0 && safeSearchData.length === 0 && (
-        <div className="col-span-full text-center py-12">
-          <div className="max-w-md mx-auto space-y-3">
-            <div className="text-5xl">🌍</div>
-            <h3 className="text-xl font-semibold text-gray-900">
-              Start exploring
-            </h3>
-            <p className="text-sm text-gray-500">
-              Use the search filters above to find your perfect accommodation
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

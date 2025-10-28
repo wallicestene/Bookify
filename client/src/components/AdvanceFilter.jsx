@@ -8,6 +8,7 @@ const AdvanceFilter = ({
   searchProperty,
   numberOfProperties,
   setSearchData,
+  setHasSearched,
 }) => {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -54,8 +55,6 @@ const AdvanceFilter = ({
       };
     });
   };
-
-  // Trigger search whenever the tags change
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -68,12 +67,14 @@ const AdvanceFilter = ({
       if (searchInput.tags !== "") {
         searchProperty({ preventDefault: () => {} });
       } else {
-        setSearchData([]); // Reset search results when "All" is selected
+        // Reset to show all properties when tags are cleared
+        setSearchData([]);
+        setHasSearched(false);
       }
     }, 500); // Adjust debounce time
 
     return () => clearTimeout(debounceTimeout.current);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput.tags]);
 
   //   scroll function

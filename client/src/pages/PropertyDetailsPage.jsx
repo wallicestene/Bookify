@@ -36,7 +36,7 @@ import {
   Remove,
 } from "@mui/icons-material";
 import Datepicker from "react-tailwindcss-datepicker";
-import { Alert, CircularProgress } from "@mui/material";
+import { Alert } from "@mui/material";
 import { useUserContext } from "../hooks/Usercontext";
 import { toast } from "sonner";
 import BookingPage from "../components/BookingPage";
@@ -170,7 +170,7 @@ const PropertyDetailsPage = () => {
         </div>
       )}
       {!isLoading && !error && data && (
-        <div className="pt-20 pb-6 w-full mx-auto font-Mulish relative">
+        <div className="pt-20 pb-32 w-full mx-auto font-Mulish relative">
           <div className="max-w-7xl mx-auto px-4 md:px-6 mb-4">
             <button
               className="flex items-center gap-2 text-sm hover:bg-gray-50 w-fit px-3 py-2 rounded-lg transition-colors border border-gray-200"
