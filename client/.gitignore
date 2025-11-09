@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 oldplace form
+.env
 
 # Editor directories and files
 .vscode/*
