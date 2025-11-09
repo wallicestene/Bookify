@@ -26,6 +26,11 @@ const s3 = new S3Client({
   region: bucketRegion,
 });
 
+// Helper function to get base URL
+const getBaseUrl = (req) => {
+  return `${req.protocol}://${req.get('host')}`;
+};
+
 // Add a property
 const addProperty = asyncHandler(async (req, res) => {
   const {
@@ -78,6 +83,10 @@ const getPropertyByOwner = asyncHandler(async (req, res) => {
 
 // Multer configuration
 const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadsDir = path.join(__dirname, "uploads");
+    cb(null, uploadsDir);
+  },
   filename: (req, file, cb) => {
     cb(null, "photo" + Date.now() + path.extname(file.originalname));
   },
@@ -109,25 +118,41 @@ const uploadImages = asyncHandler(async (req, res) => {
     throw new ApiError(400, "No files uploaded");
   }
 
+  const useS3 = bucketName && bucketRegion && accessKey && secretKey;
+
   const uploadPromises = req.files.map(async (file) => {
     const { filename, path: filePath, mimetype } = file;
 
-    const fileContent = await fs.readFile(filePath);
+    if (useS3) {
+      try {
+        const fileContent = await fs.readFile(filePath);
 
-    const params = {
-      Bucket: bucketName,
-      Key: filename,
-      Body: fileContent,
-      ContentType: mimetype,
-    };
+        const params = {
+          Bucket: bucketName,
+          Key: filename,
+          Body: fileContent,
+          ContentType: mimetype,
+        };
 
-    const command = new PutObjectCommand(params);
-    await s3.send(command);
+        const command = new PutObjectCommand(params);
+        await s3.send(command);
 
-    // Clean up local file
-    await fs.unlink(filePath);
+        // Clean up local file after successful S3 upload
+        await fs.unlink(filePath);
 
-    return `https://${bucketName}.s3.amazonaws.com/${filename}`;
+        const imageUrl = `https://${bucketName}.s3.amazonaws.com/${filename}`;
+        console.log("Image uploaded to S3:", imageUrl);
+        return imageUrl;
+      } catch (s3Error) {
+        // S3 upload failed, use local storage
+        console.warn("S3 upload failed for", filename, "using local storage:", s3Error.message);
+        return `${getBaseUrl(req)}/uploads/${filename}`;
+      }
+    } else {
+      // No S3 credentials, use local storage
+      console.log("No S3 credentials, using local storage for", filename);
+      return `${getBaseUrl(req)}/uploads/${filename}`;
+    }
   });
 
   const uploadedImages = await Promise.all(uploadPromises);
@@ -147,32 +172,69 @@ const uploadImageByLink = asyncHandler(async (req, res) => {
   }
 
   const newName = "photo" + Date.now() + ".jpg";
-  const filePath = `${__dirname}/uploads/${newName}`;
+  const uploadsDir = path.join(__dirname, "uploads");
+  const filePath = path.join(uploadsDir, newName);
 
-  await imageDownloader.image({
-    url: link,
-    dest: filePath,
-  });
+  // Ensure uploads directory exists
+  try {
+    await fs.access(uploadsDir);
+  } catch {
+    await fs.mkdir(uploadsDir, { recursive: true });
+  }
 
-  const fileStream = await fs.readFile(filePath);
-  const params = {
-    Bucket: bucketName,
-    Key: newName,
-    Body: fileStream,
-    ContentType: "image/jpeg",
-  };
+  try {
+    // Download image
+    await imageDownloader.image({
+      url: link,
+      dest: filePath,
+    });
 
-  const command = new PutObjectCommand(params);
-  await s3.send(command);
+    // Try to upload to S3, fallback to local storage if it fails
+    let imageUrl;
+    const useS3 = bucketName && bucketRegion && accessKey && secretKey;
 
-  // Clean up local file
-  await fs.unlink(filePath);
+    if (useS3) {
+      try {
+        const fileStream = await fs.readFile(filePath);
+        const params = {
+          Bucket: bucketName,
+          Key: newName,
+          Body: fileStream,
+          ContentType: "image/jpeg",
+        };
 
-  const imageUrl = `https://${bucketName}.s3.amazonaws.com/${newName}`;
+        const command = new PutObjectCommand(params);
+        await s3.send(command);
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, imageUrl, "Image uploaded successfully"));
+        // Clean up local file after successful S3 upload
+        await fs.unlink(filePath);
+
+        imageUrl = `https://${bucketName}.s3.amazonaws.com/${newName}`;
+        console.log("Image uploaded to S3:", imageUrl);
+      } catch (s3Error) {
+        // S3 upload failed (likely payment/billing issue), use local storage
+        console.warn("S3 upload failed, using local storage:", s3Error.message);
+        imageUrl = `${getBaseUrl(req)}/uploads/${newName}`;
+        // Keep the file locally
+      }
+    } else {
+      // No S3 credentials, use local storage
+      console.log("No S3 credentials, using local storage");
+      imageUrl = `${getBaseUrl(req)}/uploads/${newName}`;
+      // Keep the file locally
+    }
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, imageUrl, "Image uploaded successfully"));
+  } catch (error) {
+    // Clean up local file if it exists and download failed
+    try {
+      await fs.unlink(filePath);
+    } catch {}
+    
+    throw new ApiError(500, `Failed to upload image: ${error.message}`);
+  }
 });
 
 // Find all properties

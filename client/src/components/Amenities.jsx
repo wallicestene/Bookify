@@ -52,9 +52,9 @@ const Amenities = ({
     }
   };
   return (
-    <>
-      <div className=" w-full mb-10">
-        <div className=" grid grid-cols-3 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+    <div className="w-full space-y-8">
+      <div className="w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4">
           <AmenitiesOption
             Icon={<Wifi />}
             title={"Wifi"}
@@ -104,10 +104,13 @@ const Amenities = ({
             selectedAmenities={selectedAmenities}
           />
         </div>
-        <h2 className=" mt-10 text-[1.5rem] text-gray-500 font-poppins">
+      </div>
+      
+      <div className="w-full">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Other Amenities
         </h2>
-        <div className=" grid grid-cols-3 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4">
           <AmenitiesOption
             Icon={<HotTub />}
             title={"Hot tub"}
@@ -139,10 +142,13 @@ const Amenities = ({
             selectedAmenities={selectedAmenities}
           />
         </div>
-        <h2 className=" mt-10 text-[1.5rem] text-gray-500 font-poppins">
+      </div>
+      
+      <div className="w-full">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Safety Amenities
         </h2>
-        <div className=" grid grid-cols-3 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4">
           <AmenitiesOption
             Icon={<FireExtinguisherOutlined />}
             title={"Fire extinguisher"}
@@ -165,7 +171,7 @@ const Amenities = ({
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

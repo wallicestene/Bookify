@@ -16,7 +16,7 @@ const Property = ({ property }) => {
   const [images, setImages] = useState(property?.images || []);
 
   return (
-    <div className="group flex flex-col h-full rounded-xl overflow-hidden bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 font-Mulish">
+    <div className="group flex flex-col h-full rounded-xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 font-Mulish shadow-sm">
       <div className="relative">
         <Carousel
           showStatus={false}
@@ -73,9 +73,9 @@ const Property = ({ property }) => {
 
         {/* Rating badge */}
         {property?.rating && (
-          <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm px-2 py-0.5 rounded-lg shadow-sm flex items-center gap-1">
-            <Star className="text-yellow-500" sx={{ fontSize: "0.875rem" }} />
-            <span className="text-xs font-semibold">{property.rating}</span>
+          <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-lg shadow-md flex items-center gap-1 border border-gray-200">
+            <Star className="text-orange-500" sx={{ fontSize: "0.875rem" }} />
+            <span className="text-xs font-semibold text-gray-900">{property.rating}</span>
           </div>
         )}
       </div>
@@ -107,13 +107,13 @@ const Property = ({ property }) => {
                 {property.tags.slice(0, 3).map((tag, index) => (
                   <div
                     key={index}
-                    className="bg-gray-50 text-gray-600 py-0.5 px-2 rounded-md text-xs"
+                    className="bg-gray-100 text-gray-700 py-1 px-2.5 rounded-md text-xs font-medium border border-gray-200"
                   >
                     {tag}
                   </div>
                 ))}
                 {property.tags.length > 3 && (
-                  <div className="bg-gray-50 text-gray-500 py-0.5 px-2 rounded-md text-xs">
+                  <div className="bg-gray-100 text-gray-600 py-1 px-2.5 rounded-md text-xs font-medium border border-gray-200">
                     +{property.tags.length - 3}
                   </div>
                 )}

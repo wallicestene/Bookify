@@ -84,6 +84,7 @@ const PlacesForm = () => {
   const [errors, setErrors] = useState({});
   const [redirect, setRedirect] = useState(null);
   const [formData, setFormData] = useState({
+    owner: "",
     name: "",
     address: "",
     description: "",
@@ -198,11 +199,8 @@ const PlacesForm = () => {
 
       const payload = {
         ...formData,
+        owner: formData.owner || user?.userId, // Ensure owner is always included
       };
-
-      if (!id) {
-        payload.owner = user?.userId;
-      }
 
       const response = await fetch(endpoint, {
         method,
@@ -213,7 +211,15 @@ const PlacesForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save property");
+        const errorData = await response.json();
+        
+        // Show detailed validation errors
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          const errorMessages = errorData.errors.join(', ');
+          throw new Error(errorMessages);
+        }
+        
+        throw new Error(errorData.message || "Failed to save property");
       }
 
       toast.success(
@@ -239,6 +245,7 @@ const PlacesForm = () => {
         const data = result.data || result;
 
         setFormData({
+          owner: data.owner || user?.userId, // Include owner for editing
           name: data.name || "",
           address: data.address || "",
           description: data.description || "",
@@ -249,17 +256,15 @@ const PlacesForm = () => {
           amenities: data.amenities || [],
           tags: data.tags || [],
         });
-        setBedroom(data.bedroom || "");
-        if (data.whereToSleep && data.whereToSleep.length > 0) {
-          setSleepingPosition(
-            data.sleepingPosition || {
-              kingBed: 0,
-              queenBed: 0,
-              sofa: 0,
-              singleBed: 1,
-            }
-          );
-        }
+
+        // Reset bedroom and sleepingPosition for adding new ones
+        setBedroom("");
+        setSleepingPosition({
+          kingBed: 0,
+          queenBed: 0,
+          sofa: 0,
+          singleBed: 1,
+        });
       } catch (error) {
         toast.error("Error loading property: " + error.message);
       }
@@ -268,44 +273,49 @@ const PlacesForm = () => {
     if (id) {
       getProperty();
     }
-  }, [id, serverUrl]);
+  }, [id, serverUrl, user?.userId]);
 
   if (redirect) {
     return <Navigate to={redirect} />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
-      <Button
-        variant="ghost"
-        className="mb-6 flex items-center gap-2"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </Button>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <Button
+          variant="ghost"
+          className="mb-6 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Button>
 
-      <Card className="border shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle>{id ? "Edit Property" : "List Your Property"}</CardTitle>
-          <CardDescription>{steps[currentStep].description}</CardDescription>
-        </CardHeader>
-
-        <div className="px-6 mb-6">
-          <StepIndicator steps={steps} currentStep={currentStep} />
-        </div>
-
-        <CardContent>
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="pb-4 border-b border-gray-100">
+            <CardTitle className="text-xl font-semibold text-gray-900">
+              {id ? "Edit Property" : "List Your Property"}
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-500">
               {steps[currentStep].description}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {steps[currentStep].subtitle}
-            </p>
+            </CardDescription>
+          </CardHeader>
+
+          <div className="px-6 py-6 bg-gray-50 border-b border-gray-100">
+            <StepIndicator steps={steps} currentStep={currentStep} />
           </div>
 
-          <div className="py-4">
+          <CardContent className="pt-6">
+            <div className="mb-6">
+              <h3 className="text-base font-semibold text-gray-900">
+                {steps[currentStep].description}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                {steps[currentStep].subtitle}
+              </p>
+            </div>
+
+            <div className="py-4">
             {steps[currentStep].id === "images" && (
               <FormStep
                 step={steps[currentStep]}
@@ -320,7 +330,7 @@ const PlacesForm = () => {
                   setFormData={setFormData}
                 />
                 {errors.images && (
-                  <div className="text-red-500 mt-2">{errors.images}</div>
+                  <div className="text-sm text-red-600 mt-2">{errors.images}</div>
                 )}
               </FormStep>
             )}
@@ -384,30 +394,37 @@ const PlacesForm = () => {
           </div>
         </CardContent>
 
-        <CardFooter className="flex justify-between border-t pt-6">
+        <CardFooter className="flex justify-between border-t border-gray-100 pt-6 bg-gray-50">
           <Button
             variant="outline"
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="flex items-center gap-2"
+            className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 mr-2" />
             Previous
           </Button>
 
           {currentStep === steps.length - 1 ? (
-            <Button onClick={saveProperty} className="flex items-center gap-2">
-              <Save className="h-4 w-4" />
+            <Button 
+              onClick={saveProperty} 
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              <Save className="h-4 w-4 mr-2" />
               Save Property
             </Button>
           ) : (
-            <Button onClick={nextStep} className="flex items-center gap-2">
+            <Button 
+              onClick={nextStep} 
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+            >
               Next
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
           )}
         </CardFooter>
       </Card>
+      </div>
     </div>
   );
 };
