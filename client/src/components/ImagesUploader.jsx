@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
-import { CloudUploadOutlined, DeleteOutlineRounded } from "@mui/icons-material";
+import { Upload, X } from "lucide-react";
 import useServer from "../hooks/ServerUrl";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 const ImagesUploader = ({ imageLink, setImageLink, formData, setFormData }) => {
   const uploadByLink = (e) => {
     e.preventDefault();
@@ -61,58 +64,77 @@ const ImagesUploader = ({ imageLink, setImageLink, formData, setFormData }) => {
     });
   };
   return (
-    <>
-      <div className=" flex flex-row gap-2 w-full">
-        <input
-          type="text"
-          placeholder="Add image by link"
-          name="imageLink"
-          value={imageLink}
-          onChange={(e) => setImageLink(e.target.value)}
-        />
-        <button
-          className=" bg-slate-300 rounded-md w-28 text-center"
-          onClick={uploadByLink}
-        >
-          Add Image
-        </button>
+    <div className="space-y-6">
+      {/* Upload by Link Section */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-700">Add image by URL</label>
+        <div className="flex gap-2">
+          <Input
+            type="text"
+            placeholder="https://example.com/image.jpg"
+            name="imageLink"
+            value={imageLink}
+            onChange={(e) => setImageLink(e.target.value)}
+            className="flex-1 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+          />
+          <Button
+            onClick={uploadByLink}
+            variant="outline"
+            className="border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+          >
+            Add Image
+          </Button>
+        </div>
       </div>
-      <div className=" grid grid-cols-3 gap-3 mt-2 w-full">
+
+      {/* Images Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {formData.images.length > 0 &&
           formData.images.map((image, index) => (
-            <div key={index} className=" relative">
+            <div 
+              key={index} 
+              className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors"
+            >
               <img
                 src={image}
-                alt=""
-                className=" h-28 lg:h-32 w-full rounded-md object-cover"
+                alt={`Property image ${index + 1}`}
+                className="w-full h-full object-cover"
               />
-              <div className=" absolute bottom-2 right-2 z-10 bg-totem-pole-100 flex items-center justify-center rounded-full p-1">
-                <DeleteOutlineRounded
-                  sx={{
-                    cursor: "pointer",
-                  }}
-                  onClick={() => removeImage(image)}
-                />
-              </div>
+              <button
+                onClick={() => removeImage(image)}
+                className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                type="button"
+              >
+                <X className="h-4 w-4 text-gray-700" />
+              </button>
             </div>
           ))}
+        
+        {/* Upload Button */}
         <label
           htmlFor="images"
-          className=" flex items-center justify-center gap-x-2 p-5 rounded-md bg-slate-300 cursor-pointer h-28 lg:h-32"
+          className="aspect-square flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 hover:border-orange-400 hover:bg-orange-50 cursor-pointer transition-colors"
         >
-          <CloudUploadOutlined />
+          <Upload className="h-8 w-8 text-gray-400" />
+          <span className="text-sm font-medium text-gray-600">Upload Images</span>
           <input
             type="file"
             name="images"
             id="images"
-            className=" hidden"
+            className="hidden"
             multiple
+            accept="image/*"
             onChange={uploadImage}
           />
-          <span>Upload</span>
         </label>
       </div>
-    </>
+
+      {formData.images.length > 0 && (
+        <p className="text-sm text-gray-500">
+          {formData.images.length} image{formData.images.length !== 1 ? 's' : ''} uploaded
+        </p>
+      )}
+    </div>
   );
 };
 

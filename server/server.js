@@ -32,8 +32,13 @@ app.use(
   })
 );
 
-// Security: set security HTTP headers
-app.use(helmet());
+// Security: set security HTTP headers with relaxed CSP for local images
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false, // Disable for development to allow local images
+  })
+);
 
 // Security: rate limiting - more lenient for development
 const limiter = rateLimit({
@@ -69,8 +74,18 @@ app.use(hpp());
 // Compression middleware
 app.use(compression());
 
-// Static files
-app.use("/uploads", express.static("./controllers/uploads"));
+// Static files - serve uploads folder
+const path = require("path");
+const fs = require("fs");
+
+// Ensure uploads directory exists
+const uploadsPath = path.join(__dirname, "controllers", "uploads");
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+  console.log("Created uploads directory");
+}
+
+app.use("/uploads", express.static(uploadsPath));
 
 // connecting to mongoDB Database
 mongoose

@@ -12,9 +12,10 @@ const {
   searchProperty,
 } = require("../controllers/propertyController");
 const optionalAuth = require("../middleware/optionalAuth");
+const { validate, propertySchema } = require("../utils/validation");
 const router = express.Router();
 
-router.post("/api/property", addProperty);
+router.post("/api/property", validate(propertySchema), addProperty);
 router.get("/api/property", findAllProperties);
 router.get("/api/property/:id", findOneProperty);
 router.get("/api/properties/owner/:owner", getPropertyByOwner);
@@ -25,6 +26,6 @@ router.post(
   uploadImages
 );
 router.post("/api/upload-by-link", uploadImageByLink);
-router.put("/api/property/:id", updateProperty);
+router.put("/api/property/:id", validate(propertySchema), updateProperty);
 router.get("/api/search/property/", optionalAuth, searchProperty);
 module.exports = router;

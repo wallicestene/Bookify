@@ -72,7 +72,7 @@ const HomePage = () => {
   };
 
   return (
-    <section className="min-h-screen bg-white">
+    <section className="min-h-screen bg-gray-50">
       <div>
         {/* Hero Section */}
         {!hasSearched && (
@@ -92,7 +92,7 @@ const HomePage = () => {
         )}
 
         {/* Search Filters  */}
-        <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
           <Filter
             searchInput={searchInput}
             setSearchInput={setSearchInput}
@@ -112,7 +112,7 @@ const HomePage = () => {
         {hasSearched && searchData.length > 0 && (
           <div className="max-w-7xl mx-auto px-4 md:px-6 pt-24 pb-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-medium text-gray-700">
+              <h2 className="text-lg font-medium text-gray-900">
                 {searchData.length} {searchData.length === 1 ? 'property' : 'properties'}
               </h2>
               <button
@@ -131,7 +131,7 @@ const HomePage = () => {
                     checkOut: null,
                   });
                 }}
-                className="text-sm px-4 py-2 text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow"
+                className="text-sm px-4 py-2 text-gray-700 bg-white hover:bg-orange-50 border border-gray-300 hover:border-orange-500 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow hover:text-orange-600"
               >
                 <span className="text-base">✕</span>
                 <span className="font-medium">Clear filters</span>

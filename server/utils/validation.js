@@ -47,15 +47,20 @@ const propertySchema = Joi.object({
   address: Joi.string().trim().min(10).max(200).required(),
   description: Joi.string().trim().min(20).max(2000).required(),
   images: Joi.array().items(Joi.string().uri()).min(1).required(),
-  whereToSleep: Joi.object({
-    bedroom: Joi.number().integer().min(0).required(),
-    sleepingPosition: Joi.object({
-      kingBed: Joi.number().integer().min(0).default(0),
-      queenBed: Joi.number().integer().min(0).default(0),
-      singleBed: Joi.number().integer().min(0).default(0),
-      sofa: Joi.number().integer().min(0).default(0),
-    }),
-  }).required(),
+  whereToSleep: Joi.array().items(
+    Joi.object({
+      bedroom: Joi.alternatives().try(
+        Joi.number().integer().min(1),
+        Joi.string().min(1)
+      ).required(),
+      sleepingPosition: Joi.object({
+        kingBed: Joi.number().integer().min(0).default(0),
+        queenBed: Joi.number().integer().min(0).default(0),
+        singleBed: Joi.number().integer().min(0).default(0),
+        sofa: Joi.number().integer().min(0).default(0),
+      }).required(),
+    })
+  ).min(1).required(),
   guests: Joi.number().integer().min(1).required(),
   price: Joi.number().positive().required(),
   amenities: Joi.array().items(Joi.string()).default([]),

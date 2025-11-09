@@ -382,7 +382,7 @@ const PropertyDetailsPage = () => {
                     Where you&apos;ll sleep
                   </h2>
                   <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
-                    {data?.whereToSleep && data.whereToSleep.map((place, index) => (
+                    {data.whereToSleep.map((place, index) => (
                       <div
                         key={index}
                         className="border border-gray-200 py-4 px-4 rounded-lg space-y-2 hover:border-gray-300 transition-colors"
@@ -393,41 +393,32 @@ const PropertyDetailsPage = () => {
                           {place?.sleepingPosition?.kingBed > 0 && (
                             <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.kingBed} King bed
-                              {`${
-                                place?.sleepingPosition?.kingBed > 1 ? "s" : ""
-                              }`}
+                              {`${place?.sleepingPosition?.kingBed > 1 ? "s" : ""}`}
                             </p>
                           )}
-                          {place?.sleepingPosition?.queenBedBed > 0 && (
+                          {place?.sleepingPosition?.queenBed > 0 && (
                             <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.queenBed} Queen bed
-                              {`${
-                                place?.sleepingPosition?.queenBed > 1 ? "s" : ""
-                              }`}
+                              {`${place?.sleepingPosition?.queenBed > 1 ? "s" : ""}`}
                             </p>
                           )}
                           {place?.sleepingPosition?.singleBed > 0 && (
                             <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.singleBed} Single bed
-                              {`${
-                                place?.sleepingPosition?.singleBed > 1
-                                  ? "s"
-                                  : ""
-                              }`}
+                              {`${place?.sleepingPosition?.singleBed > 1 ? "s" : ""}`}
                             </p>
                           )}
                           {place?.sleepingPosition?.sofa > 0 && (
                             <p className="text-xs text-gray-600">
                               {place?.sleepingPosition?.sofa} Sofa
-                              {`${
-                                place?.sleepingPosition?.sofa > 1 ? "s" : ""
-                              }`}
+                              {`${place?.sleepingPosition?.sofa > 1 ? "s" : ""}`}
                             </p>
                           )}
                         </div>
                       </div>
                     ))}
                   </div>
+                  <div className="h-px bg-gray-200 my-4" />
                 </div>
               )}
             </div>

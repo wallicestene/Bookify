@@ -9,7 +9,6 @@ import {
   Pool,
 } from "@mui/icons-material";
 import TagsOption from "./TagsOption";
-import { set } from "date-fns";
 
 /* eslint-disable react/prop-types */
 const Tags = ({ formData, setFormData }) => {
@@ -31,9 +30,9 @@ const Tags = ({ formData, setFormData }) => {
     }
   };
   return (
-    <>
-      <div className=" w-full mb-10">
-        <div className=" grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4 mt-2 w-full">
+    <div className="w-full space-y-4">
+      <div className="w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4">
           <TagsOption
             title="Rooms"
             Icon={<BedOutlined />}
@@ -185,7 +184,7 @@ const Tags = ({ formData, setFormData }) => {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
