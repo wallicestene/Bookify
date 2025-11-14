@@ -1,13 +1,12 @@
 import axios from "axios";
 import { toast } from "sonner";
 
-// Fallback to localhost:3000 if VITE_API_URL is not set
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+
   headers: {
     "Content-Type": "application/json",
   },
