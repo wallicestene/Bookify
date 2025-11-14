@@ -27,7 +27,13 @@ const s3 = new S3Client({
 });
 
 // Helper function to get base URL
+// Use SERVER_URL from env for production, fallback to request-based URL for local dev
 const getBaseUrl = (req) => {
+  // If SERVER_URL is set (production), use it directly
+  if (process.env.SERVER_URL) {
+    return process.env.SERVER_URL;
+  }
+  // Otherwise build from request (local development)
   return `${req.protocol}://${req.get('host')}`;
 };
 
